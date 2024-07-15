@@ -1,0 +1,59 @@
+{
+  "name": "@tradetrust-tt/w3c-issuer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npx vitest --run",
+    "lint": "npx eslint . --color --format=table --max-warnings=0",
+    "build": "nx run @tradetrust-tt/w3c-issuer:'clean' && nx run @tradetrust-tt/w3c-issuer:'build:cjs' && nx run @tradetrust-tt/w3c-issuer:'build:esm' && nx run @tradetrust-tt/w3c-issuer:'build:type'",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build:esm": "tsc --module es2020 --outDir dist/esm",
+    "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
+    "clean": "rm -rf dist/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./*": {
+      "require": "./dist/cjs/*.js",
+      "import": "./dist/esm/*.js",
+      "types": "./dist/types/*.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "@vitest/coverage-v8": "^2.0.2",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^17.9.0",
+    "eslint-plugin-promise": "^6.4.0",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.2"
+  },
+  "dependencies": {
+    "@transmute/did-key-bls12381": "^0.3.0-unstable.10",
+    "@transmute/did-key-ed25519": "^0.3.0-unstable.10",
+    "did-resolver": "^4.1.0",
+    "jsonld-signatures": "^11.2.1",
+    "multiformats": "^13.1.3",
+    "web-did-resolver": "^2.0.27"
+  }
+}

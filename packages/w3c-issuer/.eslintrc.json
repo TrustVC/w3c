@@ -1,0 +1,6 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "ignorePatterns": ["dist", "build", "node_modules"],
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser"
+}

@@ -1,0 +1,6 @@
+{
+  "ignoreFiles": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
+  "watchFiles": ["src"],
+  "exec": "npx tsx src/index.ts",
+  "ext": "ts, js"
+}
