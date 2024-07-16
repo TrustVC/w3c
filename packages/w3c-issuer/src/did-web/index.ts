@@ -1,9 +1,10 @@
+import { getDomainHostname, parseMultibase } from '@tradetrust-tt/w3c-utils';
 import { Bls12381G2Key2020 } from '@transmute/bls12381-key-pair/dist/types';
 import * as bls12381 from '@transmute/did-key-bls12381';
 import * as ed25519 from '@transmute/did-key-ed25519';
 import { Ed25519VerificationKey2018 } from '@transmute/ed25519-key-pair/dist/types';
 import crypto from 'crypto';
-import { Resolver } from 'did-resolver';
+import { Resolver, VerificationMethod } from 'did-resolver';
 import web from 'web-did-resolver';
 import {
   DidKeyPair,
@@ -12,60 +13,23 @@ import {
   GeneratedKeyPairType as GeneratedKeyPair,
   GenerateKeyPairType as GenerateKeyPairOptions,
   KeyPairType,
-  SecurityVocabTypeToContext,
+  VerificationType,
+  WellKnownAttribute,
   WellKnownEnum,
 } from './type';
 
-export const parseMultibase = async (
-  multibase: string,
-): Promise<Uint8Array> => {
-  const [prefix, ..._value] = multibase;
-
-  const { base58btc } = await import('multiformats/bases/base58');
-  const { base64, base64pad, base64url, base64urlpad } = await import(
-    'multiformats/bases/base64'
-  );
-  const {
-    base32,
-    base32hex,
-    base32hexpad,
-    base32hexpadupper,
-    base32hexupper,
-    base32pad,
-    base32padupper,
-    base32upper,
-    base32z,
-  } = await import('multiformats/bases/base32');
-  const { base16, base16upper } = await import('multiformats/bases/base16');
-
-  const supportedBases = [
-    base58btc,
-    base64,
-    base64pad,
-    base64url,
-    base64urlpad,
-    base32,
-    base32hex,
-    base32hexpad,
-    base32hexpadupper,
-    base32hexupper,
-    base32pad,
-    base32padupper,
-    base32upper,
-    base32z,
-    base16,
-    base16upper,
-  ];
-
-  const base = supportedBases.find((base) => base.prefix === prefix);
-
-  if (!base) {
-    throw new Error('Unsupported multibase');
-  }
-
-  return base.decode(multibase);
-};
-
+/**
+ * Generate key pair based on the type.
+ * If seed is provided, it will be used to generate the key pair.
+ * If private key and public key are provided, it will be verified against the generated seed's key pair.
+ * 
+ * @param {GenerateKeyPairOptions} keyPairOptions
+ * @param {VerificationType} keyPairOptions.type - Type of key pair to generate
+ * @param {string} keyPairOptions.seedBase58 - Seed in base58 format (optional)
+ * @param {string} keyPairOptions.privateKeyBase58 - Private key in base58 format (optional)
+ * @param {string} keyPairOptions.publicKeyBase58 - Public key in base58 format (optional)
+ * @returns {Promise<GeneratedKeyPair>} - Generated key pair
+ */
 export const generateKeyPair = async (
   keyPairOptions: GenerateKeyPairOptions,
 ): Promise<GeneratedKeyPair> => {
@@ -80,10 +44,10 @@ export const generateKeyPair = async (
 
   let generatedKeyPair: GeneratedKeyPair;
   switch (type) {
-    case SecurityVocabTypeToContext.Ed25519VerificationKey2018:
+    case VerificationType.Ed25519VerificationKey2018:
       generatedKeyPair = await generateEd25519KeyPair(keyPairOptions);
       break;
-    case SecurityVocabTypeToContext.Bls12381G2Key2020:
+    case VerificationType.Bls12381G2Key2020:
       generatedKeyPair = await generateBls12381KeyPair(keyPairOptions);
       break;
     default:
@@ -105,6 +69,12 @@ export const generateKeyPair = async (
   return generatedKeyPair;
 };
 
+/**
+ * Generate Ed25519 key pair based on the seed.
+ * 
+ * @param {Uint8Array} seed - Seed to generate the key pair
+ * @returns {Promise<GeneratedKeyPair>} - Generated Ed25519 key pair
+ */
 export const generateEd25519KeyPair = async ({
   seed,
 }: Readonly<GenerateKeyPairOptions>): Promise<GeneratedKeyPair> => {
@@ -125,7 +95,7 @@ export const generateEd25519KeyPair = async ({
   const base58 = await import('multiformats/bases/base58');
 
   return {
-    type: SecurityVocabTypeToContext.Ed25519VerificationKey2018,
+    type: VerificationType.Ed25519VerificationKey2018,
     seed,
     seedBase58: base58.base58btc.encode(seed!).slice(1),
     privateKey: keys.privateKey,
@@ -135,6 +105,12 @@ export const generateEd25519KeyPair = async ({
   };
 };
 
+/**
+ * Generate Bls12381 key pair based on the seed.
+ * 
+ * @param {Uint8Array} seed - Seed to generate the key pair
+ * @returns {Promise<GeneratedKeyPair>} - Generated Bls12381 key pair
+ */
 export const generateBls12381KeyPair = async ({
   seed,
 }: GenerateKeyPairOptions): Promise<GeneratedKeyPair> => {
@@ -158,7 +134,7 @@ export const generateBls12381KeyPair = async ({
   const base58 = await import('multiformats/bases/base58');
 
   const bbsKeyPair: GeneratedKeyPair = {
-    type: SecurityVocabTypeToContext.Bls12381G2Key2020,
+    type: VerificationType.Bls12381G2Key2020,
     seed: seed,
     seedBase58: base58.base58btc.encode(seed!).slice(1),
     privateKey: keys.g2KeyPair.privateKey,
@@ -170,26 +146,38 @@ export const generateBls12381KeyPair = async ({
   return bbsKeyPair;
 };
 
-export const getDomainHostname = (
-  domain: Readonly<string>,
-): string | undefined => {
-  // convert domain https://example.com/part/index?id=123 to example.com
+/**
+ * Query well known DID document based on the domain.
+ * 
+ * @param {string} domain - Domain to query well known DID @example https://subdomain.example.com/xxx
+ * @returns {Promise<DidWellKnownDocument | undefined>} - Returns WellKnown DIDDocument if found, otherwise undefined
+ */
+export const queryWellKnownDid = async (
+  domain: string,
+): Promise<DidWellKnownDocument | undefined> => {
+  const resolver = new Resolver({
+    ...web.getResolver(),
+  });
 
-  if (!domain) {
-    return;
-  }
+  const doc = await resolver.resolve(`did:web:${getDomainHostname(domain)!}`);
 
-  const url = new URL(domain);
-  return url.hostname;
+  return doc.didDocument as DidWellKnownDocument;
 };
 
-export const generateWellKnownDid = async ({
+/**
+ * Generate well known DID document based on the well known DID document and new key pair.
+ * 
+ * @param {DidWellKnownDocument} wellKnown - Well known DID document
+ * @param {DidKeyPair} newKeyPair - New key pair to add to the well known DID document
+ * @returns {DidWellKnownDocument} - Updated well known DID document
+ */
+export const generateWellKnownDid = ({
   wellKnown,
   newKeyPair,
 }: {
   wellKnown?: DidWellKnownDocument;
   newKeyPair: DidKeyPair;
-}) => {
+}): DidWellKnownDocument => {
   if (!newKeyPair) {
     return;
   }
@@ -221,63 +209,33 @@ export const generateWellKnownDid = async ({
   }
 
   // Verification Method
-  const newVerificationMethod = {
-    type: 'Bls12381G2Key2020',
-    id: newKeyPair?.id,
-    controller: newKeyPair?.controller,
-    publicKeyBase58: newKeyPair?.publicKeyBase58,
+  const newVerificationMethod: VerificationMethod = {
+    type: newKeyPair.type,
+    id: newKeyPair.id,
+    controller: newKeyPair.controller,
+    publicKeyBase58: newKeyPair.publicKeyBase58,
   };
   if (!wellKnown[WellKnownEnum.VERIFICATION_METHOD]) {
     wellKnown[WellKnownEnum.VERIFICATION_METHOD] = [newVerificationMethod];
   } else if (
-    !wellKnown[WellKnownEnum.VERIFICATION_METHOD].find(
+    !wellKnown[WellKnownEnum.VERIFICATION_METHOD]?.find(
       (s) => s?.id === newVerificationMethod?.id,
     )
   ) {
     wellKnown[WellKnownEnum.VERIFICATION_METHOD].push(newVerificationMethod);
   }
 
-  // Assertion Method
-  if (!wellKnown[WellKnownEnum.ASSERTION_METHOD]) {
-    wellKnown[WellKnownEnum.ASSERTION_METHOD] = [newVerificationMethod?.id];
-  } else {
-    if (
-      !wellKnown[WellKnownEnum.ASSERTION_METHOD].includes(
-        newVerificationMethod?.id,
-      )
-    )
-      wellKnown[WellKnownEnum.ASSERTION_METHOD].push(newVerificationMethod?.id);
-  }
 
-  // Capability Invocation
-  if (!wellKnown[WellKnownEnum.CAPABILITY_INVOCATION]) {
-    wellKnown[WellKnownEnum.CAPABILITY_INVOCATION] = [
-      newVerificationMethod?.id,
-    ];
-  } else {
-    if (
-      !wellKnown[WellKnownEnum.CAPABILITY_INVOCATION].includes(
-        newVerificationMethod?.id,
-      )
-    )
-      wellKnown[WellKnownEnum.CAPABILITY_INVOCATION].push(
-        newVerificationMethod?.id,
-      );
+  for (const type of WellKnownAttribute) {
+    if (!wellKnown[type]) {
+      wellKnown[type] = [newVerificationMethod?.id];
+    } else {
+      if (!wellKnown[type]?.includes(newVerificationMethod?.id))
+        wellKnown[type].push(newVerificationMethod?.id);
+    }
   }
 
   return wellKnown;
-};
-
-export const queryWellKnownDid = async (
-  domain: string,
-): Promise<DidWellKnownDocument | undefined> => {
-  const resolver = new Resolver({
-    ...web.getResolver(),
-  });
-
-  const doc = await resolver.resolve(`did:web:${getDomainHostname(domain)!}`);
-
-  return doc.didDocument as DidWellKnownDocument;
 };
 
 export const issueDID = async (didInput: KeyPairType) => {
@@ -288,22 +246,21 @@ export const issueDID = async (didInput: KeyPairType) => {
 
   const did = `did:web:${domainHostname}`;
 
-  // Query well-known DID
   let wellKnown = await queryWellKnownDid(didInput.domain);
   const keyId = (wellKnown?.verificationMethod?.length ?? 0) + 1;
 
-  const bbsKeyPair = await generateKeyPair(didInput);
+  const generatedKeyPair = await generateKeyPair(didInput);
 
   const keyPairs: DidPrivateKeyPair = {
     id: `${did}#keys-${keyId}`,
-    type: 'Bls12381G2Key',
+    type: generatedKeyPair.type,
     controller: did,
-    seedBase58: bbsKeyPair.seedBase58!,
-    privateKeyBase58: bbsKeyPair.privateKeyBase58!,
-    publicKeyBase58: bbsKeyPair.publicKeyBase58!,
+    seedBase58: generatedKeyPair.seedBase58!,
+    privateKeyBase58: generatedKeyPair.privateKeyBase58!,
+    publicKeyBase58: generatedKeyPair.publicKeyBase58!,
   };
 
-  wellKnown = await generateWellKnownDid({
+  wellKnown = generateWellKnownDid({
     wellKnown,
     newKeyPair: keyPairs,
   });
