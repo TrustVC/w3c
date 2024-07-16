@@ -1,0 +1,20 @@
+{
+  "name": "w3c-cli",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon",
+    "cli": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/yargs": "^17.0.32",
+    "chalk": "^4.1.2",
+    "inquirer": "^10.0.1",
+    "yargs": "^17.7.2"
+  }
+}
