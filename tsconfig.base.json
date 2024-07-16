@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
-    "declaration": true,
+    "declaration": false,
     "outDir": "./build",
     "removeComments": true,
     "allowSyntheticDefaultImports": true,

@@ -51,6 +51,18 @@
           "buildTarget": "w3c-cli:build:production"
         }
       }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run w3c-cli:build --watch"
+      }
+    },
+    "cli": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/apps/w3c-cli/main.js"
+      }
     }
   }
 }
