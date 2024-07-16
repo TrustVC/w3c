@@ -1,15 +1,14 @@
-import { Resolver } from 'did-resolver';
-import * as web from 'web-did-resolver';
-import * as ttVerify from '@tradetrust-tt/tt-verify';
 import {
   BbsBlsSignature2020,
   BbsBlsSignatureProof2020,
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import { generateKeyPair, issueDID, SecurityVocabTypeToContext } from '@tradetrust-tt/w3c-issuer';
+import { generateKeyPair, issueDID, VerificationType } from '@tradetrust-tt/w3c-issuer';
 import { } from "@transmute/bbs-bls12381-signature-2020";
+import { Resolver } from 'did-resolver';
 import { extendContextLoader, purposes, sign, verify } from "jsonld-signatures";
+import * as web from 'web-did-resolver';
 
 const rawIDVC = {
   "@context": [
@@ -95,7 +94,7 @@ function ensureSuiteContext(_ref2) {
 };
 
 export const signIDVC = async () => {
-  const generatedKeyPair = await generateKeyPair({ type: SecurityVocabTypeToContext.Bls12381G2Key2020, seedBase58: 'ZxmZigN9Bbw6zNEnLA4wDxfVvjoQsn8F' });
+  const generatedKeyPair = await generateKeyPair({ type: VerificationType.Bls12381G2Key2020, seedBase58: 'ZxmZigN9Bbw6zNEnLA4wDxfVvjoQsn8F' });
   console.log('generatedKeyPair', generatedKeyPair)
   const keyPair = await new Bls12381G2KeyPair({
     id: 'did:web:localhost.nghaninn.com#keys-1',
