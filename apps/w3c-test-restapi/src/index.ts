@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as tradetrust from '../../../../test-tradetrust/libs/tradetrust-tt/tradetrust/src/index.js';
 import rawV4IDVCDocument from '../../../../test-tradetrust/libs/tradetrust-tt/tradetrust/test/fixtures/v4/tt/did-idvc-raw.json';
 import * as ttVerify from '../../../../test-tradetrust/libs/tradetrust-tt/tt-verify/src/index.js';
-import { issueDID, signIDVC, verifyIDVC2 } from './verify_idvc.js';
+import { issueDID, signIDVC, verifyIDVC } from './verify_idvc.js';
 import { generateBls12381KeyPair, generateEd25519KeyPair, generateKeyPair } from '@tradetrust-tt/w3c-issuer';
 // import { generateBbsKeyPair, generateEd25519KeyPair, generateKeyPair } from '../../w3c-issuer/src/did-web/index.js';
 
@@ -197,7 +197,7 @@ app.post('/vc-api-test-suite/verify', async (req: Request, res: Response) => {
 
 app.get('/verify_idvc', async (req: Request, res: Response) => {
   try {
-    const result = await verifyIDVC2()
+    const result = await verifyIDVC()
     console.log('/verify_idvc', result)
     res.json(result);
   } catch (err) {

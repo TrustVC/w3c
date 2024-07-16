@@ -1,6 +1,6 @@
 import { Resolver } from 'did-resolver';
 import * as web from 'web-did-resolver';
-import * as ttVerify from '../../../../test-tradetrust/libs/tradetrust-tt/tt-verify/src/index.js';
+import * as ttVerify from '@tradetrust-tt/tt-verify';
 import {
   BbsBlsSignature2020,
   BbsBlsSignatureProof2020,
@@ -13,7 +13,7 @@ import { extendContextLoader, purposes, sign, verify } from "jsonld-signatures";
 
 const rawIDVC = {
   "@context": [
-    // "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/v1",
     "https://didrp-test.esatus.com/schemas/basic-did-lei-mapping/v1",
     "https://w3id.org/security/bbs/v1",
     "https://w3id.org/vc/status-list/2021/v1",
@@ -64,96 +64,22 @@ const issuedIDVC = {
   }
 };
 
-export const verifyIDVC2 = async () => {
+export const verifyIDVC = async () => {
   // https://github.com/mattrglobal
   // https://github.com/TradeTrust/tt-verify/blob/beta/src/verifiers/issuerIdentity/idvc/idvc-verifier.ts
 
   const webResolver = web.getResolver();
-  // const ethrResolver = ethr.getResolver()
   const resolver = new Resolver(webResolver);
-  // const resolver = new Resolver({
-  //     ...ethrResolver,
-  //     ...webResolver,
-  // });
 
   const resolvedResponse = await resolver.resolve(issuedIDVC.issuer)
-  // console.log('resolvedResponse', JSON.stringify(resolvedResponse, null, 2))
-  const { didDocument } = resolvedResponse;
-  // didDocument = {
-  //     "@context": [
-  //         "https://www.w3.org/ns/did/v1",
-  //         "https://w3id.org/security/suites/jws-2020/v1",
-  //         "https://w3id.org/security/suites/bls12381-2020/v1",
-  //         "https://w3id.org/security/bbs/v1"
-  //     ],
-  //     "assertionMethod": [
-  //         "did:web:didrp-test.esatus.com#keys-1"
-  //     ],
-  //     "capabilityDelegation": [
-  //         "did:web:didrp-test.esatus.com#keys-1"
-  //     ],
-  //     "id": "did:web:didrp-test.esatus.com",
-  //     "verificationMethod": [
-  //         {
-  //             "type": "Bls12381G2Key2020",
-  //             "id": "did:web:didrp-test.esatus.com#keys-1",
-  //             "controller": "did:web:didrp-test.esatus.com",
-  //             "publicKeyBase58": "r7Ld81TFLZc7xTZ1EUWaG9EfYeSRgyu63eHC78WkgnX5W67qJeyDHqUDZa7Yc5SpnTvVJfPd6YEZW88jLrMs2Q1BJDPFCagaHDkY7ofZkyCUdFSMeA6BaWkBRbvNqhFf7RG"
-  //         }
-  //     ],
-  //     "capabilityInvocation": [
-  //         "did:web:didrp-test.esatus.com#keys-1"
-  //     ],
-  //     "authentication": [
-  //         "did:web:didrp-test.esatus.com#keys-1"
-  //     ]
-  // }
+  // const { didDocument } = resolvedResponse;
+  
+  // FIXME: This is implemented with dev Branch of tt-verify, route package to local instance of tt-verify in order to test
+  // add new path to tsconfig.base.json "@tradetrust-tt/tt-verify": ["../<..>/tt-verify/src"],
+  // const result = await ttVerify.verifyIDVC(issuedIDVC);
+  // console.log('result', result)
 
-  /**
-   * Extract the verification method from the DID Document
-   */
-
-  // // Check if issuer proof purpose is valid
-  // const proofPurpose = issuedIDVC.proof.proofPurpose;
-  // const issuerKey = issuedIDVC.proof.verificationMethod;
-  // if (didDocument?.hasOwnProperty(proofPurpose)) {
-  //     const isValidIssuerKey = (didDocument as any)?.[proofPurpose].find((s: string) => s === issuerKey);
-  //     if (!isValidIssuerKey) {
-  //         throw new Error('Invalid issuer key');
-  //     }
-  // } else {
-  //     throw new Error('Invalid proof purpose');
-  // }
-
-  // const verificationMethod = didDocument?.verificationMethod?.find(s => s.id === issuerKey);
-
-  // if (verificationMethod?.publicKeyBase58 && !verificationMethod?.publicKeyMultibase) {
-  //     verificationMethod.publicKeyMultibase = base58btc.encode(bs58.decode(verificationMethod.publicKeyBase58));
-  //     verificationMethod.publicKeyHex = Buffer.from(bs58.decode(verificationMethod.publicKeyBase58)).toString('hex');
-  // }
-  // console.log('verificationMethod', verificationMethod)
-
-  // const didWebDriver = driver();
-  // didWebDriver.use({
-  //     multibaseMultikeyHeader: 'zr7L',
-  //     fromMultibase: Bls12381Multikey.from
-  // });
-
-  // const {
-  //     didDocument: derivedDIDDoc, keyPairs, methodFor
-  // } = await didWebDriver.fromKeyPair({
-  //     // the desired `did:web` DID URL
-  //     url: didUrlToHttpsUrl(issuedIDVC.issuer)?.fullUrl,
-  //     // either one or both of these key pairs must be provided
-  //     // verificationKeyPair: keyPairForVerification,
-  //     verificationKeyPair: verificationMethod,
-  //     // keyAgreementKeyPair: keyPairForKeyAgreement
-  // });
-
-  const result = await ttVerify.verifyIDVC(issuedIDVC);
-  console.log('result', result)
-
-  return result[0] === false && result[1];
+  // return result[0] === false && result[1];
 }
 
 function ensureSuiteContext(_ref2) {
@@ -173,7 +99,6 @@ export const signIDVC = async () => {
   console.log('generatedKeyPair', generatedKeyPair)
   const keyPair = await new Bls12381G2KeyPair({
     id: 'did:web:localhost.nghaninn.com#keys-1',
-    // controller: SecurityVocabTypeToContext.Bls12381G2Key2020,
     controller: 'did:web:localhost.nghaninn.com',
     ...(generatedKeyPair as any)
   });
@@ -273,46 +198,5 @@ export const signIDVC = async () => {
     deriveProof: derivedProofVerified.verified
   };
 }
-
-// export const issueDID = async (didInput: BbsKeyPairType) => {
-//     const base58 = await import('multiformats/bases/base58');
-//     console.log('bbsKeyPairInput', didInput)
-
-//     const did = `did:web:${stripDomain(didInput?.domain)}` ?? 'did:web:example.com';
-
-//     const bbsKeyPair = await generateBbsKeyPair(didInput)
-//     // const bbsKeyPair = Bls12381Multikey.generateBbsKeyPair({
-//     //     id: did,
-//     //     controller: did,
-//     //     algorithm: Bls12381Multikey.ALGORITHMS.BBS_BLS12381_SHA256,
-//     // })
-
-//     console.log('bbsKeyPair', bbsKeyPair)
-
-//     const keyPairs = {
-//         id: `${did}#keys-1`,
-//         type: 'Bls12381G2Key',
-//         controller: did,
-
-//         // privateKey: Buffer.from(bbsKeyPair.secretKey).toString('utf8'),
-//         // privateKeyMultibase: base58.base58btc.encode(bbsKeyPair.secretKey),
-//         privateKeyBase58: base58.base58btc.encode(bbsKeyPair.secretKey).slice(1),
-//         // privateKeyHex: Buffer.from(bbsKeyPair.secretKey).toString('hex'),
-
-//         // publicKey: Buffer.from(bbsKeyPair.publicKey).toString('utf8'),
-//         // publicKeyMultibase: base58.base58btc.encode(bbsKeyPair.publicKey),
-//         publicKeyBase58: base58.base58btc.encode(bbsKeyPair.publicKey).slice(1),
-//         // publicKeyHex: Buffer.from(bbsKeyPair.publicKey).toString('hex')
-//     }
-
-//     const wellKnown = await generateWellKnownDid({
-//         newKeyPair: keyPairs
-//     })
-
-//     return {
-//         wellKnown,
-//         did: keyPairs
-//     };
-// }
 
 export { issueDID };
