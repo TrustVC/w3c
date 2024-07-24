@@ -36,7 +36,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/w3c-cli-e2e/**/*"]
+      "exclude": [""]
     }
   ]
 }

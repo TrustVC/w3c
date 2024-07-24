@@ -27,7 +27,7 @@ app.get('/issue_didweb', async (req: Request, res: Response) => {
     const { seedBase58, privateKeyBase58, publicKeyBase58, domain, type } = req.body
     const result = await issueDID({ domain, type, seedBase58, privateKeyBase58, publicKeyBase58 })
     res.json(result)
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(400).json({ error: error?.message });
   }
@@ -39,7 +39,7 @@ app.get('/new_private_key', async (req: Request, res: Response) => {
     let result = await generateKeyPair({ type, seedBase58, privateKeyBase58, publicKeyBase58 })
 
     res.json({ result });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(400).json({ error: error?.message });
   }
