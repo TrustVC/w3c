@@ -1,28 +1,32 @@
 {
   "name": "w3c-cli",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/w3c-cli/src",
+  "sourceRoot": "apps/w3c-cli",
   "projectType": "application",
   "tags": [],
   "targets": {
-    "build": {
+    "build1": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "^build"
+      ],
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/w3c-cli",
+        "outputPath": "dist",
         "format": ["cjs"],
         "bundle": false,
         "main": "apps/w3c-cli/src/main.ts",
-        "tsConfig": "apps/w3c-cli/tsconfig.app.json",
+        "tsConfig": "apps/w3c-cli/tsconfig.json",
         "assets": ["apps/w3c-cli/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
           "outExtension": {
             ".js": ".js"
-          }
+          },
+          "external": ["@tradetrust-tt/w3c-issuer"]
         }
       },
       "configurations": {
@@ -37,31 +41,18 @@
         }
       }
     },
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "w3c-cli:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "w3c-cli:build:development"
-        },
-        "production": {
-          "buildTarget": "w3c-cli:build:production"
-        }
-      }
-    },
-    "dev": {
+    "dev1": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "nx run w3c-cli:build --watch"
-      }
-    },
-    "cli": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node dist/apps/w3c-cli/main.js"
+        "commands": [
+          {
+            "command": "nx build w3c-cli"
+          },
+          {
+            "command": "node apps/w3c-cli/dist/cjs/apps/w3c-cli/src/main.js greet a"
+          }
+        ],
+        "parallel": false
       }
     }
   }

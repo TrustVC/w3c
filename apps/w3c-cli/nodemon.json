@@ -1,6 +1,6 @@
 {
     "watch": ["src/"],
     "ext": "ts",
-    "ignore": ["../../dist"],
-    "exec": "nx build w3c-cli"
+    "ignore": ["dist"],
+    "exec": "tsc"
   }

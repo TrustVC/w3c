@@ -17,28 +17,28 @@ import {
   WellKnownAttribute,
   WellKnownEnum,
 } from './type';
+import { base58btc } from 'multiformats/bases/base58';
+import { base64, base64pad, base64url, base64urlpad } from 'multiformats/bases/base64';
+import {
+  base32,
+  base32hex,
+  base32hexpad,
+  base32hexpadupper,
+  base32hexupper,
+  base32pad,
+  base32padupper,
+  base32upper,
+  base32z,
+} from 'multiformats/bases/base32';
+import {
+  base16,
+  base16upper,
+} from 'multiformats/bases/base16';
 
 export const parseMultibase = async (
   multibase: string,
 ): Promise<Uint8Array> => {
   const [prefix, ..._value] = multibase;
-
-  const { base58btc } = await import('multiformats/bases/base58');
-  const { base64, base64pad, base64url, base64urlpad } = await import(
-    'multiformats/bases/base64'
-  );
-  const {
-    base32,
-    base32hex,
-    base32hexpad,
-    base32hexpadupper,
-    base32hexupper,
-    base32pad,
-    base32padupper,
-    base32upper,
-    base32z,
-  } = await import('multiformats/bases/base32');
-  const { base16, base16upper } = await import('multiformats/bases/base16');
 
   const supportedBases = [
     base58btc,
@@ -85,7 +85,7 @@ export const getDomainHostname = (
  * Generate key pair based on the type.
  * If seed is provided, it will be used to generate the key pair.
  * If private key and public key are provided, it will be verified against the generated seed's key pair.
- * 
+ *
  * @param {GenerateKeyPairOptions} keyPairOptions
  * @param {VerificationType} keyPairOptions.type - Type of key pair to generate
  * @param {string} keyPairOptions.seedBase58 - Seed in base58 format (optional)
@@ -134,7 +134,7 @@ export const generateKeyPair = async (
 
 /**
  * Generate Ed25519 key pair based on the seed.
- * 
+ *
  * @param {Uint8Array} seed - Seed to generate the key pair
  * @returns {Promise<GeneratedKeyPair>} - Generated Ed25519 key pair
  */
@@ -155,12 +155,11 @@ export const generateEd25519KeyPair = async ({
     type: 'Ed25519VerificationKey2018',
     privateKey: true,
   })) as Ed25519VerificationKey2018;
-  const base58 = await import('multiformats/bases/base58');
 
   return {
     type: VerificationType.Ed25519VerificationKey2018,
     seed,
-    seedBase58: base58.base58btc.encode(seed!).slice(1),
+    seedBase58: base58btc.encode(seed!).slice(1),
     privateKey: keys.privateKey,
     privateKeyBase58: edKeyPair.privateKeyBase58,
     publicKey: keys.publicKey,
@@ -170,7 +169,7 @@ export const generateEd25519KeyPair = async ({
 
 /**
  * Generate Bls12381 key pair based on the seed.
- * 
+ *
  * @param {Uint8Array} seed - Seed to generate the key pair
  * @returns {Promise<GeneratedKeyPair>} - Generated Bls12381 key pair
  */
@@ -194,12 +193,11 @@ export const generateBls12381KeyPair = async ({
     type: 'Bls12381G2Key2020',
     privateKey: true,
   })) as Bls12381G2Key2020;
-  const base58 = await import('multiformats/bases/base58');
 
   const bbsKeyPair: GeneratedKeyPair = {
     type: VerificationType.Bls12381G2Key2020,
     seed: seed,
-    seedBase58: base58.base58btc.encode(seed!).slice(1),
+    seedBase58: base58btc.encode(seed!).slice(1),
     privateKey: keys.g2KeyPair.privateKey,
     privateKeyBase58: g2KeyPair.privateKeyBase58,
     publicKey: keys.g2KeyPair.publicKey,
@@ -211,7 +209,7 @@ export const generateBls12381KeyPair = async ({
 
 /**
  * Query well known DID document based on the domain.
- * 
+ *
  * @param {string} domain - Domain to query well known DID @example https://subdomain.example.com/xxx
  * @returns {Promise<DidWellKnownDocument | undefined>} - Returns WellKnown DIDDocument if found, otherwise undefined
  */
@@ -229,7 +227,7 @@ export const queryWellKnownDid = async (
 
 /**
  * Generate well known DID document based on the well known DID document and new key pair.
- * 
+ *
  * @param {DidWellKnownDocument} wellKnown - Well known DID document
  * @param {DidKeyPair} newKeyPair - New key pair to add to the well known DID document
  * @returns {DidWellKnownDocument} - Updated well known DID document
@@ -333,5 +331,3 @@ export const issueDID = async (didInput: KeyPairType) => {
     did: keyPairs,
   };
 };
-
-export * from './type';

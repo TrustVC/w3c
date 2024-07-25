@@ -4,7 +4,8 @@
     "target": "es6",
     "module": "commonjs",
     "esModuleInterop": true,
-    "moduleResolution": "Node10"
+    "moduleResolution": "Node10",
+    "declaration": false
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.test.ts"]

@@ -1,0 +1,44 @@
+{
+  "name": "w3c-cli",
+  "version": "1.0.0",
+  "main": "dist/cjs/main.js",
+  "types": "dist/types/main.d.ts",
+  "bin": {
+    "w3c-cli": "dist/cjs/main.js"
+  },
+  "nx": {
+    "implicitDependencies": [
+      "@tradetrust-tt/w3c-issuer"
+    ],
+    "tags": [
+      "type:app"
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/cjs/main.js",
+    "dev": "ts-node -r tsconfig-paths/register src/main.ts",
+    "cli": "node dist/main.js",
+    "build": "nx run w3c-cli:clean && nx run w3c-cli:build:cjs && nx run w3c-cli:build:type",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs --project ./tsconfig.json",
+    "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
+    "serve": "nx run w3c-cli:build && node dist/cjs/main.js",
+    "clean": "rm -rf dist/",
+    "pkg": "npx pkg ./package.json --out-path dist/@w3c-cli"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tradetrust-tt/w3c-issuer": "*",
+    "@types/yargs": "^17.0.32",
+    "chalk": "^4.1.2",
+    "inquirer": "^10.0.1",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1",
+    "ts-node": "^10.9.2"
+  }
+}

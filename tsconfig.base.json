@@ -8,7 +8,7 @@
     "paths": {
       "@tradetrust-tt/tt-verify": ["../test-tradetrust/libs/tradetrust-tt/tt-verify/src"],
       "@tradetrust-tt/w3c-utils": ["packages/w3c-utils/src"],
-      "@tradetrust-tt/*": ["packages/*"]
+      "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer/src"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
@@ -27,5 +27,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "build"]
+  "exclude": ["node_modules", "dist", "build", "tmp"]
 }
