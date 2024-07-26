@@ -1,8 +1,8 @@
 // import { getDomainHostname, parseMultibase } from '@tradetrust-tt/w3c-utils';
-import { Bls12381G2Key2020 } from '@transmute/bls12381-key-pair/dist/types';
+import { Bls12381G2Key2020 } from '@transmute/bls12381-key-pair';
 import * as bls12381 from '@transmute/did-key-bls12381';
 import * as ed25519 from '@transmute/did-key-ed25519';
-import { Ed25519VerificationKey2018 } from '@transmute/ed25519-key-pair/dist/types';
+import { Ed25519VerificationKey2018 } from '@transmute/ed25519-key-pair';
 import crypto from 'crypto';
 import { Resolver, VerificationMethod } from 'did-resolver';
 import web from 'web-did-resolver';
