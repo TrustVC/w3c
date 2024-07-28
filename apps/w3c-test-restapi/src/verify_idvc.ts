@@ -33,7 +33,7 @@ const rawIDVC = {
   },
   "issuanceDate": "2024-04-01T12:19:52Z",
   "expirationDate": "2029-12-03T12:19:52Z",
-  "issuer": "did:web:localhost.nghaninn.com",
+  "issuer": "did:web:localhost.com",
   "type": ["VerifiableCredential"],
 };
 
@@ -72,7 +72,7 @@ export const verifyIDVC = async () => {
 
   const resolvedResponse = await resolver.resolve(issuedIDVC.issuer)
   // const { didDocument } = resolvedResponse;
-  
+
   // FIXME: This is implemented with dev Branch of tt-verify, route package to local instance of tt-verify in order to test
   // add new path to tsconfig.base.json "@tradetrust-tt/tt-verify": ["../<..>/tt-verify/src"],
   // const result = await ttVerify.verifyIDVC(issuedIDVC);
@@ -97,8 +97,8 @@ export const signIDVC = async () => {
   const generatedKeyPair = await generateKeyPair({ type: VerificationType.Bls12381G2Key2020, seedBase58: 'ZxmZigN9Bbw6zNEnLA4wDxfVvjoQsn8F' });
   console.log('generatedKeyPair', generatedKeyPair)
   const keyPair = await new Bls12381G2KeyPair({
-    id: 'did:web:localhost.nghaninn.com#keys-1',
-    controller: 'did:web:localhost.nghaninn.com',
+    id: 'did:web:localhost.com#keys-1',
+    controller: 'did:web:localhost.com',
     ...(generatedKeyPair as any)
   });
   console.log('keyPair', keyPair)

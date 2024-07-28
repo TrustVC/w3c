@@ -29,7 +29,6 @@
     "express": "^4.19.2",
     "jsonld-signatures": "^11.2.1",
     "lodash": "^4.17.21",
-    "multiformats": "^13.1.3",
     "web-did-resolver": "^2.0.27"
   },
   "devDependencies": {

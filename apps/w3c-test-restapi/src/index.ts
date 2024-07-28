@@ -47,12 +47,12 @@ app.get('/new_private_key', async (req: Request, res: Response) => {
 
 app.get('/.well-known/did.json', async (req: Request, res: Response) => {
   res.type('application/did+ld+json').json({
-    "id": "did:web:localhost.nghaninn.com",
+    "id": "did:web:localhost.com",
     "verificationMethod": [
       {
         "type": "Bls12381G2Key2020",
-        "id": "did:web:localhost.nghaninn.com#keys-1",
-        "controller": "did:web:localhost.nghaninn.com",
+        "id": "did:web:localhost.com#keys-1",
+        "controller": "did:web:localhost.com",
         "publicKeyBase58": "yeFTpcEiuHVwhWuBfkKfuS6UVowJciCxTL7meFXjhu1vUAk1yYf8FbTk3BjiBgiyHXasTgznidM6WTSzxBYhXwfqEGbFSZToVxbhTQ1A1HYcnUuiocFgTAoyfCvbAhijdwx"
       }
     ],
@@ -61,10 +61,10 @@ app.get('/.well-known/did.json', async (req: Request, res: Response) => {
       "https://w3id.org/security/suites/bls12381-2020/v1"
     ],
     "assertionMethod": [
-      "did:web:localhost.nghaninn.com#keys-1"
+      "did:web:localhost.com#keys-1"
     ],
     "capabilityInvocation": [
-      "did:web:localhost.nghaninn.com#keys-1"
+      "did:web:localhost.com#keys-1"
     ]
   })
 });

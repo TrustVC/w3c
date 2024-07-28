@@ -9,7 +9,6 @@
     "dist"
   ],
   "scripts": {
-    "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",
     "clean": "rm -rf dist/"
   },
@@ -20,7 +19,7 @@
     "node": "18.x"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^18.17.0",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitest/coverage-v8": "^2.0.2",

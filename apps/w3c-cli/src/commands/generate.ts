@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { Argv, Choices } from 'yargs';
-import { generateKeyPair, GenerateKeyPairType, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { generateKeyPair, GenerateKeyPairOptions, VerificationType } from '@tradetrust-tt/w3c-issuer';
 import fs from 'fs'
 import chalk from 'chalk'
 
@@ -45,7 +45,7 @@ export const handler = async (argv: any) => {
     const keyFilePath = `${keyPath}/keypair.json`;
 
     console.log("seed", seedBase58);
-    const keypairOptions: GenerateKeyPairType = {
+    const keypairOptions: GenerateKeyPairOptions = {
         type: encAlgo,
         seedBase58,
     }

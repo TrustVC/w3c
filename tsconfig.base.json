@@ -6,8 +6,7 @@
     "module": "CommonJS",
     "baseUrl": ".",
     "paths": {
-      "@tradetrust-tt/tt-verify": ["../test-tradetrust/libs/tradetrust-tt/tt-verify/src"],
-      "@tradetrust-tt/w3c-utils": ["packages/w3c-utils/src"],
+      "@/tradetrust-tt/w3c-utils": ["packages/w3c-utils/src"],
       "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer/src"]
     },
     "resolveJsonModule": true,

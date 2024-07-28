@@ -2,18 +2,26 @@
   "name": "@tradetrust-tt/w3c-issuer",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/cjs/w3c-issuer/src/index.js",
+  "module": "dist/esm/w3c-issuer/src/index.js",
+  "types": "dist/types/w3c-issuer/src/index.d.ts",
   "files": [
     "dist"
   ],
+  "nx": {
+    "implicitDependencies": [
+      "@tradetrust-tt/w3c-utils"
+    ],
+    "tags": [
+      "type:package"
+    ]
+  },
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @tradetrust-tt/w3c-issuer:'clean' && nx run @tradetrust-tt/w3c-issuer:'build:cjs' && nx run @tradetrust-tt/w3c-issuer:'build:esm' && nx run @tradetrust-tt/w3c-issuer:'build:type'",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
-    "build:esm": "tsc --module es2020 --outDir dist/esm",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs && tscpaths -p tsconfig.build.cjs.json -s ./dist/cjs/w3c-issuer/src -o ./dist/cjs/w3c-issuer/src",
+    "build:esm": "tsc --module es2020 --outDir dist/esm && tscpaths -p tsconfig.build.esm.json -s ./dist/esm/w3c-issuer/src -o ./dist/esm/w3c-issuer/src",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
     "clean": "rm -rf dist/"
   },
@@ -25,18 +33,23 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/cjs/w3c-issuer/src/index.js",
+      "import": "./dist/esm/w3c-issuer/src/index.js",
+      "types": "./dist/types/w3c-issuer/src/index.d.ts"
+    },
+    "./did-web": {
+      "require": "./dist/cjs/w3c-issuer/src/did-web/*",
+      "import": "./dist/esm/w3c-issuer/src/did-web/*",
+      "types": "./dist/types/w3c-issuer/src/did-web/*"
     },
     "./*": {
-      "require": "./dist/cjs/*.js",
-      "import": "./dist/esm/*.js",
-      "types": "./dist/types/*.d.ts"
+      "require": "./dist/cjs/w3c-issuer/src/*.js",
+      "import": "./dist/esm/w3c-issuer/src/*.js",
+      "types": "./dist/types/w3c-issuer/src/*.d.ts"
     }
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^18.17.0",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitest/coverage-v8": "^2.0.2",
@@ -45,7 +58,9 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^17.9.0",
     "eslint-plugin-promise": "^6.4.0",
+    "tscpaths": "^0.0.9",
     "typescript": "^5.5.3",
+    "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.2"
   },
   "dependencies": {
