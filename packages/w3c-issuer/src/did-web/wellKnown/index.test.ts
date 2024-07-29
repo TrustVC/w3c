@@ -1,30 +1,31 @@
-import { issueDID } from ".";
-import { VerificationType } from "../keyPair/types";
+import { issueDID } from '.';
+import { VerificationType } from '../keyPair/types';
 import { describe, expect, it, vi } from 'vitest';
 import * as query from './query';
 
 const mockedQueryWellKnownDidResult = {
   id: 'did:web:localhost.com',
-  verificationMethod: [{
-    "type": "Bls12381G2Key2020",
-    "id": "did:web:localhost.com#keys-0",
-    "controller": "did:web:localhost.com",
-    "publicKeyBase58": "yeFTpcEiuHVwhWuBfkKfuS6UVowJciCxTL7meFXjhu1vUAk1yYf8FbTk3BjiBgiyHXasTgznidM6WTSzxBYhXwfqEGbFSZToVxbhTQ1A1HYcnUuiocFgTAoyfCvbAhijdwx"
-  }],
-  "@context": [
-    "https://www.w3.org/ns/did/v1",
-    "https://w3id.org/security/suites/bls12381-2020/v1"
+  verificationMethod: [
+    {
+      type: 'Bls12381G2Key2020',
+      id: 'did:web:localhost.com#keys-0',
+      controller: 'did:web:localhost.com',
+      publicKeyBase58:
+        'yeFTpcEiuHVwhWuBfkKfuS6UVowJciCxTL7meFXjhu1vUAk1yYf8FbTk3BjiBgiyHXasTgznidM6WTSzxBYhXwfqEGbFSZToVxbhTQ1A1HYcnUuiocFgTAoyfCvbAhijdwx',
+    },
   ],
-  assertionMethod: ["did:web:localhost.com#keys-0"],
-  authentication: ["did:web:localhost.com#keys-0"],
-  capabilityInvocation: ["did:web:localhost.com#keys-0"],
-  capabilityDelegation: ["did:web:localhost.com#keys-0"]
-}
+  '@context': ['https://www.w3.org/ns/did/v1', 'https://w3id.org/security/suites/bls12381-2020/v1'],
+  assertionMethod: ['did:web:localhost.com#keys-0'],
+  authentication: ['did:web:localhost.com#keys-0'],
+  capabilityInvocation: ['did:web:localhost.com#keys-0'],
+  capabilityDelegation: ['did:web:localhost.com#keys-0'],
+};
 
 describe('wellKnown', () => {
   const seedBase58 = 'CxBwAH4ftdc9XkLhw7DkFAESxh3NEdetMyJXKrPiAKAX';
   const privateKeyBase58 = '7e1VnFeqvMjqoq61qhGE2dgnQmgNDAYEX1FGzwywf2h7';
-  const publicKeyBase58 = '23GznFBm8BZcPM2BX7tcPfmeCAfkKKLWUWYwAj1jnu8acYhaNB892YkCDCJ1LLhXRBDpXEigx2tQYaw6EP1e1Fia83AfRUnmSA35v96ZgU3PmEd2DGqhUAXZZa4rM1gVGB9v';
+  const publicKeyBase58 =
+    '23GznFBm8BZcPM2BX7tcPfmeCAfkKKLWUWYwAj1jnu8acYhaNB892YkCDCJ1LLhXRBDpXEigx2tQYaw6EP1e1Fia83AfRUnmSA35v96ZgU3PmEd2DGqhUAXZZa4rM1gVGB9v';
 
   describe('issueDID', () => {
     it('should fail to issueDID without any input', () => {
@@ -32,11 +33,16 @@ describe('wellKnown', () => {
     });
 
     it('should fail to issueDID with invalid domain', () => {
-      expect(issueDID({ domain: 'invalidDomain', type: VerificationType.Bls12381G2Key2020 })).rejects.toThrowError('Invalid URL');
+      expect(
+        issueDID({ domain: 'invalidDomain', type: VerificationType.Bls12381G2Key2020 }),
+      ).rejects.toThrowError('Invalid URL');
     });
 
     it('should issueDID with valid domain and type', async () => {
-      const result = await issueDID({ domain: 'https://www.google.com', type: VerificationType.Bls12381G2Key2020 });
+      const result = await issueDID({
+        domain: 'https://www.google.com',
+        type: VerificationType.Bls12381G2Key2020,
+      });
 
       expect(result).toBeTruthy();
       expect(result.wellKnownDid).toHaveProperty('id');
@@ -58,7 +64,11 @@ describe('wellKnown', () => {
     });
 
     it('should issueDID with valid domain, type and seed', async () => {
-      const result = await issueDID({ domain: 'https://www.google.com', type: VerificationType.Bls12381G2Key2020, seedBase58 });
+      const result = await issueDID({
+        domain: 'https://www.google.com',
+        type: VerificationType.Bls12381G2Key2020,
+        seedBase58,
+      });
 
       expect(result).toMatchInlineSnapshot(`
         {
@@ -123,9 +133,17 @@ describe('wellKnown', () => {
     });
 
     it('should issueDID with valid domain, type, seed and valid hosted did', async () => {
-      const spy = vi.spyOn(query, 'queryWellKnownDid').mockImplementation(() => new Promise((resolve, rejects) => resolve(mockedQueryWellKnownDidResult)));
+      const spy = vi
+        .spyOn(query, 'queryWellKnownDid')
+        .mockImplementation(
+          () => new Promise((resolve, _rejects) => resolve(mockedQueryWellKnownDidResult)),
+        );
 
-      const result = await issueDID({ domain: 'https://www.google.com', type: VerificationType.Bls12381G2Key2020, seedBase58 });
+      const result = await issueDID({
+        domain: 'https://www.google.com',
+        type: VerificationType.Bls12381G2Key2020,
+        seedBase58,
+      });
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(result).toBeTruthy();

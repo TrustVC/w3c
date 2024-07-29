@@ -17,18 +17,19 @@ export enum WellKnownEnum {
   VERIFICATION_METHOD = 'verificationMethod',
 }
 
-export type WellKnownAttributeType = Extract<WellKnownEnum,
-  WellKnownEnum.AUTHENTICATION |
-  WellKnownEnum.ASSERTION_METHOD |
-  WellKnownEnum.CAPABILITY_INVOCATION |
-  WellKnownEnum.CAPABILITY_DELEGATION
+export type WellKnownAttributeType = Extract<
+  WellKnownEnum,
+  | WellKnownEnum.AUTHENTICATION
+  | WellKnownEnum.ASSERTION_METHOD
+  | WellKnownEnum.CAPABILITY_INVOCATION
+  | WellKnownEnum.CAPABILITY_DELEGATION
 >;
 
 export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.AUTHENTICATION,
   WellKnownEnum.ASSERTION_METHOD,
   WellKnownEnum.CAPABILITY_INVOCATION,
-  WellKnownEnum.CAPABILITY_DELEGATION
+  WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
 export type DidKeyPair = {
@@ -43,7 +44,6 @@ export type DidPrivateKeyPair = DidKeyPair & {
   privateKeyBase58: string;
 };
 
-export type DidWellKnownDocument = DIDDocument
-  & {
+export type DidWellKnownDocument = DIDDocument & {
   [key in WellKnownAttributeType]?: string[];
 };

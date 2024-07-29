@@ -1,10 +1,5 @@
 import { VerificationMethod } from 'did-resolver';
-import {
-  DidKeyPair,
-  DidWellKnownDocument,
-  WellKnownAttribute,
-  WellKnownEnum
-} from './types';
+import { DidKeyPair, DidWellKnownDocument, WellKnownAttribute, WellKnownEnum } from './types';
 
 /**
  * Generate well known DID document based on the well known DID document and new key pair.
@@ -65,15 +60,12 @@ export const generateWellKnownDid = ({
   if (!wellKnown[WellKnownEnum.VERIFICATION_METHOD]) {
     wellKnown[WellKnownEnum.VERIFICATION_METHOD] = [newVerificationMethod];
   } else if (
-    !wellKnown[WellKnownEnum.VERIFICATION_METHOD]?.find(
-      (s) => s?.id === newVerificationMethod?.id,
-    )
+    !wellKnown[WellKnownEnum.VERIFICATION_METHOD]?.find((s) => s?.id === newVerificationMethod?.id)
   ) {
     wellKnown[WellKnownEnum.VERIFICATION_METHOD].push(newVerificationMethod);
   } else {
     throw new Error('Key already exists');
   }
-
 
   for (const type of WellKnownAttribute) {
     if (!wellKnown[type]) {
@@ -98,7 +90,7 @@ export const nextKeyId = (wellKnown: DidWellKnownDocument): number => {
 
   // strip the key id to get the number
   const keyIdNumbers = keyIds.map((s) => {
-    const parts = s?.split("#");
+    const parts = s?.split('#');
     if (!parts) return 0;
     return parts?.[parts.length - 1]?.split('keys-')?.[1];
   });

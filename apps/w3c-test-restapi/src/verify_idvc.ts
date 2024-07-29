@@ -95,22 +95,19 @@ function ensureSuiteContext(_ref2) {
 
 export const signIDVC = async () => {
   const generatedKeyPair = await generateKeyPair({ type: VerificationType.Bls12381G2Key2020, seedBase58: 'ZxmZigN9Bbw6zNEnLA4wDxfVvjoQsn8F' });
-  console.log('generatedKeyPair', generatedKeyPair)
+
   const keyPair = await new Bls12381G2KeyPair({
     id: 'did:web:localhost.com#keys-1',
     controller: 'did:web:localhost.com',
     ...(generatedKeyPair as any)
   });
-  console.log('keyPair', keyPair)
 
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const cacheDocument = new Map<string, any>();
   const customDocLoader = async (url: string): Promise<any> => {
     if (url.startsWith("did:web:")) {
       url = url.replace("did:web:", "https://");
       url = 'https://' + new URL(url).hostname + '/.well-known/did.json';
     }
-    console.log('customDocLoader url', url)
 
     let result;
     if (cacheDocument.has(url)) {
@@ -124,10 +121,6 @@ export const signIDVC = async () => {
     }
   };
 
-  console.log("Input document");
-  console.log(JSON.stringify(rawIDVC, null, 2));
-
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const documentLoader: any = extendContextLoader(customDocLoader);
 
   const signedDocument = await sign(rawIDVC, {

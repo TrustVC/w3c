@@ -3,11 +3,13 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   define: {
-    "import.meta.vitest": "undefined",
+    'import.meta.vitest': 'undefined',
   },
-  plugins: [tsconfigPaths({
-    projects: ['./tsconfig.test.json'],
-  })],
+  plugins: [
+    tsconfigPaths({
+      projects: ['./tsconfig.test.json'],
+    }),
+  ],
   test: {
     cache: {
       dir: './node_modules/.vitest',
@@ -20,7 +22,7 @@ export default defineConfig({
       reportsDirectory: '.coverage',
       ignoreEmptyLines: true,
       reporter: ['text', 'lcov', 'json', 'html'],
-      include: ['src/**/*.{ts,js}']
+      include: ['src/**/*.{ts,js}'],
     },
   },
 });

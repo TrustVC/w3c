@@ -2,11 +2,7 @@ import { parseMultibase } from '@/tradetrust-tt/w3c-utils';
 import crypto from 'crypto';
 import { generateBls12381KeyPair } from './bls12381';
 import { generateEd25519KeyPair } from './ed25519';
-import {
-  GeneratedKeyPair,
-  GenerateKeyPairOptions,
-  VerificationType,
-} from './types';
+import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from './types';
 
 /**
  * Generate key pair based on the type.
@@ -23,8 +19,7 @@ import {
 export const generateKeyPair = async (
   keyPairOptions: GenerateKeyPairOptions,
 ): Promise<GeneratedKeyPair> => {
-  const { seedBase58, privateKeyBase58, publicKeyBase58, type } =
-    keyPairOptions;
+  const { seedBase58, privateKeyBase58, publicKeyBase58, type } = keyPairOptions;
 
   if (!type) {
     throw new Error('Invalid key pair type');

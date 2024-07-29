@@ -1,9 +1,7 @@
 import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
 import { Resolver } from 'did-resolver';
 import { getResolver as webGetResolver } from 'web-did-resolver';
-import {
-  DidWellKnownDocument
-} from './types';
+import { DidWellKnownDocument } from './types';
 
 /**
  * Query well known DID document based on the domain.

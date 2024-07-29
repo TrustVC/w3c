@@ -18,7 +18,7 @@ export const VerificationContext: { [key in VerificationType]: string } = {
   [VerificationType.Ed25519VerificationKey2018]: 'https://w3id.org/security/v2',
   [VerificationType.Bls12381G1Key2020]: 'https://w3id.org/security/suites/bls12381-2020/v1',
   [VerificationType.Bls12381G2Key2020]: 'https://w3id.org/security/suites/bls12381-2020/v1',
-}
+};
 
 export type GenerateKeyPairOptions = {
   type: VerificationType;

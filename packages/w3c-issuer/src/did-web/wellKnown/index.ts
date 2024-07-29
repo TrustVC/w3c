@@ -1,13 +1,8 @@
 import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
-import {
-  generateKeyPair
-} from './../keyPair';
+import { generateKeyPair } from './../keyPair';
 import { generateWellKnownDid, nextKeyId } from './generate';
 import { queryWellKnownDid } from './query';
-import {
-  DidPrivateKeyPair,
-  KeyPairType
-} from './types';
+import { DidPrivateKeyPair, KeyPairType } from './types';
 
 /**
  *  Issue a DID based on the input key pair.
@@ -34,9 +29,9 @@ export const issueDID = async (didInput: KeyPairType) => {
     id: `${did}#keys-${keyId}`,
     type: generatedKeyPair.type,
     controller: did,
-    seedBase58: generatedKeyPair.seedBase58!,
-    privateKeyBase58: generatedKeyPair.privateKeyBase58!,
-    publicKeyBase58: generatedKeyPair.publicKeyBase58!,
+    seedBase58: generatedKeyPair.seedBase58,
+    privateKeyBase58: generatedKeyPair.privateKeyBase58,
+    publicKeyBase58: generatedKeyPair.publicKeyBase58,
   };
 
   wellKnownDid = generateWellKnownDid({

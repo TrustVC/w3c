@@ -5,7 +5,8 @@ import { generateWellKnownDid, nextKeyId } from './generate';
 describe('generate', () => {
   const seedBase58 = 'CxBwAH4ftdc9XkLhw7DkFAESxh3NEdetMyJXKrPiAKAX';
   const privateKeyBase58 = '7e1VnFeqvMjqoq61qhGE2dgnQmgNDAYEX1FGzwywf2h7';
-  const publicKeyBase58 = '23GznFBm8BZcPM2BX7tcPfmeCAfkKKLWUWYwAj1jnu8acYhaNB892YkCDCJ1LLhXRBDpXEigx2tQYaw6EP1e1Fia83AfRUnmSA35v96ZgU3PmEd2DGqhUAXZZa4rM1gVGB9v';
+  const publicKeyBase58 =
+    '23GznFBm8BZcPM2BX7tcPfmeCAfkKKLWUWYwAj1jnu8acYhaNB892YkCDCJ1LLhXRBDpXEigx2tQYaw6EP1e1Fia83AfRUnmSA35v96ZgU3PmEd2DGqhUAXZZa4rM1gVGB9v';
   let wellKnown;
   const keyPair = {
     id: 'did:web:localhost.com#keys-2',
@@ -19,33 +20,36 @@ describe('generate', () => {
   beforeEach(() => {
     wellKnown = {
       id: 'did:web:localhost.com',
-      verificationMethod: [{
-        "type": "Bls12381G2Key2020",
-        "id": "did:web:localhost.com#keys-1",
-        "controller": "did:web:localhost.com",
-        "publicKeyBase58": "yeFTpcEiuHVwhWuBfkKfuS6UVowJciCxTL7meFXjhu1vUAk1yYf8FbTk3BjiBgiyHXasTgznidM6WTSzxBYhXwfqEGbFSZToVxbhTQ1A1HYcnUuiocFgTAoyfCvbAhijdwx"
-      }],
-      "@context": [
-        "https://www.w3.org/ns/did/v1",
-        "https://w3id.org/security/suites/bls12381-2020/v1"
+      verificationMethod: [
+        {
+          type: 'Bls12381G2Key2020',
+          id: 'did:web:localhost.com#keys-1',
+          controller: 'did:web:localhost.com',
+          publicKeyBase58:
+            'yeFTpcEiuHVwhWuBfkKfuS6UVowJciCxTL7meFXjhu1vUAk1yYf8FbTk3BjiBgiyHXasTgznidM6WTSzxBYhXwfqEGbFSZToVxbhTQ1A1HYcnUuiocFgTAoyfCvbAhijdwx',
+        },
       ],
-      assertionMethod: ["did:web:localhost.com#keys-1"],
-      authentication: ["did:web:localhost.com#keys-1"],
-      capabilityInvocation: ["did:web:localhost.com#keys-1"],
-      capabilityDelegation: ["did:web:localhost.com#keys-1"]
+      '@context': [
+        'https://www.w3.org/ns/did/v1',
+        'https://w3id.org/security/suites/bls12381-2020/v1',
+      ],
+      assertionMethod: ['did:web:localhost.com#keys-1'],
+      authentication: ['did:web:localhost.com#keys-1'],
+      capabilityInvocation: ['did:web:localhost.com#keys-1'],
+      capabilityDelegation: ['did:web:localhost.com#keys-1'],
     };
   });
 
   describe('generateWellKnownDid', () => {
     const verificationMethod = omit(keyPair, ['seedBase58', 'privateKeyBase58']);
     it('should fail to generateWellKnownDid without any input', () => {
-      const result = generateWellKnownDid({} as any)
+      const result = generateWellKnownDid({} as any);
       expect(result).toBeFalsy();
     });
 
     it('should generateWellKnownDid with keyPair - Bls12381', async () => {
       const result = generateWellKnownDid({
-        newKeyPair: keyPair
+        newKeyPair: keyPair,
       });
 
       expect(result).toBeTruthy();
@@ -58,14 +62,14 @@ describe('generate', () => {
       expect(result).toHaveProperty('capabilityInvocation');
       expect(result).toHaveProperty('capabilityDelegation');
       expect(result?.verificationMethod?.[0]).toMatchObject(verificationMethod);
-      expect(result?.['@context']).toContain("https://www.w3.org/ns/did/v1",);
-      expect(result?.['@context']).toContain("https://w3id.org/security/suites/bls12381-2020/v1");
+      expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+      expect(result?.['@context']).toContain('https://w3id.org/security/suites/bls12381-2020/v1');
     });
 
     it('should generateWellKnownDid with keyPair and wellKnown - Bls12381', async () => {
       const result = generateWellKnownDid({
         wellKnown: wellKnown,
-        newKeyPair: keyPair
+        newKeyPair: keyPair,
       });
 
       expect(result).toBeTruthy();
@@ -78,16 +82,16 @@ describe('generate', () => {
       expect(result).toHaveProperty('capabilityInvocation');
       expect(result).toHaveProperty('capabilityDelegation');
       expect(result?.verificationMethod?.[1]).toMatchObject(verificationMethod);
-      expect(result?.['@context']).toContain("https://www.w3.org/ns/did/v1",);
-      expect(result?.['@context']).toContain("https://w3id.org/security/suites/bls12381-2020/v1");
+      expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+      expect(result?.['@context']).toContain('https://w3id.org/security/suites/bls12381-2020/v1');
     });
 
     it('should generateWellKnownDid with keyPair and empty wellKnown object - Bls12381', async () => {
       const result = generateWellKnownDid({
         wellKnown: {} as any,
-        newKeyPair: keyPair
+        newKeyPair: keyPair,
       });
-      console.log('result', result)
+      console.log('result', result);
 
       expect(result).toBeTruthy();
       expect(result?.id).toBe(keyPair.controller);
@@ -99,19 +103,21 @@ describe('generate', () => {
       expect(result).toHaveProperty('capabilityInvocation');
       expect(result).toHaveProperty('capabilityDelegation');
       expect(result?.verificationMethod?.[0]).toMatchObject(verificationMethod);
-      expect(result?.['@context']).toContain("https://www.w3.org/ns/did/v1",);
-      expect(result?.['@context']).toContain("https://w3id.org/security/suites/bls12381-2020/v1");
+      expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+      expect(result?.['@context']).toContain('https://w3id.org/security/suites/bls12381-2020/v1');
     });
 
     it('should fail to generateWellKnownDid with same keyPair id and wellKnown - Bls12381', async () => {
       const duplicatedKeyPair = {
         ...keyPair,
-        id: 'did:web:localhost.com#keys-1'
+        id: 'did:web:localhost.com#keys-1',
       };
-      expect(() => generateWellKnownDid({
-        wellKnown: wellKnown,
-        newKeyPair: duplicatedKeyPair
-      })).toThrowError('Key already exists');
+      expect(() =>
+        generateWellKnownDid({
+          wellKnown: wellKnown,
+          newKeyPair: duplicatedKeyPair,
+        }),
+      ).toThrowError('Key already exists');
     });
   });
 

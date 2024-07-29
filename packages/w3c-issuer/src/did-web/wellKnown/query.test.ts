@@ -1,9 +1,7 @@
-import { queryWellKnownDid } from "./query";
-import * as query from "./query";
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { queryWellKnownDid } from './query';
 
 describe('query', () => {
-
   describe('queryWellKnownDid', () => {
     it('should fail to queryWellKnownDid without any input', async () => {
       await expect(queryWellKnownDid('')).rejects.toThrowError('Invalid / Missing domain');
@@ -19,4 +17,4 @@ describe('query', () => {
       expect(wellKnownDid).toBe(null);
     });
   });
-})
+});
