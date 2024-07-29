@@ -48,7 +48,7 @@ export const getDomainHostname = (domain: Readonly<string>): string | undefined 
   // convert domain https://example.com/part/index?id=123 to example.com
 
   if (!domain) {
-    return;
+    return undefined;
   }
 
   const url = new URL(domain);

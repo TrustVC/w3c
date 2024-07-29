@@ -1,12 +1,23 @@
+
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "moduleResolution": "Node10",
-    "declaration": false
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts"]
+    "moduleResolution": "Node10"
+    },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
 }

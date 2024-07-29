@@ -1,12 +1,11 @@
 {
   "name": "@tradetrust-tt/w3c",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "nx": {
+    "includedScripts": []
+  },
   "scripts": {
     "affected": "nx affected",
     "affected:lint": "nx affected:lint",
@@ -90,6 +89,7 @@
     "lodash": "^4.17.21",
     "multiformats": "^9.9.0",
     "tslib": "^2.6.3",
+    "vite-plugin-dts": "^4.0.0-beta.1",
     "web-did-resolver": "^2.0.27",
     "yargs": "^17.7.2"
   },

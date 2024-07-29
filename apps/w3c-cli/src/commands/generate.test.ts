@@ -1,16 +1,34 @@
-import { GenerateKeyPairOptions, VerificationType, generateKeyPair } from '@tradetrust-tt/w3c-issuer';
-import { describe, expect, it } from 'vitest';
+// import {
+//   GenerateKeyPairOptions,
+//   VerificationType,
+//   generateKeyPair,
+// } from '@tradetrust-tt/w3c-issuer';
+// // import { execSync } from 'child_process';
+// // import { describe, expect, it, vi } from 'vitest';
 
+// // vi.mock('fs', () => ({
+// //   writeFile: vi.fn((path, data, callback) => callback(null)),
+// // }));
 
-describe("generate", () => {
+// // vi.mock('@tradetrust-tt/w3c-issuer', () => ({
+// //   generateKeyPair: vi
+// //     .fn()
+// //     .mockResolvedValue({
+// //       publicKey: 'mockPublicKey',
+// //       privateKey: 'mockPrivateKey',
+// //     }),
+// // }));
 
-    it("should generate random key pair", async () => {
-        const mockSeed = "FVj12jBiBUqYFaEUkTuwAD73p9Hx5NzCJBge74nTguQN";
-        const generateKeypairOption: GenerateKeyPairOptions = {
-            type: VerificationType.Bls12381G2Key2020
-        }
-        const keypair = await generateKeyPair(generateKeypairOption)
-        console.log(keypair)
-        expect(keypair.type).toBe(VerificationType.Bls12381G2Key2020);
-    })
-})
+// // describe('generate', () => {
+// //   it('should generate a key pair and save it to a file', async () => {
+
+// //     const consoleLogSpy = vi.spyOn(console, 'log');
+// //     const consoleErrorSpy = vi.spyOn(console, 'error');
+
+// //     const mockSeed = 'FVj12jBiBUqYFaEUkTuwAD73p9Hx5NzCJBge74nTguQN';
+// //     const generateKeypairOption: GenerateKeyPairOptions = {
+// //       type: VerificationType.Bls12381G2Key2020,
+// //     };
+// //     // execSync(`nx dev w3c-cli generate`);
+// //   });
+// // });

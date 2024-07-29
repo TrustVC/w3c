@@ -43,24 +43,37 @@ export const handler = async (argv: any) => {
 
   const { encAlgo, seedBase58, keyPath } = answers;
 
-  if (seedBase58) {
-    console.log(chalk.green('Generating keys from provided seed...'));
-  }
+  await generateAndSaveKeyPair({encAlgo, seedBase58, keyPath})
+}
 
-  const keyFilePath = `${keyPath}/keypair.json`;
 
-  console.log('seed', seedBase58);
-  const keypairOptions: GenerateKeyPairOptions = {
-    type: encAlgo,
+
+export const generateAndSaveKeyPair = async ({
+    encAlgo,
     seedBase58,
-  };
-  const keypairData = await generateKeyPair(keypairOptions);
-
-  fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
-    if (err) {
-      console.error(chalk.red('Error writing file', err));
-    } else {
-      console.log(chalk.green('File written successfully'));
+    keyPath
+}: {
+    encAlgo: VerificationType;
+    seedBase58: string;
+    keyPath: string;
+}) => {
+    if (seedBase58) {
+        console.log(chalk.green("Generating keys from provided seed..."));
     }
-  });
+
+    const keyFilePath = `${keyPath}/keypair.json`;
+
+    const keypairOptions: GenerateKeyPairOptions = {
+        type: encAlgo,
+        seedBase58,
+    };
+    const keypairData = await generateKeyPair(keypairOptions);
+
+    fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
+        if (err) {
+            console.error(chalk.red("Error writing file", err));
+        } else {
+            console.log(chalk.green("File written successfully"));
+        }
+    });
 };

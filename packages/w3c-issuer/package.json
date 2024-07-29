@@ -5,17 +5,7 @@
   "main": "dist/cjs/w3c-issuer/src/index.js",
   "module": "dist/esm/w3c-issuer/src/index.js",
   "types": "dist/types/w3c-issuer/src/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "nx": {
-    "implicitDependencies": [
-      "@tradetrust-tt/w3c-utils"
-    ],
-    "tags": [
-      "type:package"
-    ]
-  },
+  "type": "module",
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",
@@ -30,23 +20,6 @@
   "license": "ISC",
   "engines": {
     "node": "18.x"
-  },
-  "exports": {
-    ".": {
-      "require": "./dist/cjs/w3c-issuer/src/index.js",
-      "import": "./dist/esm/w3c-issuer/src/index.js",
-      "types": "./dist/types/w3c-issuer/src/index.d.ts"
-    },
-    "./did-web": {
-      "require": "./dist/cjs/w3c-issuer/src/did-web/*",
-      "import": "./dist/esm/w3c-issuer/src/did-web/*",
-      "types": "./dist/types/w3c-issuer/src/did-web/*"
-    },
-    "./*": {
-      "require": "./dist/cjs/w3c-issuer/src/*.js",
-      "import": "./dist/esm/w3c-issuer/src/*.js",
-      "types": "./dist/types/w3c-issuer/src/*.d.ts"
-    }
   },
   "devDependencies": {
     "@types/node": "^18.17.0",
