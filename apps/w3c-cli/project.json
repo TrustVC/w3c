@@ -49,7 +49,7 @@
             "command": "nx build w3c-cli"
           },
           {
-            "command": "node apps/w3c-cli/dist/cjs/apps/w3c-cli/src/main.js greet a"
+            "command": "node apps/w3c-cli/dist/cjs/main.js greet a"
           }
         ],
         "parallel": false
