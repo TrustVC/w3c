@@ -10,7 +10,7 @@
     "start": "node dist/cjs/main.js",
     "dev": "ts-node src/main.ts",
     "cli": "node dist/main.js",
-    "build": "nx run w3c-cli:clean && nx run w3c-cli:build:cjs && nx run w3c-cli:build:type",
+    "build-tsc": "nx run w3c-cli:clean && nx run w3c-cli:build:cjs && nx run w3c-cli:build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs --project ./tsconfig.build.json",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
     "serve": "nx run w3c-cli:build && node dist/cjs/main.js",

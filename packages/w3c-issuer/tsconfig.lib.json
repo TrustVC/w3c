@@ -7,8 +7,8 @@
     "composite": true
   },
   "include": [
-    "src/**/*.ts", 
-    "../../packages/w3c-utils/src/**/*.ts"
+    "src/**/*.ts",
+    "../w3c-utils/src/**/*.ts"
   ],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": ["node_modules", ".coverage", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

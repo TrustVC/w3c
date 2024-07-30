@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "build1": {
+    "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "development",

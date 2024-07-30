@@ -23,7 +23,7 @@
         "assets": ["packages/w3c-issuer/*.md"]
       }
     },
-    "build": {
+    "build-vite": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["^build"],
@@ -31,7 +31,23 @@
         "outputPath": "dist/packages/w3c-issuer",
         "main": "packages/w3c-issuer/src/index.ts",
         "tsConfig": "packages/w3c-issuer/tsconfig.lib.json",
-        "assets": ["packages/w3c-issuer/*.md"]
+        "assets": ["packages/w3c-issuer/*.md"],
+        "external": ["@tradetrust-tt/w3c-utils"]
+      }
+    },
+    
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
+      "options": {
+        "outputPath": "dist",
+        "main": "packages/w3c-issuer/src/index.ts",
+        "bundle": true,
+        "tsConfig": "packages/w3c-issuer/tsconfig.lib.json",
+        "assets": ["packages/w3c-issuer/*.md"],
+        "format": ["cjs", "esm"],
+        "external": ["@tradetrust-tt/w3c-utils"]
       }
     },
     "nx-release-publish": {

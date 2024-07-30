@@ -26,7 +26,6 @@
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitest/coverage-v8": "^2.0.2",
-    "@tradetrust-tt/w3c-utils": "file:../../dist/packages/w3c-utils/index.js",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",

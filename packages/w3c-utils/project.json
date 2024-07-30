@@ -14,6 +14,19 @@
   "tags": [],
   "targets": {
     "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
+      "options": {
+        "outputPath": "dist/packages/w3c-utils",
+        "main": "packages/w3c-utils/src/index.ts",
+        "tsConfig": "packages/w3c-utils/tsconfig.lib.json",
+        "assets": ["packages/w3c-utils/*.md"],
+        "format": ["cjs", "esm"],
+        "external": ["@tradetrust-tt/w3c-utils"]
+      }
+    },
+    "build-vite": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "options": {
