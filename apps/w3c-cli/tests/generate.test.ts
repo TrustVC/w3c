@@ -33,7 +33,7 @@ describe('generate', () => {
 
     execSync(`nx dev w3c-cli generate`);
 
-    expect(true).toBe(true)
+    // expect(true).toBe(true)
     // expect(consoleLogSpy).toHaveBeenCalledWith('Public Key: mockPublicKey');
   });
 });

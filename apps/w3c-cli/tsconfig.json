@@ -3,7 +3,7 @@
   "files": [],
   "compilerOptions": {
     "module": "ESNext",
-    "types": ["node"],
+    "types": ["node", "vite/client"],
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
@@ -15,9 +15,13 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "ESNext"
-    }
+      "module": "CommonJS"
+    },
+    "ignore": [
+      "(?:^|/)node_modules/",
+      "(?:^|/)tests/"
+    ]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }
