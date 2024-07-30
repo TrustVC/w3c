@@ -4,8 +4,6 @@
 name: CI
 
 on:
-  push:
-    branches: ['main']
   pull_request:
 
 permissions:
@@ -13,22 +11,22 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  tests:
+    name: Tests
+    uses: ./.github/workflows/tests.yml
+
+  linters:
+    name: Linters
+    uses: ./.github/workflows/linters.yml
+
+  eslint-review:
+    name: ESLint Review
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: reviewdog/action-eslint@v1
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm ci
-
-      - uses: nrwl/nx-set-shas@v4
-
-      - run: npx nx affected -t lint test build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
