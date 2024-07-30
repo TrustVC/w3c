@@ -18,11 +18,11 @@
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["^build"],
       "options": {
-        "outputPath": "dist/packages/w3c-utils",
+        "outputPath": "dist",
         "main": "packages/w3c-utils/src/index.ts",
         "tsConfig": "packages/w3c-utils/tsconfig.lib.json",
         "assets": ["packages/w3c-utils/*.md"],
-        "format": ["cjs", "esm"],
+        "format": ["cjs"],
         "external": ["@tradetrust-tt/w3c-utils"]
       }
     },

@@ -2,7 +2,11 @@ import { parseMultibase } from '@tradetrust-tt/w3c-utils';
 import crypto from 'crypto';
 import { generateBls12381KeyPair } from './bls12381';
 import { generateEd25519KeyPair } from './ed25519';
-import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from './types';
+import type {GenerateKeyPairOptions} from './types'
+import {
+  GeneratedKeyPair,
+  VerificationType,
+} from './types';
 
 /**
  * Generate key pair based on the type.

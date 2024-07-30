@@ -4,3 +4,14 @@
 3. `npm run cli:exec <command>` - This runs the CLI. Specify a command as parameter
 
 
+
+## TRoubleshooting
+1. If you run into ` Cannot convert undefined or null to object`, try removing the dist folder `rm -rf dist`, `nx reset` and try again
+
+## Changelog
+30/7/24
+- Moved dist folder to project root
+- Renamed front / in @/tradetrust-tt/w3c-utils path alias
+- Add missing project.jsons and vite.config.ts for project
+- Standardise build to use esbuild instead of vite
+= Remove w3c-cli/package.json

@@ -3,6 +3,7 @@
   "env": {
     "node": true
   },
+  "ignorePatterns": ["**/*"],
   "plugins": ["@nx"],
   "extends": [
     "eslint:recommended",

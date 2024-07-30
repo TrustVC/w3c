@@ -43,11 +43,17 @@
       "options": {
         "outputPath": "dist",
         "main": "packages/w3c-issuer/src/index.ts",
-        "bundle": true,
+        "bundle": false,
         "tsConfig": "packages/w3c-issuer/tsconfig.lib.json",
         "assets": ["packages/w3c-issuer/*.md"],
-        "format": ["cjs", "esm"],
-        "external": ["@tradetrust-tt/w3c-utils"]
+        "format": ["esm"],
+        "external": ["@tradetrust-tt/w3c-utils"],
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
       }
     },
     "nx-release-publish": {

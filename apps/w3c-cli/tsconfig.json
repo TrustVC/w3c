@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "files": [],
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
+    "module": "ESNext",
     "types": ["node"],
     "outDir": "./dist",
     "strict": true,
@@ -16,7 +15,7 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "ESNext"
     }
   },
   "include": ["src/**/*"],

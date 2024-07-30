@@ -2,13 +2,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "target": "ES2015",
+    "module": "CommonJS",
     "declaration": true,
-    "types": ["node", "vite/client"],
-    "composite": true
+    "types": ["node"],
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": [
-    "src/**/*.ts",
-    "../w3c-utils/src/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": ["node_modules", ".coverage", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

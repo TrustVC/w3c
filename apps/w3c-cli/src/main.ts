@@ -4,8 +4,9 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 yargs(hideBin(process.argv))
-  .scriptName('w3c-cli')
-  .commandDir(path.join(__dirname, 'commands'), { extensions: ['ts', 'js'] })
+  .scriptName("w3c-cli")
+  // TODO: Make code ESM-compatible
+  .commandDir(path.join(__dirname, "commands"), { extensions: ["ts", "js", "cjs", "mjs"] })
   .demandCommand()
   .strict()
   .help()

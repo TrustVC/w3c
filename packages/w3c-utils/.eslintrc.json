@@ -2,5 +2,31 @@
   "extends": ["../../.eslintrc.json"],
   "ignorePatterns": ["dist", "build", "node_modules"],
   "plugins": ["@typescript-eslint"],
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.json"],
+      "parser": "jsonc-eslint-parser",
+      "rules": {
+        "@nx/dependency-checks": [
+          "error",
+          {
+            "ignoredFiles": ["{projectRoot}/esbuild.config.{js,ts,mjs,mts}"]
+          }
+        ]
+      }
+    }
+  ]
 }

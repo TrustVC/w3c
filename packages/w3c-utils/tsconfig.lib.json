@@ -1,11 +1,14 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-      "outDir": "../../dist/out-tsc",
-      "declaration": false,
-      "types": ["node", "vite/client"]
-    },
-    "include": ["src/**/*.ts"],
-    "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
-  }
-  
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "declaration": true,
+    "types": ["node", "vite/client"],
+    "target": "ES2015",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+}

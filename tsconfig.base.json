@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "CommonJS",
     "baseUrl": ".",
     "paths": {
       "@tradetrust-tt/w3c-utils": ["packages/w3c-utils/src"],
@@ -23,8 +24,11 @@
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "alwaysStrict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "skipDefaultLibCheck": true
   },
-  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "build", "tmp"]
 }

@@ -39,7 +39,17 @@
         }
       }
     },
-    "dev1": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "node dist/apps/w3c-cli/src/main.js"
+          }
+        ]
+      }
+    },
+    "dev-build": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -47,7 +57,7 @@
             "command": "nx build w3c-cli"
           },
           {
-            "command": "node apps/w3c-cli/dist/cjs/main.js greet a"
+            "command": "node dist/apps/w3c-cli/src/main.js"
           }
         ],
         "parallel": false
