@@ -44,7 +44,7 @@
       "options": {
         "commands": [
           {
-            "command": "node dist/apps/w3c-cli/src/main.js"
+            "command": "ts-node apps/w3c-cli/src/main.ts"
           }
         ]
       }
