@@ -1,5 +1,7 @@
+import * as defaultConfig from "@commitlint/config-conventional";
+
 module.exports = {
-  extends: ["@commitlint/config-conventional"],
+  extends: [defaultConfig],
 
   // Add your own rules. See http://marionebl.github.io/commitlint
   rules: {}
