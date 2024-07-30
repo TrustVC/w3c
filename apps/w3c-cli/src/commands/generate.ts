@@ -1,8 +1,8 @@
 import {
   generateKeyPair,
-  GenerateKeyPairOptions,
   VerificationType,
 } from '@tradetrust-tt/w3c-issuer';
+import type {GenerateKeyPairOptions} from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';

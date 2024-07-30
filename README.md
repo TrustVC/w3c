@@ -7,6 +7,7 @@
 
 ## TRoubleshooting
 1. If you run into ` Cannot convert undefined or null to object`, try removing the dist folder `rm -rf dist`, `nx reset` and try again
+2. `[ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /Users/khanghou/Documents/Code/tradetrust/w3c/apps/w3c-cli/src/main.ts` - Becuase package.json has type=module
 
 ## Changelog
 30/7/24

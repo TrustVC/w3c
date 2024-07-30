@@ -2,10 +2,8 @@
   "name": "@tradetrust-tt/w3c-issuer",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/cjs/w3c-issuer/src/index.js",
-  "module": "dist/esm/w3c-issuer/src/index.js",
-  "types": "dist/types/w3c-issuer/src/index.d.ts",
-  "type": "module",
+  "type": "commonjs",
+  "main": "./index.cjs",
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",

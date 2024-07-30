@@ -23,7 +23,13 @@
         "tsConfig": "packages/w3c-utils/tsconfig.lib.json",
         "assets": ["packages/w3c-utils/*.md"],
         "format": ["cjs"],
-        "external": ["@tradetrust-tt/w3c-utils"]
+        "external": ["@tradetrust-tt/w3c-utils"],
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
       }
     },
     "build-vite": {

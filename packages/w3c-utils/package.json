@@ -2,8 +2,8 @@
     "name": "@tradetrust-tt/w3c-utils",
     "version": "1.0.0",
     "description": "",
-    "main": "./index.js",
-    "type": "module",
+    "type": "commonjs",
+    "main": "./index.cjs",
     "scripts": {
       "lint": "npx eslint . --color --format=table --max-warnings=0",
       "clean": "rm -rf dist/"

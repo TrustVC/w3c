@@ -46,7 +46,7 @@
         "bundle": false,
         "tsConfig": "packages/w3c-issuer/tsconfig.lib.json",
         "assets": ["packages/w3c-issuer/*.md"],
-        "format": ["esm"],
+        "format": ["cjs"],
         "external": ["@tradetrust-tt/w3c-utils"],
         "esbuildOptions": {
           "sourcemap": true,
