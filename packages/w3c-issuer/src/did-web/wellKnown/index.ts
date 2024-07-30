@@ -1,5 +1,7 @@
-import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
-import { generateKeyPair } from './../keyPair';
+import { getDomainHostname } from '@tradetrust-tt/w3c-utils';
+import {
+  generateKeyPair
+} from './../keyPair';
 import { generateWellKnownDid, nextKeyId } from './generate';
 import { queryWellKnownDid } from './query';
 import { DidPrivateKeyPair, KeyPairType } from './types';

@@ -16,7 +16,7 @@ export const generateWellKnownDid = ({
   newKeyPair: DidKeyPair;
 }): DidWellKnownDocument | undefined => {
   if (!newKeyPair) {
-    return;
+    return undefined;
   }
 
   if (!wellKnown) {

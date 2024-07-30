@@ -1,4 +1,4 @@
-import { parseMultibase } from '@/tradetrust-tt/w3c-utils';
+import { parseMultibase } from '@tradetrust-tt/w3c-utils';
 import crypto from 'crypto';
 import { generateBls12381KeyPair } from './bls12381';
 import { generateEd25519KeyPair } from './ed25519';

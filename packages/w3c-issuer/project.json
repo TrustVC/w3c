@@ -26,6 +26,7 @@
     "build": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
       "options": {
         "outputPath": "dist/packages/w3c-issuer",
         "main": "packages/w3c-issuer/src/index.ts",

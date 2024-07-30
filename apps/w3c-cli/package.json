@@ -22,7 +22,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@tradetrust-tt/w3c-issuer": "*",
+    "@tradetrust-tt/w3c-issuer": "file:../../dist/packages/w3c-issuer/index.js",
     "@types/yargs": "^17.0.32",
     "chalk": "^4.1.2",
     "inquirer": "^10.0.1",
