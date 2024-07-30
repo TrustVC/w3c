@@ -42,5 +42,5 @@ jobs:
           fetch-depth: 0
 
       - name: Install Commit Lint Dependencies
-        run: npm install @commitlint/config-conventional
+        run: npm install -D @commitlint/config-conventional
       - uses: JulienKode/pull-request-name-linter-action@v0.5.0
