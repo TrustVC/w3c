@@ -28,7 +28,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: git checkout HEAD^
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - uses: reviewdog/action-eslint@v1
         with:
