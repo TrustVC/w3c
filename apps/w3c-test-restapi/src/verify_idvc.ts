@@ -6,7 +6,7 @@ import {
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
 import { generateKeyPair, issueDID, VerificationType } from '@tradetrust-tt/w3c-issuer';
-import { } from '@transmute/bbs-bls12381-signature-2020';
+import {} from '@transmute/bbs-bls12381-signature-2020';
 import { Resolver } from 'did-resolver';
 import { extendContextLoader, purposes, sign, verify } from 'jsonld-signatures';
 import * as web from 'web-did-resolver';

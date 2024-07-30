@@ -1,10 +1,10 @@
-import inquirer from 'inquirer';
-import { Argv } from 'yargs';
-import fs from 'fs';
 import { issueDID, KeyPairType } from '@tradetrust-tt/w3c-issuer';
+import fs from 'fs';
+import inquirer from 'inquirer';
 
 export const command = 'generate-did';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const keypairQuestions: any = [
   {
     name: 'keyPairPath',
@@ -13,6 +13,7 @@ const keypairQuestions: any = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
   {
     name: 'domainName',
@@ -31,7 +32,7 @@ export const describe = 'Generate a new DID token file from a key pair file and 
 
 // export const builder = (yargs: Argv) => {};
 
-export const handler = async (argv: any) => {
+export const handler = async () => {
   // const answers = await inquirer.prompt(questions);
   const { keyPairPath } = await inquirer.prompt(keypairQuestions);
 

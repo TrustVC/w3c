@@ -6,15 +6,15 @@ import {
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-import { Argv } from 'yargs';
 
 export const command = 'generate';
 
-const encAlgos: any = [
+const encAlgos: VerificationType[] = [
   VerificationType.Bls12381G2Key2020,
   VerificationType.Ed25519VerificationKey2018,
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
   {
     name: 'encAlgo',
@@ -38,7 +38,7 @@ const questions: any = [
 
 export const describe = 'Generate a new key pair file';
 // export const builder = (yargs: Argv) => { };
-export const handler = async (argv: any) => {
+export const handler = async () => {
   const answers = await inquirer.prompt(questions);
 
   const { encAlgo, seedBase58, keyPath } = answers;
