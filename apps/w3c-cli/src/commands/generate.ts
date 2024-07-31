@@ -1,12 +1,17 @@
 import {
   generateKeyPair,
-  GenerateKeyPairOptions,
   VerificationType,
 } from '@tradetrust-tt/w3c-issuer';
+import type {GenerateKeyPairOptions} from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-import { Argv } from 'yargs';
+
+export type GenerateInput = {
+  encAlgo: VerificationType;
+  seedBase58: string;
+  keyPath: string;
+};
 
 export const command = 'generate';
 
@@ -41,26 +46,38 @@ export const describe = 'Generate a new key pair file';
 export const handler = async (argv: any) => {
   const answers = await inquirer.prompt(questions);
 
-  const { encAlgo, seedBase58, keyPath } = answers;
+  const { encAlgo, seedBase58, keyPath } = answers
 
-  if (seedBase58) {
-    console.log(chalk.green('Generating keys from provided seed...'));
-  }
+  await generateAndSaveKeyPair({encAlgo, seedBase58, keyPath})
+}
 
-  const keyFilePath = `${keyPath}/keypair.json`;
+export const promptQuestions = async () => {
+  const answers = await inquirer.prompt(questions);
+  return answers;
+}
 
-  console.log('seed', seedBase58);
-  const keypairOptions: GenerateKeyPairOptions = {
-    type: encAlgo,
+export const generateAndSaveKeyPair = async ({
+    encAlgo,
     seedBase58,
-  };
-  const keypairData = await generateKeyPair(keypairOptions);
-
-  fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
-    if (err) {
-      console.error(chalk.red('Error writing file', err));
-    } else {
-      console.log(chalk.green('File written successfully'));
+    keyPath
+}: GenerateInput) => {
+    if (seedBase58) {
+        console.log(chalk.green("Generating keys from provided seed..."));
     }
-  });
+
+    const keyFilePath = `${keyPath}/keypair.json`;
+
+    const keypairOptions: GenerateKeyPairOptions = {
+        type: encAlgo,
+        seedBase58,
+    };
+    const keypairData = await generateKeyPair(keypairOptions);
+
+    fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
+        if (err) {
+            console.error(chalk.red("Error writing file", err));
+        } else {
+            console.log(chalk.green(`File written successfully ${keyFilePath}`));
+        }
+    });
 };
