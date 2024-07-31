@@ -39,14 +39,15 @@ const questions: any = [
 export const describe = 'Generate a new key pair file';
 // export const builder = (yargs: Argv) => { };
 export const handler = async (argv: any) => {
-  const answers = await inquirer.prompt(questions);
-
-  const { encAlgo, seedBase58, keyPath } = answers;
+  const { encAlgo, seedBase58, keyPath } = await promptQuestions();
 
   await generateAndSaveKeyPair({encAlgo, seedBase58, keyPath})
 }
 
-
+export const promptQuestions = async () => {
+  const answers = await inquirer.prompt(questions);
+  return answers;;
+}
 
 export const generateAndSaveKeyPair = async ({
     encAlgo,

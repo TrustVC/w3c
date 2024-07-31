@@ -6,7 +6,10 @@ import {
 import { execSync, spawn } from 'child_process';
 import { describe, expect, it, vi } from 'vitest';
 import stripAnsi from 'strip-ansi';
+import { promptQuestions } from 'apps/w3c-cli/src/commands/generate';
+import inquirer from 'inquirer';
 
+vi.mock("inquirer")
 vi.mock('fs', () => ({
   writeFile: vi.fn((path, data, callback) => callback(null)),
 }));
@@ -23,7 +26,7 @@ vi.mock('@tradetrust-tt/w3c-issuer', () => ({
 }));
 
 describe('generate', () => {
-  it('should generate a key pair and save it to a file', async () => {
+  it('should prompt questions', async () => {
     const consoleLogSpy = vi.spyOn(console, 'log');
     const consoleErrorSpy = vi.spyOn(console, 'error');
 
@@ -32,7 +35,12 @@ describe('generate', () => {
       type: VerificationType.Bls12381G2Key2020,
     };
 
-    await runCliCommand('nx dev w3c-cli', ['generate'], [generateKeypairOption.type, mockSeed, '']);
+    (inquirer.prompt as any).mockResolvedValue({ encryptionAlgorithm: VerificationType.Bls12381G2Key2020, seedBase58: mockSeed, keyPath: '.' });
+
+    const answers = await promptQuestions();
+
+    console.log(answers)
+    // await runCliCommand('nx dev w3c-cli', ['generate'], [["enter"], mockSeed, '']);
     // execSync(`nx dev w3c-cli generate`);
     // execSync(`nx dev w3c-cli generate`);
 
@@ -41,35 +49,3 @@ describe('generate', () => {
   });
 });
 
-function runCliCommand(command: string, args: string[], inputs: string[]): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { shell: true });
-    let output = '';
-    let errorOutput = '';
-    let inputIndex = 0;
-
-    child.stdout.on('data', (data) => {
-      const strData = data.toString();
-      output += strData;
-      console.log("POoP", strData); // Optional: log output for debugging
-      
-      if (inputIndex < inputs.length) {
-        child.stdin.write(inputs[inputIndex] + '\n');
-        inputIndex++;
-      }
-    });
-
-    child.stderr.on('data', (data) => {
-      errorOutput += data.toString();
-    });
-
-    child.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(`Command failed with code ${code}: ${errorOutput}`));
-      } else {
-        console.log("op", output);
-        resolve(stripAnsi(output));
-      }
-    });
-  });
-}

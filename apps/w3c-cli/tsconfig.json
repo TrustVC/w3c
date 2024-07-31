@@ -24,7 +24,7 @@
     "transpileOnly": true,
     "ignore": [
       "(?:^|/)node_modules/",
-      "(?:^|/)tests/"
+      "\\.test\\.ts$"
     ]
   },
   "include": ["src/**/*", "tests/**/*"],

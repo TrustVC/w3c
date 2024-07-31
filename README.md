@@ -15,4 +15,4 @@
 - Renamed front / in @/tradetrust-tt/w3c-utils path alias
 - Add missing project.jsons and vite.config.ts for project
 - Standardise build to use esbuild instead of vite
-= Remove w3c-cli/package.json
+- Remove w3c-cli/package.json
