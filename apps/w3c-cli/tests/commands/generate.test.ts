@@ -6,7 +6,7 @@ import {
 import { execSync, spawn } from 'child_process';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import stripAnsi from 'strip-ansi';
-import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from './generate';
+import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from '../../src/commands/generate';
 import inquirer from 'inquirer';
 import fs from 'fs';
 
