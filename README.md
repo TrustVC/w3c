@@ -1,13 +1,15 @@
 ## Starting the CLI local build 
-1. `npm run cli:install` - This installs all packages for the CLI app
-2. `npm run cli:dev` - This listens to the w3c-cli src/ folder for any changes and rebuilds the files into the dist/ folder at the root level
-3. `npm run cli:exec <command>` - This runs the CLI. Specify a command as parameter
+1. `npm install` - This installs all packages for the CLI app
+- Note: You might need to cd into the individual packages in the packages/ folder to install dependencies there
+2. `nx build w3c-cli` - This builds all required dependencies for the CLI app, including its local dependencies in the same repo
+3. `npm run cli:dev <command>` - This runs the CLI. Specify a command as parameter
 
 
 
 ## TRoubleshooting
 1. If you run into ` Cannot convert undefined or null to object`, after running `nx reset`, try waiting for a few seconds
 2. `[ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /Users/khanghou/Documents/Code/tradetrust/w3c/apps/w3c-cli/src/main.ts` - Becuase package.json has type=module
+3. We currently cannot run the CLI app via NX as it cannot handle user input like with `inquirer`. Instead, run it directly via `node dist/main.js` or `ts-node apps/w3c-cli/src/main.ts`
 
 ## Changelog
 30/7/24
