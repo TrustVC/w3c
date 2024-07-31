@@ -8,6 +8,12 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import { Argv } from 'yargs';
 
+export type GenerateInput = {
+  encAlgo: VerificationType;
+  seedBase58: string;
+  keyPath: string;
+};
+
 export const command = 'generate';
 
 const encAlgos: any = [
@@ -53,11 +59,7 @@ export const generateAndSaveKeyPair = async ({
     encAlgo,
     seedBase58,
     keyPath
-}: {
-    encAlgo: VerificationType;
-    seedBase58: string;
-    keyPath: string;
-}) => {
+}: GenerateInput) => {
     if (seedBase58) {
         console.log(chalk.green("Generating keys from provided seed..."));
     }
