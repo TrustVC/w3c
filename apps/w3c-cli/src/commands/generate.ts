@@ -45,14 +45,16 @@ const questions: any = [
 export const describe = 'Generate a new key pair file';
 // export const builder = (yargs: Argv) => { };
 export const handler = async (argv: any) => {
-  const { encAlgo, seedBase58, keyPath } = await promptQuestions();
+  const answers = await inquirer.prompt(questions);
+
+  const { encAlgo, seedBase58, keyPath } = answers
 
   await generateAndSaveKeyPair({encAlgo, seedBase58, keyPath})
 }
 
 export const promptQuestions = async () => {
   const answers = await inquirer.prompt(questions);
-  return answers;;
+  return answers;
 }
 
 export const generateAndSaveKeyPair = async ({
@@ -76,7 +78,7 @@ export const generateAndSaveKeyPair = async ({
         if (err) {
             console.error(chalk.red("Error writing file", err));
         } else {
-            console.log(chalk.green("File written successfully"));
+            console.log(chalk.green(`File written successfully ${keyFilePath}`));
         }
     });
 };

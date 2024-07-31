@@ -18,7 +18,7 @@
     "clean": "nx clear-cache && nx run-many --target=clean",
     "dev": "nx run-many --target=dev",
     "cli:install": "npm install --prefix apps/w3c-cli",
-    "cli:dev": "npm run dev --prefix apps/w3c-cli",
+    "cli:dev": "ts-node apps/w3c-cli/src/main.ts",
     "cli:exec": "npm run cli --prefix apps/w3c-cli"
   },
   "devDependencies": {
@@ -89,7 +89,6 @@
     "express": "^4.19.2",
     "inquirer": "^10.1.2",
     "jsonld-signatures": "^11.2.1",
-    "keypress": "^0.2.1",
     "lodash": "^4.17.21",
     "multiformats": "^9.9.0",
     "strip-ansi": "^7.1.0",

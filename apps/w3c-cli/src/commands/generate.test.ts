@@ -4,9 +4,9 @@ import {
   generateKeyPair,
 } from '@tradetrust-tt/w3c-issuer';
 import { execSync, spawn } from 'child_process';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import stripAnsi from 'strip-ansi';
-import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from '../../src/commands/generate';
+import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from './generate';
 import inquirer from 'inquirer';
 import fs from 'fs';
 
@@ -32,6 +32,11 @@ const generateKeypairOption: GenerateKeyPairOptions = {
 };
 
 describe('generate', () => {
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  
   it('should prompt questions and obtain answers', async () => {
     
 
@@ -50,7 +55,7 @@ describe('generate', () => {
     expect(answers.keyPath).toBe('.');
   });
 
-  it("should generate and save keypair file", async () => {
+  it("should save keypair file", async () => {
     const input: GenerateInput = { 
       encAlgo: generateKeypairOption.type, 
       seedBase58: mockSeed, 
@@ -61,10 +66,7 @@ describe('generate', () => {
     });
     await generateAndSaveKeyPair(input)
 
-
-    // expect(writeFileMock).toHaveBeenCalledWith()
     expect(writeFileMock).toHaveBeenCalled()
-    // expect(inquirer.prompt).toHaveBeenCalled();
   })
 });
 
