@@ -4,5 +4,6 @@
     "paths": {
       "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer"]
     }
-  }
+  },
+  "exclude": ["tests"]
 }

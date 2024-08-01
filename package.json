@@ -82,6 +82,7 @@
     "ethr-did-resolver": "^10.1.9",
     "express": "^4.19.2",
     "inquirer": "^10.1.2",
+    "jsdom": "^24.1.1",
     "jsonld-signatures": "^11.2.1",
     "lodash": "^4.17.21",
     "multiformats": "^9.9.0",
