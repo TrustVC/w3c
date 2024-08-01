@@ -16,7 +16,7 @@ const keypairQuestions: any = [
   {
     name: 'keyPairPath',
     type: 'input',
-    message: 'Enter the path of your key pair JSON?',
+    message: 'Please enter the path to your key pair JSON file:',
   },
 ];
 
@@ -25,12 +25,12 @@ const questions: any = [
   {
     name: 'domainName',
     type: 'input',
-    message: 'What is your domain name? (https://example.com)',
+    message: 'Please enter your domain name (e.g., https://example.com):',
   },
   {
     name: 'outputPath',
     type: 'input',
-    message: 'Enter a path to save the DID token file (default: ./wellknown.json)',
+    message: 'Please specify a directory path to save the DID token file (optional):',
     default: '.',
   },
 ];
@@ -48,7 +48,7 @@ export const handler = async (argv: any) => {
     await saveIssuedDid(did, keypairData, outputPath);
     // Write the wellknown data to a file
   } catch (err) {
-    console.error(chalk.red('Error generating DID token:'), err);
+    console.error(chalk.red('Error generating DID token'));
   }
 };
 
@@ -87,7 +87,7 @@ export const promptQuestions = async () => {
 
     return { keypairData, domainName, outputPath };
   } catch (err) {
-    console.error(chalk.red('Error during prompts or reading key pair file:'), err);
+    console.error(chalk.red('Error during prompts or reading key pair file'));
     throw err; // Re-throw error to handle it in the main handler
   }
 };

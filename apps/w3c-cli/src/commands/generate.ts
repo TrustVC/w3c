@@ -26,18 +26,18 @@ const questions: any = [
     name: 'encAlgo',
     type: 'list',
     choices: encAlgos,
-    message: 'Select an encryption algorithm',
+    message: 'Please select an encryption algorithm:',
   },
   {
     name: 'seedBase58',
     type: 'input',
-    message: 'Enter a seed in base58 format (optional)',
+    message: 'Please enter a seed in base58 format (optional):',
     default: '',
   },
   {
     name: 'keyPath',
     type: 'input',
-    message: 'Enter a path to save the key files (default: .)',
+    message: 'Please specify a directory to save your key file (optional):',
     default: '.',
   },
 ];
