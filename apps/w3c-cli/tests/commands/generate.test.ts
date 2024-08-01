@@ -5,7 +5,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import inquirer from 'inquirer';
 import fs from 'fs';
-import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from './generate';
+import { generateAndSaveKeyPair, GenerateInput, promptQuestions } from '../../src/commands/generate';
 
 vi.mock("inquirer")
 vi.mock('fs');
