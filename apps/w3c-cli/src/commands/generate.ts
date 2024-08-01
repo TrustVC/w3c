@@ -81,12 +81,10 @@ export const generateAndSaveKeyPair = async ({
         seedBase58,
     };
     const keypairData = await generateKeyPair(keypairOptions);
-
-    fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
-        if (err) {
-            console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
-        } else {
-            console.log(chalk.green(`File written successfully to ${keyFilePath}`));
-        }
-    });
+    try {
+        fs.writeFileSync(keyFilePath, JSON.stringify(keypairData));
+        console.log(chalk.green(`File written successfully to ${keyFilePath}`));
+    } catch (err) {
+        console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
+    }
 };
