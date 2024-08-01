@@ -77,8 +77,9 @@ export const generateAndSaveKeyPair = async ({
     fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
         if (err) {
             console.error(chalk.red("Error writing file", err));
+            throw err
         } else {
-            console.log(chalk.green(`File written successfully ${keyFilePath}`));
+            console.log(chalk.green(`File written successfully to ${keyFilePath}`));
         }
     });
 };
