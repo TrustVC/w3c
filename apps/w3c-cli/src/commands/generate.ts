@@ -44,8 +44,9 @@ const questions: any = [
 
 export const describe = 'Generate a new key pair file';
 // export const builder = (yargs: Argv) => { };
-export const handler = async () => {
-  const answers = await inquirer.prompt(questions);
+export const handler = async (argv: any) => {
+  const answers = await promptQuestions();
+  if (!answers) return;
 
   const { encAlgo, seedBase58, keyPath } = answers
 
@@ -54,6 +55,13 @@ export const handler = async () => {
 
 export const promptQuestions = async () => {
   const answers = await inquirer.prompt(questions);
+
+  try {
+    fs.readdirSync(answers.keyPath, {encoding: "utf-8"});
+  } catch (err) {
+    console.error(chalk.red(`Invalid file path provided: ${answers.keyPath}`))
+    return;
+  }
   return answers;
 }
 
@@ -63,7 +71,7 @@ export const generateAndSaveKeyPair = async ({
     keyPath
 }: GenerateInput) => {
     if (seedBase58) {
-        console.log(chalk.green("Generating keys from provided seed..."));
+        console.log(chalk.blue("Generating keys from provided seed..."));
     }
 
     const keyFilePath = `${keyPath}/keypair.json`;
@@ -76,8 +84,7 @@ export const generateAndSaveKeyPair = async ({
 
     fs.writeFile(keyFilePath, JSON.stringify(keypairData), (err) => {
         if (err) {
-            console.error(chalk.red("Error writing file", err));
-            throw err
+            console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
         } else {
             console.log(chalk.green(`File written successfully to ${keyFilePath}`));
         }
