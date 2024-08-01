@@ -45,18 +45,22 @@ export const handler = async (argv: any) => {
       
     // Issue the DID
     const did = await issueDID(keypairData);
-
+    await saveIssuedDid(did, keypairData, outputPath);
     // Write the wellknown data to a file
-    const wellknownPath = `${outputPath}/wellknown.json`;
-    writeFile(wellknownPath, did.wellKnownDid);
-    const keypairsPath = `${outputPath}/keypairs.json`;
-    writeFile(keypairsPath, did.keyPairs);
   } catch (err) {
     console.error(chalk.red('Error generating DID token:'), err);
   }
 };
 
-export const writeFile = (path: string, data: any) => {
+export const saveIssuedDid = async (wellKnownDid, keyPairs, outputPath) => {
+  const wellknownPath = `${outputPath}/wellknown.json`;
+  writeFile(wellknownPath, wellKnownDid);
+  const keypairsPath = `${outputPath}/keypairs.json`;
+  writeFile(keypairsPath, keyPairs);
+}
+
+
+const writeFile = (path: string, data: any) => {
   fs.writeFile(path, JSON.stringify(data), (err) => {
     if (err) {
       console.error(chalk.red('Error writing file'), err);
