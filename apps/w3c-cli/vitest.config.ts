@@ -7,10 +7,7 @@ export default defineConfig({
     'import.meta.vitest': 'undefined',
   },
   plugins: [
-    nxViteTsPaths(),
-    tsconfigPaths({
-      projects: ['./tsconfig.test.json'],
-    }),
+    nxViteTsPaths()
   ],
   test: {
     cache: {
