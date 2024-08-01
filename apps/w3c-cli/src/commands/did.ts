@@ -3,6 +3,12 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
+export type IssueDidInput = {
+  keyPairPath: string;
+  domainName: string;
+  outputPath: string;
+};
+
 export const command = 'generate-did';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,17 +44,19 @@ export const handler = async (argv: any) => {
     const {keypairData, domainName, outputPath, } = await promptQuestions();
       
     // Issue the DID
-    const wellknown = await issueDID(keypairData);
+    const did = await issueDID(keypairData);
 
     // Write the wellknown data to a file
     const wellknownPath = `${outputPath}/wellknown.json`;
-    writeFile(wellknownPath, wellknown);
+    writeFile(wellknownPath, did.wellKnownDid);
+    const keypairsPath = `${outputPath}/keypairs.json`;
+    writeFile(keypairsPath, did.keyPairs);
   } catch (err) {
     console.error(chalk.red('Error generating DID token:'), err);
   }
 };
 
-const writeFile = (path: string, data: any) => {
+export const writeFile = (path: string, data: any) => {
   fs.writeFile(path, JSON.stringify(data), (err) => {
     if (err) {
       console.error(chalk.red('Error writing file'), err);
@@ -59,8 +67,7 @@ const writeFile = (path: string, data: any) => {
 };
 
 
-
-const promptQuestions = async () => {
+export const promptQuestions = async () => {
   try {
     // Prompt for the key pair path
     const { keyPairPath } = await inquirer.prompt(keypairQuestions);
@@ -71,6 +78,8 @@ const promptQuestions = async () => {
 
     // Prompt for the domain name and output path
     const { domainName, outputPath } = await inquirer.prompt(questions);
+    
+    keypairData.domain = domainName;
 
     return { keypairData, domainName, outputPath };
   } catch (err) {
