@@ -18,52 +18,54 @@ describe("did", () => {
         vi.clearAllMocks();
     })
 
-    it("should return correct answers for valid file path", async () => {
-        const input: IssueDidInput = {
-            keyPairPath: './keypair.json',
-            domainName: 'https://example.com',
-            outputPath: ''
-        };
-        const mockKeypairData = {};
-        (inquirer.prompt as any).mockResolvedValue(input);;
-        // Mocks the readFileSync function so that it successfully reads a file
-        (fs.readFileSync as any).mockReturnValue(JSON.stringify(mockKeypairData));
-        
-        const answers = await promptQuestions();
+    describe("promptQuestions", () => {
+        it("should return correct answers for valid file path", async () => {
+            const input: IssueDidInput = {
+                keyPairPath: './keypair.json',
+                domainName: 'https://example.com',
+                outputPath: ''
+            };
+            const mockKeypairData = {};
+            (inquirer.prompt as any).mockResolvedValue(input);;
+            // Mocks the readFileSync function so that it successfully reads a file
+            (fs.readFileSync as any).mockReturnValue(JSON.stringify(mockKeypairData));
+            
+            const answers = await promptQuestions();
+    
+            expect(answers.domainName).toBe(input.domainName);
+            expect(answers.outputPath).toBe(input.outputPath);
+    
+            const expectedKeypairData = {
+                ...mockKeypairData,
+                domain: answers.domainName
+            }
+            expect(answers.keypairData).toStrictEqual(expectedKeypairData);
+        })
+    
+        it("should throw error for invalid file path", async () => {
+            const input: IssueDidInput = {
+                keyPairPath: './keypair.json',
+                domainName: 'https://example.com',
+                outputPath: ''
+            };
+            (inquirer.prompt as any).mockResolvedValue(input);;
+            
+            await expect(promptQuestions()).rejects.toThrowError()
+        })
 
-        expect(answers.domainName).toBe(input.domainName);
-        expect(answers.outputPath).toBe(input.outputPath);
-
-        const expectedKeypairData = {
-            ...mockKeypairData,
-            domain: answers.domainName
-        }
-        expect(answers.keypairData).toStrictEqual(expectedKeypairData);
     })
 
-    it("should return correct answers for invalid file path", async () => {
-        const input: IssueDidInput = {
-            keyPairPath: './keypair.json',
-            domainName: 'https://example.com',
-            outputPath: ''
-        };
-        (inquirer.prompt as any).mockResolvedValue(input);;
-        
-        try {
-            await promptQuestions();
-            assert.fail("Should throw an error")
-        } catch (err) {
-            expect(err).toBeInstanceOf(Error);
-        }
+
+    describe("saveIssuedDid", () => {
+        it("should write files successfully", async() => {
+            const writeFileMock = vi.spyOn(fs, 'writeFile').mockImplementation((path, data, callback) => {
+                callback(null);
+            });
+
+            await saveIssuedDid({}, {}, "./");
+
+            expect(writeFileMock).toHaveBeenCalledTimes(2);
+        })
     })
 
-    it("should write files successfully", async() => {
-        const writeFileMock = vi.spyOn(fs, 'writeFile').mockImplementation((path, data, callback) => {
-            callback(null);
-        });
-
-        await saveIssuedDid({}, {}, "./");
-
-        expect(writeFileMock).toHaveBeenCalledTimes(2);
-    })
 })
