@@ -106,7 +106,7 @@ export const promptQuestions = async () => {
     try {
       fs.readdirSync(outputPath, { encoding: 'utf-8' });
     } catch (err) {
-      console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
+    console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
     return;
   }
     keypairData.domain = domainName;
