@@ -88,12 +88,10 @@ export const generateAndSaveKeyPair = async ({
       if (err instanceof Error) {
         if (err.message == "Non-base58btc character") {
           console.error(chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'));
-        } else {
-          console.error(chalk.red('Error generating keypair'));
+          return;
         }
-      } else {
-        console.error(chalk.red('Error generating keypair'));
       }
+      console.error(chalk.red('Error generating keypair'));
       return;
     }
 

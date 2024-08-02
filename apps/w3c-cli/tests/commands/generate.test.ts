@@ -82,24 +82,24 @@ describe('generate', () => {
         })
 
         // NOTE: Currently doesn't work because we automatically resolve the value without being able to trigger inquirer's default values
-        // it("should use defaults for optional inputs", async () => {
-        //     const input1: GenerateInput = {
-        //         encAlgo: generateKeypairOption.type,
-        //         seedBase58: undefined,
-        //         keyPath: undefined
-        //     };
+        it("should use defaults for optional inputs", async () => {
+            const input1: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: undefined,
+                keyPath: undefined
+            };
 
-        //     (inquirer.prompt as any).mockResolvedValue({
-        //         encAlgo: generateKeypairOption.type,
-        //     });
+            (inquirer.prompt as any).mockResolvedValue({
+                encAlgo: generateKeypairOption.type,
+            });
 
-        //     const answers = await promptQuestions();
-        //     console.log(answers)
+            const answers = await promptQuestions();
+            console.log(answers)
     
-        //     expect(answers.encAlgo).toBe(generateKeypairOption.type);
-        //     expect(answers.seedBase58).toBe('');
-        //     expect(answers.keyPath).toBe('.');
-        // })
+            expect(answers.encAlgo).toBe(generateKeypairOption.type);
+            expect(answers.seedBase58).toBeFalsy();
+            expect(answers.keyPath).toBeFalsy();
+        })
 
     })
 
@@ -125,7 +125,7 @@ describe('generate', () => {
             expect(writeFileMock).toHaveBeenCalledTimes(1)
         })
 
-        it("should use seed to generate and save save keypair file", async () => {
+        it("should use seed to generate and save same keypair file", async () => {
             // Mock function
 
             const input: GenerateInput = { 
@@ -140,6 +140,7 @@ describe('generate', () => {
             await generateAndSaveKeyPair(input)
 
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.blue("Generating keys from provided seed..."));
+            // TODO: Check if write file mock has been called with given parameters
             expect(writeFileMock).toHaveBeenCalledTimes(1);
         })
 
@@ -159,7 +160,7 @@ describe('generate', () => {
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red("Invalid seed provided. Please provide a valid seed in base58 format."));
         })
 
-        // TODO: Unable to currently mock generateKeyPair function to throw a generic error
+        // TODO: Unable to currently mock generateKeyPair function to throw a generic error.
         // it("should throw generic error if generateKeyPair fails", async () => {
         //     // Mock function
 
