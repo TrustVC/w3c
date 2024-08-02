@@ -108,7 +108,7 @@ export const promptQuestions = async () => {
     } catch (err) {
       console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
       return;
-    }
+  }
     keypairData.domain = domainName;
 
     return { keypairData, domainName, outputPath };
