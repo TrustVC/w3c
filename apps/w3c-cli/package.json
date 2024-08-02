@@ -34,7 +34,7 @@
   "dependencies": {
     "@tradetrust-tt/w3c-issuer": "*",
     "@types/yargs": "^17.0.32",
-    "@vitest/coverage-v8": "^2.0.5",
+    "@vitest/coverage-v8": "^2.0.2",
     "chalk": "^4.1.2",
     "inquirer": "^10.0.1",
     "yargs": "^17.7.2"
