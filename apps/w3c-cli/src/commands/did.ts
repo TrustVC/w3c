@@ -42,7 +42,6 @@ export const describe = 'Generate a new DID token file from a key pair file and 
 export const handler = async (argv: any) => {
   const answers = await promptQuestions();
   if (!answers) return;
-  
   const { keypairData, domainName, outputPath } = answers;
   const did = await getIssuedDid(keypairData);
   if (!did) return;
