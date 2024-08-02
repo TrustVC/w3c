@@ -40,16 +40,28 @@ export const describe = 'Generate a new DID token file from a key pair file and 
 // export const builder = (yargs: Argv) => {};
 
 export const handler = async (argv: any) => {
+  const answers = await promptQuestions();
+  if (!answers) return;
+  
+  const {keypairData, domainName, outputPath} = answers;
+  
+  let did;
   try {
-    const {keypairData, domainName, outputPath, } = await promptQuestions();
-      
     // Issue the DID
     const did = await issueDID(keypairData);
-    await saveIssuedDid(did, keypairData, outputPath);
-    // Write the wellknown data to a file
   } catch (err) {
-    console.error(chalk.red('Error generating DID token'));
+    if (err instanceof Error) {
+      if (err.message == "Invalid / Missing domain") {
+        console.error(chalk.red('Error generating DID token: Invalid / Missing domain'));
+      } else {
+        console.error(chalk.red('Error generating DID token'));
+      }
+    }
+    return;
   }
+
+  await saveIssuedDid(did, keypairData, outputPath);
+    // Write the wellknown data to a file
 };
 
 export const saveIssuedDid = async (wellKnownDid, keyPairs, outputPath) => {
@@ -61,33 +73,40 @@ export const saveIssuedDid = async (wellKnownDid, keyPairs, outputPath) => {
 
 
 const writeFile = (path: string, data: any) => {
-  fs.writeFile(path, JSON.stringify(data), (err) => {
-    if (err) {
-      console.error(chalk.red('Error writing file'), err);
-    } else {
-      console.log(chalk.green('File written successfully to'), path);
-    }
-  });
+  try {
+    fs.writeFileSync(path, JSON.stringify(data));
+    console.log(chalk.green(`File written successfully to ${path}`));
+  } catch (err) {
+    console.error(chalk.red(`Unable to write file to ${path}`));
+  }
 };
 
 
 export const promptQuestions = async () => {
-  try {
     // Prompt for the key pair path
     const { keyPairPath } = await inquirer.prompt(keypairQuestions);
 
     // Validate and read the key pair file
-    const data = fs.readFileSync(keyPairPath, { encoding: 'utf8', flag: 'r' });
+    let data;
+    try {
+      data = fs.readFileSync(keyPairPath, { encoding: 'utf8', flag: 'r' });
+    } catch(err) {
+      console.error(chalk.red(`Invalid file path provided: ${keyPairPath}`));
+      return;
+    }
+
     const keypairData: KeyPairType = JSON.parse(data);
 
     // Prompt for the domain name and output path
     const { domainName, outputPath } = await inquirer.prompt(questions);
-    
+    try {
+      fs.readdirSync(outputPath, { encoding: 'utf-8' });
+    } catch (err) {
+      console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
+      return;
+    }
     keypairData.domain = domainName;
 
     return { keypairData, domainName, outputPath };
-  } catch (err) {
-    console.error(chalk.red('Error during prompts or reading key pair file'));
-    throw err; // Re-throw error to handle it in the main handler
-  }
+
 };
