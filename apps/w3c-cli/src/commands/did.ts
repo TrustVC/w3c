@@ -105,7 +105,7 @@ export const promptQuestions = async () => {
     const { domainName, outputPath } = await inquirer.prompt(questions);
     try {
       fs.readdirSync(outputPath, { encoding: 'utf-8' });
-    } catch (err) {
+  } catch (err) {
     console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
     return;
   }
