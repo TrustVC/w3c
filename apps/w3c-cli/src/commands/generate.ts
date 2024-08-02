@@ -80,7 +80,23 @@ export const generateAndSaveKeyPair = async ({
         type: encAlgo,
         seedBase58,
     };
-    const keypairData = await generateKeyPair(keypairOptions);
+
+    let keypairData;
+    try{
+      keypairData = await generateKeyPair(keypairOptions);
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message == "Non-base58btc character") {
+          console.error(chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'));
+        } else {
+          console.error(chalk.red('Error generating keypair'));
+        }
+      } else {
+        console.error(chalk.red('Error generating keypair'));
+      }
+      return;
+    }
+
     try {
         fs.writeFileSync(keyFilePath, JSON.stringify(keypairData));
         console.log(chalk.green(`File written successfully to ${keyFilePath}`));
