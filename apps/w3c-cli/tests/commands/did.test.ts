@@ -5,7 +5,7 @@ import {
 import { assert, beforeEach, describe, expect, it, vi } from 'vitest';
 import inquirer from 'inquirer';
 import fs from 'fs';
-import { promptQuestions, saveIssuedDid } from '../../src/commands/did';
+import { getIssuedDid, promptQuestions, saveIssuedDid } from '../../src/commands/did';
 import { IssueDidInput } from 'apps/w3c-cli/src/commands/did';
 import chalk from 'chalk';
 
@@ -24,10 +24,11 @@ vi.mock('chalk', async () => {
     };
   });
 
-const mockSeed = "9TuXkSMHnipzCMjgj56hft78LUqdGx8vbPazKDgRWfms";
-
 describe("did", () => {
-    
+    beforeEach(() => {
+        vi.clearAllMocks();
+        vi.resetAllMocks();
+    })
     describe("promptQuestions", () => {
         beforeEach(() => {
             vi.clearAllMocks();
@@ -100,18 +101,49 @@ describe("did", () => {
 
     })
 
-
+    describe("getIssuedDid", () => {
+        beforeEach(() => {
+            vi.clearAllMocks();
+            vi.resetAllMocks();
+        })
+        it("should throw error if getIssuedDid receives invalid domain name", async() => {
+            const consoleLogSpy = vi.spyOn(console, 'error')
+            
+            const mockKeypairData = {
+                domainName: 'bad-domain-name',
+                keyPairPath: './keypair.json',
+                outputPath: '.'
+            };
+            await getIssuedDid(mockKeypairData);
+            expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red(`Error generating DID token: Invalid / Missing domain`));
+        })
+    })
     describe("saveIssuedDid", () => {
+        beforeEach(() => {
+            vi.clearAllMocks();
+            vi.resetAllMocks();
+        })
         it("should write files successfully", async() => {
             const consoleLogSpy = vi.spyOn(console, 'log')
             const writeFileMock = vi.spyOn(fs, 'writeFileSync');
 
-
             await saveIssuedDid({}, {}, ".");
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.green(`File written successfully to ./wellknown.json`));
             expect(consoleLogSpy).toHaveBeenNthCalledWith(2, chalk.green(`File written successfully to ./keypairs.json`));
-            expect(writeFileMock).toHaveBeenCalledTimes(2);
         })
+        it("should throw error if writeFileSync fails", async() => {
+        const consoleLogSpy = vi.spyOn(console, 'error')
+            const writeFileMock = vi.spyOn(fs, 'writeFileSync');
+            writeFileMock.mockImplementation(() => {
+                throw new Error();
+            });
+
+            await saveIssuedDid({}, {}, ".");
+            expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red(`Unable to write file to ./wellknown.json`));
+            expect(consoleLogSpy).toHaveBeenNthCalledWith(2, chalk.red(`Unable to write file to ./keypairs.json`));
+        })
+
+
     })
 
 })

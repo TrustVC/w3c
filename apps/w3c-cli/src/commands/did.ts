@@ -44,11 +44,19 @@ export const handler = async (argv: any) => {
   if (!answers) return;
   
   const {keypairData, domainName, outputPath} = answers;
-  
+  const did = await getIssuedDid(keypairData);
+  if (!did) return;
+
+  await saveIssuedDid(did, keypairData, outputPath);
+    // Write the wellknown data to a file
+};
+
+export const getIssuedDid = async (keypairData) => {
   let did;
   try {
     // Issue the DID
     const did = await issueDID(keypairData);
+    return did;
   } catch (err) {
     if (err instanceof Error) {
       if (err.message == "Invalid / Missing domain") {
@@ -57,12 +65,8 @@ export const handler = async (argv: any) => {
         console.error(chalk.red('Error generating DID token'));
       }
     }
-    return;
   }
-
-  await saveIssuedDid(did, keypairData, outputPath);
-    // Write the wellknown data to a file
-};
+}
 
 export const saveIssuedDid = async (wellKnownDid, keyPairs, outputPath) => {
   const wellknownPath = `${outputPath}/wellknown.json`;
