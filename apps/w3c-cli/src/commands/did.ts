@@ -48,7 +48,7 @@ export const handler = async (argv: any) => {
   if (!did) return;
 
   await saveIssuedDid(did, keypairData, outputPath);
-    // Write the wellknown data to a file
+  // Write the wellknown data to a file
 };
 
 export const getIssuedDid = async (keypairData) => {
