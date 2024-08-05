@@ -91,7 +91,6 @@ describe('generate', () => {
         wellKnown: {} as any,
         newKeyPair: keyPair,
       });
-      console.log('result', result);
 
       expect(result).toBeTruthy();
       expect(result?.id).toBe(keyPair.controller);

@@ -12,8 +12,8 @@ export const builder = (yargs: Argv) => {
   });
 };
 
-export const handler = async (argv: any) => {
-  const type: any = {
+export const handler = async (argv) => {
+  const type = {
     type: VerificationType.Ed25519VerificationKey2018,
   };
 

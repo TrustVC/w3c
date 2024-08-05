@@ -34,13 +34,11 @@
   "dependencies": {
     "@tradetrust-tt/w3c-issuer": "*",
     "@types/yargs": "^17.0.32",
-    "@vitest/coverage-v8": "^2.0.5",
     "chalk": "^4.1.2",
     "inquirer": "^10.0.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "pkg": "^5.8.1",
-    "ts-node": "^10.9.2"
+    "pkg": "^5.8.1"
   }
 }

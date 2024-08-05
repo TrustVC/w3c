@@ -1,8 +1,7 @@
-import inquirer from 'inquirer';
-import { Argv } from 'yargs';
-import fs from 'fs';
 import { issueDID, KeyPairType } from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
+import fs from 'fs';
+import inquirer from 'inquirer';
 
 export type IssueDidInput = {
   keyPairPath: string;
@@ -12,6 +11,7 @@ export type IssueDidInput = {
 
 export const command = 'generate-did';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const keypairQuestions: any = [
   {
     name: 'keyPairPath',
@@ -20,6 +20,7 @@ const keypairQuestions: any = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
   {
     name: 'domainName',
@@ -36,12 +37,10 @@ const questions: any = [
 
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
 
-// export const builder = (yargs: Argv) => {};
-
-export const handler = async (argv: any) => {
+export const handler = async () => {
   try {
-    const {keypairData, domainName, outputPath, } = await promptQuestions();
-      
+    const { keypairData, outputPath } = await promptQuestions();
+
     // Issue the DID
     const did = await issueDID(keypairData);
     await saveIssuedDid(did, keypairData, outputPath);
@@ -56,10 +55,9 @@ export const saveIssuedDid = async (wellKnownDid, keyPairs, outputPath) => {
   writeFile(wellknownPath, wellKnownDid);
   const keypairsPath = `${outputPath}/keypairs.json`;
   writeFile(keypairsPath, keyPairs);
-}
+};
 
-
-const writeFile = (path: string, data: any) => {
+const writeFile = (path: string, data) => {
   fs.writeFile(path, JSON.stringify(data), (err) => {
     if (err) {
       console.error(chalk.red('Error writing file'), err);
@@ -68,7 +66,6 @@ const writeFile = (path: string, data: any) => {
     }
   });
 };
-
 
 export const promptQuestions = async () => {
   try {
@@ -81,7 +78,7 @@ export const promptQuestions = async () => {
 
     // Prompt for the domain name and output path
     const { domainName, outputPath } = await inquirer.prompt(questions);
-    
+
     keypairData.domain = domainName;
 
     return { keypairData, domainName, outputPath };
