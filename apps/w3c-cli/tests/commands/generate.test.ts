@@ -38,16 +38,16 @@ describe('generate', () => {
         vi.clearAllMocks();
         vi.resetAllMocks();
     });
-    
+
     describe("promptQuestions", () => {
         beforeEach(() => {
             vi.clearAllMocks();
             vi.resetAllMocks();
         });
         it('should promptQuestions successfully', async () => {
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: mockSeed, 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: mockSeed,
                 keyPath: './valid-dir'
             };
             // Automatically keys in "user input" that inquirer will receive
@@ -55,18 +55,18 @@ describe('generate', () => {
             vi.spyOn(fs, "readdirSync").mockImplementation(() => {
                 return []
             })
-    
+
             const answers = await promptQuestions();
-    
+
             expect(answers.encAlgo).toBe(generateKeypairOption.type);
             expect(answers.seedBase58).toBe(mockSeed);
             expect(answers.keyPath).toBe('./valid-dir');
         });
 
         it('should fail promptQuestions when given invalid file path', async () => {
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: mockSeed, 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: mockSeed,
                 keyPath: './/invalid-file-path'
             };
             // Automatically keys in "user input" that inquirer will receive
@@ -77,7 +77,7 @@ describe('generate', () => {
                 throw new Error()
             })
             await promptQuestions();
-            
+
             expect(consoleErrorSpy).toHaveBeenCalledWith(chalk.red(`Invalid file path provided: ${input.keyPath}`))
         })
 
@@ -95,7 +95,7 @@ describe('generate', () => {
 
             const answers = await promptQuestions();
             console.log(answers)
-    
+
             expect(answers.encAlgo).toBe(generateKeypairOption.type);
             expect(answers.seedBase58).toBeFalsy();
             expect(answers.keyPath).toBeFalsy();
@@ -109,9 +109,9 @@ describe('generate', () => {
             vi.resetAllMocks();
         });
         it("should successfully generate and save keypair file", async () => {
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: '', 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: '',
                 keyPath: '.'
             };
 
@@ -128,12 +128,12 @@ describe('generate', () => {
         it("should use seed to generate and save same keypair file", async () => {
             // Mock function
 
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: mockSeed, 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: mockSeed,
                 keyPath: '.'
             };
-    
+
             const consoleLogSpy = vi.spyOn(console, 'log')
             const writeFileMock = vi.spyOn(fs, 'writeFileSync');
 
@@ -147,12 +147,12 @@ describe('generate', () => {
         it("should throw error given invalid seed", async () => {
             // Mock function
 
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: 'a invalid seed', 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: 'a invalid seed',
                 keyPath: '.'
             };
-    
+
             const consoleLogSpy = vi.spyOn(console, 'error')
 
             await generateAndSaveKeyPair(input)
@@ -164,12 +164,12 @@ describe('generate', () => {
         // it("should throw generic error if generateKeyPair fails", async () => {
         //     // Mock function
 
-        //     const input: GenerateInput = { 
-        //         encAlgo: generateKeypairOption.type, 
-        //         seedBase58: '', 
+        //     const input: GenerateInput = {
+        //         encAlgo: generateKeypairOption.type,
+        //         seedBase58: '',
         //         keyPath: '.'
         //     };
-    
+
         //     const consoleLogSpy = vi.spyOn(console, 'error');
         //     // vi.doMock('@tradetrust-tt/w3c-issuer', async (importOriginal) => {
         //     //     const actual: typeof import("@tradetrust-tt/w3c-issuer") = await importOriginal()
@@ -190,9 +190,9 @@ describe('generate', () => {
 
 
         it('should fail generateAndSaveKeyPair when unable to save file', async () => {
-            const input: GenerateInput = { 
-                encAlgo: generateKeypairOption.type, 
-                seedBase58: "", 
+            const input: GenerateInput = {
+                encAlgo: generateKeypairOption.type,
+                seedBase58: "",
                 keyPath: '///invalid-key-path///' // This value doesn't really matter since we mock writeFil to always thro error below
             };
             // Automatically keys in "user input" that inquirer will receive
@@ -202,7 +202,7 @@ describe('generate', () => {
             writeFileMock.mockImplementation(() => {
                 throw new Error()
             })
-            
+
             await generateAndSaveKeyPair(input);
 
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red(`Unable to write file to ${input.keyPath}/keypair.json`));

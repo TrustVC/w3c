@@ -1,7 +1,7 @@
 import { issueDID, KeyPairType } from '@tradetrust-tt/w3c-issuer';
+import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-import chalk from 'chalk';
 
 export type IssueDidInput = {
   keyPairPath: string;
@@ -36,8 +36,6 @@ const questions: any = [
 ];
 
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
-
-// export const builder = (yargs: Argv) => {};
 
 export const handler = async (argv: any) => {
   const answers = await promptQuestions();

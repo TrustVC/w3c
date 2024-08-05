@@ -48,21 +48,6 @@
       "types": "./dist/types/w3c-issuer/src/*.d.ts"
     }
   },
-  "devDependencies": {
-    "@types/node": "^18.17.0",
-    "@typescript-eslint/eslint-plugin": "^7.15.0",
-    "@typescript-eslint/parser": "^7.15.0",
-    "@vitest/coverage-v8": "^2.0.2",
-    "dotenv": "^16.4.5",
-    "eslint": "^8.57.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^17.9.0",
-    "eslint-plugin-promise": "^6.4.0",
-    "tscpaths": "^0.0.9",
-    "typescript": "^5.5.3",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.0.2"
-  },
   "dependencies": {
     "@transmute/did-key-bls12381": "^0.3.0-unstable.10",
     "@transmute/did-key-ed25519": "^0.3.0-unstable.10",

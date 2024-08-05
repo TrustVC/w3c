@@ -46,19 +46,19 @@ describe("did", () => {
             (inquirer.prompt as any).mockResolvedValue(input);;
             // Mocks the readFileSync function so that it successfully reads a file
             vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(mockKeypairData));
-            
+
             const answers = await promptQuestions();
 
             expect(answers.domainName).toBe(input.domainName);
             expect(answers.outputPath).toBe(input.outputPath);
-    
+
             const expectedKeypairData = {
                 ...mockKeypairData,
                 domain: answers.domainName
             }
             expect(answers.keypairData).toStrictEqual(expectedKeypairData);
         })
-    
+
         it("should throw error for invalid file path", async () => {
             const input: IssueDidInput = {
                 keyPairPath: './/bad-keypair.json',
@@ -71,7 +71,7 @@ describe("did", () => {
             vi.spyOn(fs, "readFileSync").mockImplementation(() => {
                 throw new Error();
             })
-            
+
             await promptQuestions()
 
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red(`Invalid file path provided: ${input.keyPairPath}`));
@@ -83,16 +83,16 @@ describe("did", () => {
                 domainName: 'https://example.com',
                 outputPath: './/bad-path'
             };
-            
+
             const consoleLogSpy = vi.spyOn(console, "error");
-            
+
             vi.spyOn(fs, "readFileSync").mockImplementation(() => {
                 return "{}"
             })
             vi.spyOn(fs, "readdirSync").mockImplementation(() => {
                 throw new Error()
             });
-                
+
             (inquirer.prompt as any).mockResolvedValue(input);
             await promptQuestions();
 
@@ -108,7 +108,7 @@ describe("did", () => {
         })
         it("should throw error if getIssuedDid receives invalid domain name", async() => {
             const consoleLogSpy = vi.spyOn(console, 'error')
-            
+
             const mockKeypairData = {
                 domainName: 'bad-domain-name',
                 keyPairPath: './keypair.json',
