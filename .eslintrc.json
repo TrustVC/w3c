@@ -3,7 +3,8 @@
   "env": {
     "node": true
   },
-  "plugins": ["@nx"],
+  "plugins": ["@nx", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",

@@ -1,8 +1,5 @@
-import {
-  generateKeyPair,
-  VerificationType,
-} from '@tradetrust-tt/w3c-issuer';
-import type {GenerateKeyPairOptions} from '@tradetrust-tt/w3c-issuer';
+import { generateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import type { GenerateKeyPairOptions } from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -43,62 +40,59 @@ const questions: any = [
 ];
 
 export const describe = 'Generate a new key pair file';
-// export const builder = (yargs: Argv) => { };
-export const handler = async (argv: any) => {
+export const handler = async () => {
   const answers = await promptQuestions();
   if (!answers) return;
 
-  const { encAlgo, seedBase58, keyPath } = answers
+  const { encAlgo, seedBase58, keyPath } = answers;
 
-  await generateAndSaveKeyPair({encAlgo, seedBase58, keyPath})
-}
+  await generateAndSaveKeyPair({ encAlgo, seedBase58, keyPath });
+};
 
 export const promptQuestions = async () => {
   const answers = await inquirer.prompt(questions);
 
   try {
-    fs.readdirSync(answers.keyPath, {encoding: "utf-8"});
+    fs.readdirSync(answers.keyPath, { encoding: 'utf-8' });
   } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${answers.keyPath}`))
+    console.error(chalk.red(`Invalid file path provided: ${answers.keyPath}`));
     return;
   }
   return answers;
-}
+};
 
-export const generateAndSaveKeyPair = async ({
-    encAlgo,
+export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: GenerateInput) => {
+  if (seedBase58) {
+    console.log(chalk.blue('Generating keys from provided seed...'));
+  }
+
+  const keyFilePath = `${keyPath}/keypair.json`;
+
+  const keypairOptions: GenerateKeyPairOptions = {
+    type: encAlgo,
     seedBase58,
-    keyPath
-}: GenerateInput) => {
-    if (seedBase58) {
-        console.log(chalk.blue("Generating keys from provided seed..."));
-    }
+  };
 
-    const keyFilePath = `${keyPath}/keypair.json`;
-
-    const keypairOptions: GenerateKeyPairOptions = {
-        type: encAlgo,
-        seedBase58,
-    };
-
-    let keypairData;
-    try{
-      keypairData = await generateKeyPair(keypairOptions);
-    } catch (err) {
-      if (err instanceof Error) {
-        if (err.message == "Non-base58btc character") {
-          console.error(chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'));
-          return;
-        }
+  let keypairData;
+  try {
+    keypairData = await generateKeyPair(keypairOptions);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message == 'Non-base58btc character') {
+        console.error(
+          chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'),
+        );
+        return;
       }
-      console.error(chalk.red('Error generating keypair'));
-      return;
     }
+    console.error(chalk.red('Error generating keypair'));
+    return;
+  }
 
-    try {
-        fs.writeFileSync(keyFilePath, JSON.stringify(keypairData));
-        console.log(chalk.green(`File written successfully to ${keyFilePath}`));
-    } catch (err) {
-        console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
-    }
+  try {
+    fs.writeFileSync(keyFilePath, JSON.stringify(keypairData));
+    console.log(chalk.green(`File written successfully to ${keyFilePath}`));
+  } catch (err) {
+    console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
+  }
 };

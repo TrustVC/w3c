@@ -2,7 +2,7 @@ import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
 import { generateKeyPair } from './../keyPair';
 import { generateWellKnownDid, nextKeyId } from './generate';
 import { queryWellKnownDid } from './query';
-import { DidPrivateKeyPair, KeyPairType } from './types';
+import { DidPrivateKeyPair, IssuedDID, KeyPairType } from './types';
 
 /**
  *  Issue a DID based on the input key pair.
@@ -13,9 +13,9 @@ import { DidPrivateKeyPair, KeyPairType } from './types';
  * @param {string} didInput.seedBase58 - Seed in base58 format (optional)
  * @param {string} didInput.privateKeyBase58 - Private key in base58 format (optional)
  * @param {string} didInput.publicKeyBase58 - Public key in base58 format (optional)
- * @returns {Promise<{ wellKnownDid: DidWellKnownDocument; keyPair: DidPrivateKeyPair }>} - Well known DID document and generated DID key pair
+ * @returns {Promise<IssuedDID>} - Well known DID document and generated DID key pair
  */
-export const issueDID = async (didInput: KeyPairType) => {
+export const issueDID = async (didInput: KeyPairType): Promise<IssuedDID> => {
   let wellKnownDid = await queryWellKnownDid(didInput.domain);
 
   const domainHostname = getDomainHostname(didInput?.domain);
