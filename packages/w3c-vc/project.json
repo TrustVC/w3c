@@ -1,0 +1,22 @@
+{
+  "name": "@tradetrust-tt/w3c-vc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/w3c-vc/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project w3c-vc --web",
+  "targets": {
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/w3c-vc/**/*.ts"]
+      }
+    }
+  }
+}
