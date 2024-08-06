@@ -36,7 +36,7 @@ describe('wellKnown', () => {
     it('should fail to issueDID with invalid domain', () => {
       expect(
         issueDID({ domain: 'invalidDomain', type: VerificationType.Bls12381G2Key2020 }),
-      ).rejects.toThrowError('Invalid URL');
+      ).rejects.toThrowError('Invalid / Missing domain');
     });
 
     it('should issueDID with valid domain and type', async () => {
