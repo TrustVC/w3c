@@ -3,11 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  getIssuedDid,
-  promptQuestions,
-  saveIssuedDid,
-} from '../../src/commands/did';
+import { getIssuedDid, promptQuestions, saveIssuedDid } from '../../src/commands/did';
 import { IssueDidInput } from '../../src/types';
 
 vi.mock('inquirer');

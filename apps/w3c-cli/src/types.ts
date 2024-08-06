@@ -1,4 +1,4 @@
-import { VerificationType } from "@tradetrust-tt/w3c-issuer";
+import { VerificationType } from '@tradetrust-tt/w3c-issuer';
 
 export type IssueDidInput = {
   keyPairPath: string;
