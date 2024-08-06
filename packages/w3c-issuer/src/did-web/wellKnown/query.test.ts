@@ -8,7 +8,9 @@ describe('query', () => {
     });
 
     it('should fail to queryWellKnownDid with invalid did', async () => {
-      await expect(queryWellKnownDid('invalidDomain')).rejects.toThrowError('Invalid URL');
+      await expect(queryWellKnownDid('invalidDomain')).rejects.toThrowError(
+        'Invalid / Missing domain',
+      );
     });
 
     it('should queryWellKnownDid with valid did', async () => {

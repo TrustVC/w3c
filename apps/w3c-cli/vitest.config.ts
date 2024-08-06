@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   cacheDir: './node_modules/.vitest',
   test: {
-    include: ['src/**/*.test.{ts,js}'],
+    include: ['tests/**/*.test.{ts,js}'],
     exclude: ['dist', 'node_modules', '*/type{s}.{ts,js}'],
     coverage: {
       enabled: true,

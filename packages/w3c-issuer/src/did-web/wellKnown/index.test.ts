@@ -2,6 +2,7 @@ import { issueDID } from '.';
 import { VerificationType } from '../keyPair/types';
 import { describe, expect, it, vi } from 'vitest';
 import * as query from './query';
+import { IssuedDID } from './types';
 
 const mockedQueryWellKnownDidResult = {
   id: 'did:web:localhost.com',
@@ -35,11 +36,11 @@ describe('wellKnown', () => {
     it('should fail to issueDID with invalid domain', () => {
       expect(
         issueDID({ domain: 'invalidDomain', type: VerificationType.Bls12381G2Key2020 }),
-      ).rejects.toThrowError('Invalid URL');
+      ).rejects.toThrowError('Invalid / Missing domain');
     });
 
     it('should issueDID with valid domain and type', async () => {
-      const result = await issueDID({
+      const result: IssuedDID = await issueDID({
         domain: 'https://www.google.com',
         type: VerificationType.Bls12381G2Key2020,
       });
@@ -55,12 +56,12 @@ describe('wellKnown', () => {
       expect(result.wellKnownDid?.verificationMethod?.[0]).not.toHaveProperty('seedBase58');
       expect(result.wellKnownDid?.verificationMethod?.[0]).not.toHaveProperty('privateKeyBase58');
 
-      expect(result.keyPairs).toHaveProperty('type');
-      expect(result.keyPairs).toHaveProperty('id');
-      expect(result.keyPairs).toHaveProperty('controller');
-      expect(result.keyPairs).toHaveProperty('seedBase58');
-      expect(result.keyPairs).toHaveProperty('publicKeyBase58');
-      expect(result.keyPairs).toHaveProperty('privateKeyBase58');
+      expect(result.didKeyPairs).toHaveProperty('type');
+      expect(result.didKeyPairs).toHaveProperty('id');
+      expect(result.didKeyPairs).toHaveProperty('controller');
+      expect(result.didKeyPairs).toHaveProperty('seedBase58');
+      expect(result.didKeyPairs).toHaveProperty('publicKeyBase58');
+      expect(result.didKeyPairs).toHaveProperty('privateKeyBase58');
     });
 
     it('should issueDID with valid domain, type and seed', async () => {
@@ -72,7 +73,7 @@ describe('wellKnown', () => {
 
       expect(result).toMatchInlineSnapshot(`
         {
-          "keyPairs": {
+          "didKeyPairs": {
             "controller": "did:web:www.google.com",
             "id": "did:web:www.google.com#keys-1",
             "privateKeyBase58": "7e1VnFeqvMjqoq61qhGE2dgnQmgNDAYEX1FGzwywf2h7",
@@ -122,14 +123,14 @@ describe('wellKnown', () => {
       expect(result.wellKnownDid?.verificationMethod?.[0]).not.toHaveProperty('seedBase58');
       expect(result.wellKnownDid?.verificationMethod?.[0]).not.toHaveProperty('privateKeyBase58');
 
-      expect(result.keyPairs).toHaveProperty('type');
-      expect(result.keyPairs).toHaveProperty('id');
-      expect(result.keyPairs).toHaveProperty('controller');
-      expect(result.keyPairs).toHaveProperty('seedBase58');
-      expect(result.keyPairs).toHaveProperty('publicKeyBase58');
-      expect(result.keyPairs).toHaveProperty('privateKeyBase58');
-      expect(result.keyPairs?.publicKeyBase58).toBe(publicKeyBase58);
-      expect(result.keyPairs?.privateKeyBase58).toBe(privateKeyBase58);
+      expect(result.didKeyPairs).toHaveProperty('type');
+      expect(result.didKeyPairs).toHaveProperty('id');
+      expect(result.didKeyPairs).toHaveProperty('controller');
+      expect(result.didKeyPairs).toHaveProperty('seedBase58');
+      expect(result.didKeyPairs).toHaveProperty('publicKeyBase58');
+      expect(result.didKeyPairs).toHaveProperty('privateKeyBase58');
+      expect(result.didKeyPairs?.publicKeyBase58).toBe(publicKeyBase58);
+      expect(result.didKeyPairs?.privateKeyBase58).toBe(privateKeyBase58);
     });
 
     it('should issueDID with valid domain, type, seed and valid hosted did', async () => {

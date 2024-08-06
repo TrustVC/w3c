@@ -47,3 +47,8 @@ export type DidPrivateKeyPair = DidKeyPair & {
 export type DidWellKnownDocument = DIDDocument & {
   [key in WellKnownAttributeType]?: string[];
 };
+
+export type IssuedDID = {
+  wellKnownDid: DidWellKnownDocument;
+  didKeyPairs: DidPrivateKeyPair;
+};

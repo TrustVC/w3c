@@ -39,7 +39,6 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "pkg": "^5.8.1",
-    "ts-node": "^10.9.2"
+    "pkg": "^5.8.1"
   }
 }

@@ -46,11 +46,13 @@ export const parseMultibase = async (multibase: string): Promise<Uint8Array> => 
 
 export const getDomainHostname = (domain: Readonly<string>): string | undefined => {
   // convert domain https://example.com/part/index?id=123 to example.com
-
-  if (!domain) {
+  const domainRegex = new RegExp(/.+\..+/);
+  if (!domain || !domainRegex.test(domain)) {
     return;
   }
 
-  const url = new URL(domain);
+  const parsedUrl = domain.startsWith('http') ? domain : 'http://' + domain;
+
+  const url = new URL(parsedUrl);
   return url.hostname;
 };
