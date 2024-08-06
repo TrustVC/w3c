@@ -5,9 +5,9 @@ import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   generateAndSaveKeyPair,
-  GenerateInput,
   promptQuestions,
 } from '../../src/commands/generate';
+import { GenerateInput } from '../../src/types';
 
 vi.mock('inquirer');
 vi.mock('fs', async () => {

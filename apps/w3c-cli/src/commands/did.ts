@@ -2,12 +2,7 @@ import { IssuedDID, issueDID, KeyPairType } from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-
-export type IssueDidInput = {
-  keyPairPath: string;
-  domainName: string;
-  outputPath: string;
-};
+import { KeyPairQuestionType, QuestionType } from '../types';
 
 export const command = 'generate-did';
 
@@ -37,10 +32,6 @@ const questions: any = [
     default: '.',
   },
 ];
-export type QuestionType = {
-  domainName: string;
-  outputPath: string;
-};
 
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
 

@@ -5,10 +5,10 @@ import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getIssuedDid,
-  IssueDidInput,
   promptQuestions,
   saveIssuedDid,
 } from '../../src/commands/did';
+import { IssueDidInput } from '../../src/types';
 
 vi.mock('inquirer');
 vi.mock('fs', async () => {

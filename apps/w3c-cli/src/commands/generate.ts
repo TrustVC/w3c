@@ -1,21 +1,11 @@
-import { generateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
-import type { GenerateKeyPairOptions } from '@tradetrust-tt/w3c-issuer';
+import type { GeneratedKeyPair, GenerateKeyPairOptions } from '@tradetrust-tt/w3c-issuer';
+import { generateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-
-export type GenerateInput = {
-  encAlgo: VerificationType;
-  seedBase58: string;
-  keyPath: string;
-};
+import { encAlgos, GenerateInput } from '../types';
 
 export const command = 'generate';
-
-const encAlgos: VerificationType[] = [
-  VerificationType.Bls12381G2Key2020,
-  VerificationType.Ed25519VerificationKey2018,
-];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
