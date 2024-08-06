@@ -41,6 +41,6 @@ export const issueDID = async (didInput: KeyPairType): Promise<IssuedDID> => {
 
   return {
     wellKnownDid,
-    keyPairs,
+    didKeyPairs: keyPairs,
   };
 };

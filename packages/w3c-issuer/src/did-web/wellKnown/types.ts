@@ -50,5 +50,5 @@ export type DidWellKnownDocument = DIDDocument & {
 
 export type IssuedDID = {
   wellKnownDid: DidWellKnownDocument;
-  keyPairs: DidPrivateKeyPair;
+  didKeyPairs: DidPrivateKeyPair;
 };

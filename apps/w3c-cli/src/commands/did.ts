@@ -12,24 +12,26 @@ const keypairQuestions: any = [
     name: 'keyPairPath',
     type: 'input',
     message: 'Please enter the path to your key pair JSON file:',
+    default: './keypair.json',
+    required: true,
   },
 ];
-export type KeyPairQuestionType = {
-  keyPairPath: string;
-};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
   {
     name: 'domainName',
     type: 'input',
-    message: 'Please enter your domain name (e.g., https://example.com):',
+    message:
+      'Please enter your domain for hosting the did-web public key (e.g., https://example.com/.wellknown/did.json):',
+    required: true,
   },
   {
     name: 'outputPath',
     type: 'input',
     message: 'Please specify a directory path to save the DID token file (optional):',
     default: '.',
+    required: true,
   },
 ];
 
@@ -42,7 +44,7 @@ export const handler = async () => {
   const did = await getIssuedDid(keypairData);
   if (!did) return;
 
-  await saveIssuedDid(did, keypairData, outputPath);
+  await saveIssuedDid(did, outputPath);
 };
 
 export const getIssuedDid = async (keypairData: KeyPairType): Promise<IssuedDID> => {
@@ -61,15 +63,11 @@ export const getIssuedDid = async (keypairData: KeyPairType): Promise<IssuedDID>
   }
 };
 
-export const saveIssuedDid = async (
-  wellKnownDid: IssuedDID,
-  keyPairs: KeyPairType,
-  outputPath: string,
-) => {
+export const saveIssuedDid = async (wellKnownDid: IssuedDID, outputPath: string) => {
   const wellknownPath = `${outputPath}/wellknown.json`;
-  writeFile(wellknownPath, wellKnownDid);
-  const keypairsPath = `${outputPath}/keypairs.json`;
-  writeFile(keypairsPath, keyPairs);
+  writeFile(wellknownPath, wellKnownDid.wellKnownDid);
+  const keypairsPath = `${outputPath}/didKeyPairs.json`;
+  writeFile(keypairsPath, wellKnownDid.didKeyPairs);
 };
 
 const writeFile = (path: string, data) => {

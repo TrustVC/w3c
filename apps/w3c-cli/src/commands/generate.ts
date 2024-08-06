@@ -26,6 +26,7 @@ const questions: any = [
     type: 'input',
     message: 'Please specify a directory to save your key file (optional):',
     default: '.',
+    required: true,
   },
 ];
 
@@ -63,7 +64,7 @@ export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: G
     seedBase58,
   };
 
-  let keypairData;
+  let keypairData: GeneratedKeyPair;
   try {
     keypairData = await generateKeyPair(keypairOptions);
   } catch (err) {
@@ -80,7 +81,14 @@ export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: G
   }
 
   try {
-    fs.writeFileSync(keyFilePath, JSON.stringify(keypairData));
+    const keyPair: GeneratedKeyPair = {
+      type: keypairData.type,
+      seedBase58: keypairData.seedBase58,
+      privateKeyBase58: keypairData.privateKeyBase58,
+      publicKeyBase58: keypairData.publicKeyBase58,
+    };
+
+    fs.writeFileSync(keyFilePath, JSON.stringify(keyPair));
     console.log(chalk.green(`File written successfully to ${keyFilePath}`));
   } catch (err) {
     console.error(chalk.red(`Unable to write file to ${keyFilePath}`));

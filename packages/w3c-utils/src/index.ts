@@ -51,6 +51,8 @@ export const getDomainHostname = (domain: Readonly<string>): string | undefined 
     return;
   }
 
-  const url = new URL(domain);
+  const parsedUrl = domain.startsWith('http') ? domain : 'http://' + domain;
+
+  const url = new URL(parsedUrl);
   return url.hostname;
 };

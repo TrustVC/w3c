@@ -19,6 +19,11 @@ export const generateWellKnownDid = ({
     return;
   }
 
+  // check if public key already exists
+  if (wellKnown?.verificationMethod?.find((s) => s?.publicKeyBase58 === newKeyPair?.publicKeyBase58)) {
+    throw new Error('Public key already exists');
+  }
+
   if (!wellKnown) {
     wellKnown = {
       id: newKeyPair?.controller,

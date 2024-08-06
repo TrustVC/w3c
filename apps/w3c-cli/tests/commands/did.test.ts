@@ -132,16 +132,21 @@ describe('did', () => {
     });
     it('should write files successfully', async () => {
       const consoleLogSpy = vi.spyOn(console, 'log');
-      // const writeFileMock = vi.spyOn(fs, 'writeFileSync');
 
-      await saveIssuedDid({}, {} as any, '.');
+      await saveIssuedDid(
+        {
+          wellKnownDid: null,
+          didKeyPairs: null,
+        } as any,
+        '.',
+      );
       expect(consoleLogSpy).toHaveBeenNthCalledWith(
         1,
         chalk.green(`File written successfully to ./wellknown.json`),
       );
       expect(consoleLogSpy).toHaveBeenNthCalledWith(
         2,
-        chalk.green(`File written successfully to ./keypairs.json`),
+        chalk.green(`File written successfully to ./didKeyPairs.json`),
       );
     });
     it('should throw error if writeFileSync fails', async () => {
@@ -151,14 +156,14 @@ describe('did', () => {
         throw new Error();
       });
 
-      await saveIssuedDid({}, {} as any, '.');
+      await saveIssuedDid({} as any, '.');
       expect(consoleLogSpy).toHaveBeenNthCalledWith(
         1,
         chalk.red(`Unable to write file to ./wellknown.json`),
       );
       expect(consoleLogSpy).toHaveBeenNthCalledWith(
         2,
-        chalk.red(`Unable to write file to ./keypairs.json`),
+        chalk.red(`Unable to write file to ./didKeyPairs.json`),
       );
     });
   });
