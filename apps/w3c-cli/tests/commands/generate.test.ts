@@ -1,4 +1,5 @@
 import { GenerateKeyPairOptions, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import * as w3cIssuer from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -162,32 +163,21 @@ describe('generate', () => {
     });
 
     // TODO: Unable to currently mock generateKeyPair function to throw a generic error.
-    // it("should throw generic error if generateKeyPair fails", async () => {
-    //     // Mock function
+    it('should throw generic error if generateKeyPair fails', async () => {
+      const input: GenerateInput = {
+        encAlgo: generateKeypairOption.type,
+        seedBase58: '',
+        keyPath: '.',
+      };
 
-    //     const input: GenerateInput = {
-    //         encAlgo: generateKeypairOption.type,
-    //         seedBase58: '',
-    //         keyPath: '.'
-    //     };
+      const consoleLogSpy = vi.spyOn(console, 'error');
+      vi.spyOn(w3cIssuer, 'generateKeyPair').mockImplementation(() => {
+        throw new Error();
+      });
+      await generateAndSaveKeyPair(input);
 
-    //     const consoleLogSpy = vi.spyOn(console, 'error');
-    //     // vi.doMock('@tradetrust-tt/w3c-issuer', async (importOriginal) => {
-    //     //     const actual: typeof import("@tradetrust-tt/w3c-issuer") = await importOriginal()
-    //     //     return {
-    //     //         ...actual,
-    //     //         generateKeyPair: vi.fn(() => {
-    //     //             throw new Error
-    //     //         })
-    //     //     }
-    //     // });
-    //     (generateKeyPair as any).mockImplementation(() => {
-    //         throw new Error()
-    //     })
-    //     await generateAndSaveKeyPair(input)
-
-    //     expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red("Error generating keypair"));
-    // })
+      expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red('Error generating keypair'));
+    });
 
     it('should fail generateAndSaveKeyPair when unable to save file', async () => {
       const input: GenerateInput = {
