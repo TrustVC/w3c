@@ -40,7 +40,7 @@ const onSuccess = async (): Promise<void> => {
 
 export default defineConfig([
   {
-    dts: {},
+    dts: true,
     sourcemap: false,
     treeshake: true,
     splitting: false,

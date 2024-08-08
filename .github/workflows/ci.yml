@@ -1,9 +1,12 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: CI
 
 on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/*
+      - feature/*
   pull_request:
     types: ['opened', 'edited', 'reopened', 'synchronize']
 
