@@ -31,7 +31,6 @@
           {
             "enforceBuildableLibDependency": true,
             "checkDynamicDependenciesExceptions": [".*"],
-            "allow": ["@/tradetrust-tt/w3c-utils"],
             "depConstraints": [
               {
                 "sourceTag": "*",
@@ -63,6 +62,12 @@
       "files": ["*.test.ts", "*.test.tsx", "*.test.js", "*.test.jsx"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["*.config.{ts,js,json}"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
       }
     }
   ]

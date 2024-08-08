@@ -6,14 +6,6 @@
   "bin": {
     "w3c-cli": "dist/cjs/main.js"
   },
-  "nx": {
-    "implicitDependencies": [
-      "@tradetrust-tt/w3c-issuer"
-    ],
-    "tags": [
-      "type:app"
-    ]
-  },
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",
@@ -22,7 +14,7 @@
     "cli": "node dist/main.js",
     "build": "nx run w3c-cli:clean && nx run w3c-cli:build:cjs && nx run w3c-cli:build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs --project ./tsconfig.build.json",
-    "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
+    "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types --project ./tsconfig.build.json",
     "serve": "nx run w3c-cli:build && node dist/cjs/main.js",
     "clean": "rm -rf dist/",
     "pkg": "npx pkg ./package.json --out-path dist/@w3c-cli"

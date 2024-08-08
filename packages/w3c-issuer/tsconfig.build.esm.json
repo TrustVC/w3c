@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "@/tradetrust-tt/w3c-utils": ["./dist/esm/w3c-utils/src"]
-    }
-  }
-}

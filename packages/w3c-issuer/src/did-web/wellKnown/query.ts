@@ -1,4 +1,4 @@
-import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
+import { getDomainHostname } from '../../lib';
 import { Resolver } from 'did-resolver';
 import { getResolver as webGetResolver } from 'web-did-resolver';
 import { DidWellKnownDocument } from './types';
