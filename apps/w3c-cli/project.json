@@ -4,56 +4,5 @@
   "sourceRoot": "apps/w3c-cli",
   "projectType": "application",
   "tags": [],
-  "targets": {
-    "build1": {
-      "executor": "@nx/esbuild:esbuild",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "development",
-      "dependsOn": [
-        "^build"
-      ],
-      "options": {
-        "platform": "node",
-        "outputPath": "dist",
-        "format": ["cjs"],
-        "bundle": false,
-        "main": "apps/w3c-cli/src/main.ts",
-        "tsConfig": "apps/w3c-cli/tsconfig.json",
-        "assets": ["apps/w3c-cli/src/assets"],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          },
-          "external": ["@tradetrust-tt/w3c-issuer"]
-        }
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        }
-      }
-    },
-    "dev1": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx build w3c-cli"
-          },
-          {
-            "command": "node apps/w3c-cli/dist/cjs/apps/w3c-cli/src/main.js greet a"
-          }
-        ],
-        "parallel": false
-      }
-    }
-  }
+  "targets": {}
 }

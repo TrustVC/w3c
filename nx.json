@@ -38,5 +38,11 @@
       },
       "exclude": [""]
     }
-  ]
+  ],
+  "release": {
+    "projects": ["@tradetrust-tt/w3c-issuer"],
+    "version": {
+      "conventionalCommits": true
+    }
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@nghaninn/w3c-issuer",
+  "name": "@tradetrust-tt/w3c-issuer",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "test": "npx vitest --run",
     "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
-    "build:tsup": "nx run w3c-issuer:'clean' && tsup",
+    "build": "nx run @tradetrust-tt/w3c-issuer:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
   "keywords": [],

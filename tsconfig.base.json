@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES6",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "CommonJS",
@@ -14,7 +14,7 @@
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
