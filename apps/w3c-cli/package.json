@@ -6,14 +6,6 @@
   "bin": {
     "w3c-cli": "dist/cjs/main.js"
   },
-  "nx": {
-    "implicitDependencies": [
-      "@tradetrust-tt/w3c-issuer"
-    ],
-    "tags": [
-      "type:app"
-    ]
-  },
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",

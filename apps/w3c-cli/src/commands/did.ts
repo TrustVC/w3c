@@ -70,7 +70,7 @@ export const saveIssuedDid = async (wellKnownDid: IssuedDID, outputPath: string)
   writeFile(keypairsPath, wellKnownDid.didKeyPairs);
 };
 
-const writeFile = (path: string, data) => {
+const writeFile = <T>(path: string, data: T) => {
   try {
     fs.writeFileSync(path, JSON.stringify(data));
     console.log(chalk.green(`File written successfully to ${path}`));

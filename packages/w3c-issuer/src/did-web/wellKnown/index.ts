@@ -1,4 +1,4 @@
-import { getDomainHostname } from '@/tradetrust-tt/w3c-utils';
+import { getDomainHostname } from '../../lib';
 import { generateKeyPair } from './../keyPair';
 import { generateWellKnownDid, nextKeyId } from './generate';
 import { queryWellKnownDid } from './query';
