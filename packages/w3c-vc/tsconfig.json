@@ -1,16 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "target": "ES6",
     "module": "CommonJS",
+    "esModuleInterop": true,
+    "moduleResolution": "Node10",
+    "declaration": false,
+    "noImplicitAny": false
   },
-  "files": [],
-  "include": [],
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.test.json"
-    }
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }
