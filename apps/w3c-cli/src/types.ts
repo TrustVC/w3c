@@ -10,6 +10,10 @@ export type KeyPairQuestionType = {
   keyPairPath: string;
 };
 
+export type CredentialQuestionType = {
+  credentialPath: string;
+};
+
 export type QuestionType = {
   domainName: string;
   outputPath: string;

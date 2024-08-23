@@ -1,23 +1,9 @@
-import {
-  BbsBlsSignature2020,
-  Bls12381G2KeyPair,
-  KeyPairOptions,
-} from '@mattrglobal/jsonld-signatures-bbs';
-import jsonldSignatures from 'jsonld-signatures';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-var-requires */
+import { BbsBlsSignature2020, Bls12381G2KeyPair } from '@mattrglobal/jsonld-signatures-bbs';
+const jsonldSignatures = require('jsonld-signatures');
 
-// Define the type for the DID document
-interface DidDocument {
-  '@context'?: string[];
-  id?: string;
-  // Add other properties based on the structure of the DID document
-}
-
-// Define a type for the context loader function
-type DocumentLoader = (url: string) => Promise<{
-  contextUrl: string | null;
-  document: DidDocument;
-  documentUrl: string;
-}>;
+import { _checkCredential, _checkKeyPair } from './helper';
+import { DocumentLoader, SigningResult, VerificationResult } from './types';
 
 /**
  * Creates and returns a custom document loader for JSON-LD contexts.
@@ -34,59 +20,101 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
       const path = id.map(decodeURIComponent).join('/') + '/.well-known/did.json';
       url = path.replace('did/web/', 'https://');
     }
-    try {
-      const results = await fetch(url, { redirect: 'follow' });
+    const results = await fetch(url, { redirect: 'follow' });
 
-      const resolveContext = {
-        contextUrl: null,
-        document: await results.json(),
-        documentUrl: results.url,
-      };
+    const resolveContext: any = {
+      contextUrl: null,
+      document: await results.json(),
+      documentUrl: results.url,
+    };
 
-      return resolveContext;
-    } catch (err) {
-      throw new Error();
-    }
+    return resolveContext;
   };
   return jsonldSignatures.extendContextLoader(customDocLoader);
 }
 
 /**
  * Signs a credential using the BBS+ signature scheme.
- * @param {Object} credential - The credential to be signed.
- * @param {KeyPairOptions} keyPair - The key pair options for signing.
- * @returns {Promise<Object>} The signed credential.
+ * @param {object} credential - The credential to be signed.
+ * @param {object} keyPair - The key pair options for signing.
+ * @returns {Promise<SigningResult>} The signed credential or an error message in case of failure.
  */
-export const signCredential = async (
-  credential: object,
-  keyPair: KeyPairOptions,
-): Promise<object> => {
-  const documentLoader = await getDocumentLoader();
-  const key = new Bls12381G2KeyPair(keyPair);
+export const signCredential = async (credential: any, keyPair: any): Promise<SigningResult> => {
+  try {
+    _checkKeyPair(keyPair);
+    _checkCredential(credential, undefined, 'sign');
+    const documentLoader = await getDocumentLoader();
 
-  return await jsonldSignatures.sign(credential, {
-    suite: new BbsBlsSignature2020({ key }),
-    purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
-    documentLoader,
-  });
+    const key = new Bls12381G2KeyPair(keyPair);
+
+    const signed = await jsonldSignatures.sign(credential, {
+      suite: new BbsBlsSignature2020({ key }),
+      purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
+      documentLoader,
+    });
+    return { signed: signed };
+  } catch (err: any) {
+    const errorMessage = err.message;
+
+    // Handle the case where the JSON-LD object is invalid
+    if (errorMessage.includes('Dereferencing a URL did not result in a valid JSON-LD object')) {
+      const errorUrl = err.details?.url;
+      return {
+        error: `Dereferencing a URL did not result in a valid JSON-LD object: "${errorUrl || 'Unknown URL'}"`,
+      };
+    }
+    return { error: errorMessage };
+  }
 };
-
-// Define the type for the verification result
-interface VerificationResult {
-  verified: boolean;
-}
 
 /**
  * Verifies a credential using the BBS+ signature scheme.
- * @param {Object} credential - The credential to be verified.
- * @returns {Promise<VerificationResult>} The verification result.
+ * @param {object} credential - The credential to be verified.
+ * @returns {Promise<VerificationResult>} The verification result indicating success
+ * or failure, along with an error message if applicable.
  */
-export const verifyCredential = async (credential: object): Promise<VerificationResult> => {
-  const documentLoader = await getDocumentLoader();
+export const verifyCredential = async (credential: any): Promise<VerificationResult> => {
+  try {
+    _checkCredential(credential);
+    const documentLoader = await getDocumentLoader();
 
-  return await jsonldSignatures.verify(credential, {
-    suite: new BbsBlsSignature2020(),
-    purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
-    documentLoader,
-  });
+    const verificationResult = await jsonldSignatures.verify(credential, {
+      suite: new BbsBlsSignature2020(),
+      purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
+      documentLoader,
+    });
+
+    if (verificationResult.verified) {
+      return { verified: true };
+    }
+
+    if (verificationResult.error && verificationResult.error.errors) {
+      const errorMessage = verificationResult.error.errors[0].message;
+
+      // Handle scenario where the verification method is not found
+      if (
+        errorMessage.includes('Unexpected token N in JSON at position 0') ||
+        errorMessage.includes("Cannot read properties of undefined (reading 'length')")
+      ) {
+        return { verified: false, error: 'Verification method could not be found.' };
+      }
+
+      // Handle the case where the JSON-LD object is invalid
+      if (errorMessage.includes('Dereferencing a URL did not result in a valid JSON-LD object')) {
+        const errorUrl = verificationResult.error.errors[0].details?.url;
+        return {
+          verified: false,
+          error: `Dereferencing a URL did not result in a valid JSON-LD object: "${errorUrl || 'Unknown URL'}"`,
+        };
+      }
+
+      // Fallback: return the original error message
+      return { verified: false, error: errorMessage };
+    }
+
+    // Default error message if no specific error conditions match
+    return { verified: false, error: 'Verification error.' };
+  } catch (err: any) {
+    return { verified: false, error: err.message };
+  }
 };
