@@ -30,7 +30,7 @@ export function _checkKeyPair(keyPair: any) {
  * @param {object|string} obj - The object from which to retrieve the `id`, or a string.
  * @returns {string|undefined} The `id` property or the input string, or undefined if `id` is missing.
  */
-function _getId(obj: any): any {
+function _getId(obj: any): string | undefined {
   if (typeof obj === 'string') {
     return obj;
   }
@@ -78,10 +78,14 @@ function assertDateString({ credential, prop }: { credential: any; prop: any }):
  * Returns true if the context is valid, otherwise false.
  *
  * @param {object} credential - The Verifiable Credential object.
- * @returns {boolean} True if the context is valid, otherwise false.
+ * @throws {Error} If the context is invalid.
  */
-function assertCredentialContext(credential: any): boolean {
-  return credential['@context'][0] === 'https://www.w3.org/2018/credentials/v1';
+function assertCredentialContext(credential: any): any {
+  if (credential['@context'][0] !== 'https://www.w3.org/2018/credentials/v1') {
+    throw new Error(
+      "The first element of '@context' must be 'https://www.w3.org/2018/credentials/v1'",
+    );
+  }
 }
 
 /**
@@ -102,11 +106,7 @@ export function _checkCredential(credential: any, now = new Date(), mode = 'veri
   if (jsonld.getValues(credential, '@context').length < 1) {
     throw new Error('"@context" property is required.');
   }
-  if (!assertCredentialContext(credential)) {
-    throw new Error(
-      "The first element of '@context' must be 'https://www.w3.org/2018/credentials/v1'",
-    );
-  }
+  assertCredentialContext(credential);
 
   // Check if the "type" field exists and contains the required VerifiableCredential type
   if (!credential.type) {
