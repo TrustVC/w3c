@@ -4,7 +4,8 @@
     "rootDir": null,
     "noEmit": null,
     "paths": {
-      "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer"]
+      "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer"],
+      "@tradetrust-tt/w3c-vc": ["packages/w3c-vc"]
     }
   },
   "exclude": ["tests"]
