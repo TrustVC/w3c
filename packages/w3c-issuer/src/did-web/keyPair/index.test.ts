@@ -1,7 +1,7 @@
 import { omit } from 'lodash';
 import { describe, expect, it } from 'vitest';
 import { generateKeyPair } from './index';
-import { VerificationType } from './types';
+import { VerificationType } from '../../lib/types';
 describe('keyPair', () => {
   const seedBase58 = 'CxBwAH4ftdc9XkLhw7DkFAESxh3NEdetMyJXKrPiAKAX';
   const privateKeyBase58 = '7e1VnFeqvMjqoq61qhGE2dgnQmgNDAYEX1FGzwywf2h7';

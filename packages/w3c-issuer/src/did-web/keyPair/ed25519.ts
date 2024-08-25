@@ -1,17 +1,18 @@
 import * as ed25519 from '@transmute/did-key-ed25519';
 import { Ed25519VerificationKey2018 } from '@transmute/ed25519-key-pair';
 import { base58btc } from 'multiformats/bases/base58';
-import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from './types';
+import { VerificationType } from '../../lib/types';
+import { DidWebGeneratedKeyPair, DidWebGenerateKeyPairOptions } from './types';
 
 /**
  * Generate Ed25519 key pair based on the seed.
  *
  * @param {Uint8Array} seed - Seed to generate the key pair
- * @returns {Promise<GeneratedKeyPair>} - Generated Ed25519 key pair
+ * @returns {Promise<DidWebGeneratedKeyPair>} - Generated Ed25519 key pair
  */
 export const generateEd25519KeyPair = async ({
   seed,
-}: Readonly<GenerateKeyPairOptions>): Promise<GeneratedKeyPair> => {
+}: Readonly<DidWebGenerateKeyPairOptions>): Promise<DidWebGeneratedKeyPair> => {
   if (!seed) {
     throw new Error('Invalid seed');
   }

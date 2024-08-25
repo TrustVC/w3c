@@ -1,4 +1,8 @@
-import type { GeneratedKeyPair, GenerateKeyPairOptions } from '@tradetrust-tt/w3c-issuer';
+import type {
+  DidWebGeneratedKeyPair,
+  DidWebGenerateKeyPairOptions,
+  GeneratedKeyPair,
+} from '@tradetrust-tt/w3c-issuer';
 import { generateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
@@ -59,7 +63,7 @@ export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: G
 
   const keyFilePath = `${keyPath}/keypair.json`;
 
-  const keypairOptions: GenerateKeyPairOptions = {
+  const keypairOptions: DidWebGenerateKeyPairOptions = {
     type: encAlgo,
     seedBase58,
   };
@@ -81,7 +85,7 @@ export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: G
   }
 
   try {
-    const keyPair: GeneratedKeyPair = {
+    const keyPair: DidWebGeneratedKeyPair = {
       type: keypairData.type,
       seedBase58: keypairData.seedBase58,
       privateKeyBase58: keypairData.privateKeyBase58,

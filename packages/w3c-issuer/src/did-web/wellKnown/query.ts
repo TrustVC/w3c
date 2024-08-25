@@ -1,7 +1,7 @@
-import { getDomainHostname } from '../../lib';
+import { getDomain } from '../../lib';
 import { Resolver } from 'did-resolver';
 import { getResolver as webGetResolver } from 'web-did-resolver';
-import { DidWellKnownDocument } from './types';
+import { DidWellKnownDocument, QueryDidWellKnownDocument } from './types';
 
 /**
  * Query well known DID document based on the domain.
@@ -11,8 +11,8 @@ import { DidWellKnownDocument } from './types';
  */
 export const queryWellKnownDid = async (
   domain: Readonly<string>,
-): Promise<DidWellKnownDocument | undefined> => {
-  const domainHostname = getDomainHostname(domain);
+): Promise<QueryDidWellKnownDocument> => {
+  const domainHostname = getDomain(domain);
 
   if (!domainHostname) {
     throw new Error('Invalid / Missing domain');
@@ -22,7 +22,11 @@ export const queryWellKnownDid = async (
     ...webGetResolver(),
   });
 
-  const doc = await resolver.resolve(`did:web:${domainHostname}`);
+  const did = `did:web:${domainHostname?.replace(/\//g, ':')}`;
+  const doc = await resolver.resolve(did);
 
-  return doc.didDocument as DidWellKnownDocument;
+  return {
+    wellKnownDid: doc?.didDocument as DidWellKnownDocument,
+    did,
+  };
 };
