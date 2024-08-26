@@ -73,7 +73,7 @@ export const generateKeyPair = async (
     if (privateKeyBase58 && privateKeyBase58 !== generatedKeyPair.privateKeyBase58) {
       throw new Error('Private key does not match');
     }
-    if (privateKeyBase58 && publicKeyBase58 !== generatedKeyPair.publicKeyBase58) {
+    if (publicKeyBase58 && publicKeyBase58 !== generatedKeyPair.publicKeyBase58) {
       throw new Error('Public key does not match');
     }
   }
