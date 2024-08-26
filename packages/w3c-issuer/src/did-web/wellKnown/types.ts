@@ -1,5 +1,5 @@
 import { DIDDocument } from 'did-resolver';
-import { GenerateKeyPairOptions } from '../keyPair/types';
+import { GenerateKeyPairOptions, VerificationType } from '../../lib/types';
 
 export type KeyPairType = GenerateKeyPairOptions & {
   domain: string;
@@ -32,23 +32,33 @@ export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
-export type DidKeyPair = {
+export type DidDocumentKeyPair = {
   id: string;
-  type: string;
+  type: VerificationType;
   controller: string;
-  publicKeyBase58: string;
+  publicKeyBase58?: string;
+  blockchainAccountId?: string;
 };
 
-export type DidPrivateKeyPair = DidKeyPair & {
-  seedBase58: string;
-  privateKeyBase58: string;
+export type DidDocumentPrivateKeyPair = DidDocumentKeyPair & {
+  seedBase58?: string;
+  privateKeyBase58?: string;
+
+  path?: string;
+  privateKeyHex?: string;
+  mnemonics?: string;
 };
 
 export type DidWellKnownDocument = DIDDocument & {
   [key in WellKnownAttributeType]?: string[];
 };
 
+export type QueryDidWellKnownDocument = {
+  did: string;
+  wellKnownDid: DidWellKnownDocument | undefined;
+};
+
 export type IssuedDID = {
   wellKnownDid: DidWellKnownDocument;
-  didKeyPairs: DidPrivateKeyPair;
+  didKeyPairs: DidDocumentPrivateKeyPair;
 };

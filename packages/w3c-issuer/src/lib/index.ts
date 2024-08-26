@@ -44,9 +44,16 @@ export const parseMultibase = async (multibase: string): Promise<Uint8Array> => 
   return base.decode(multibase);
 };
 
-export const getDomainHostname = (domain: Readonly<string>): string | undefined => {
+/**
+ * Strip the query, hash and protocol from the domain.
+ *
+ * @param {string} domain - Domain name (e.g., https://example.com/part/index?id=123)
+ * @returns {string} - Domain name (e.g., example.com/part/index)
+ */
+export const getDomain = (domain: Readonly<string>): string | undefined => {
   // convert domain https://example.com/part/index?id=123 to example.com
   const domainRegex = new RegExp(/.+\..+/);
+  const pathNameRegex = new RegExp(/\/.+/);
   if (!domain || !domainRegex.test(domain)) {
     return;
   }
@@ -54,5 +61,6 @@ export const getDomainHostname = (domain: Readonly<string>): string | undefined 
   const parsedUrl = domain.startsWith('http') ? domain : 'http://' + domain;
 
   const url = new URL(parsedUrl);
-  return url.hostname;
+  const validPathName = pathNameRegex.test(url.pathname);
+  return url.hostname + (validPathName ? url.pathname : '');
 };

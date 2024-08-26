@@ -1,16 +1,17 @@
 import { Bls12381G2KeyPair } from '@mattrglobal/bls12381-key-pair';
 import { base58btc } from 'multiformats/bases/base58';
-import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from './types';
+import { VerificationType } from '../../lib/types';
+import { DidWebGeneratedKeyPair, DidWebGenerateKeyPairOptions } from './types';
 
 /**
  * Generate Bls12381 key pair based on the seed.
  *
  * @param {Uint8Array} seed - Seed to generate the key pair
- * @returns {Promise<GeneratedKeyPair>} - Generated Bls12381 key pair
+ * @returns {Promise<DidWebGeneratedKeyPair>} - Generated Bls12381 key pair
  */
 export const generateBls12381KeyPair = async ({
   seed,
-}: GenerateKeyPairOptions): Promise<GeneratedKeyPair> => {
+}: DidWebGenerateKeyPairOptions): Promise<DidWebGeneratedKeyPair> => {
   if (!seed) {
     throw new Error('Invalid seed');
   }
@@ -44,7 +45,7 @@ export const generateBls12381KeyPair = async ({
     seed,
   });
 
-  const bbsKeyPair: GeneratedKeyPair = {
+  const bbsKeyPair: DidWebGeneratedKeyPair = {
     type: VerificationType.Bls12381G2Key2020,
     seed: seed,
     seedBase58: base58btc.encode(seed).slice(1),

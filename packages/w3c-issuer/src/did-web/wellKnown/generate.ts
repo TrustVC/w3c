@@ -1,11 +1,17 @@
 import { VerificationMethod } from 'did-resolver';
-import { DidKeyPair, DidWellKnownDocument, WellKnownAttribute, WellKnownEnum } from './types';
+import { VerificationContext } from '../../lib/types';
+import {
+  DidDocumentKeyPair,
+  DidWellKnownDocument,
+  WellKnownAttribute,
+  WellKnownEnum,
+} from './types';
 
 /**
  * Generate well known DID document based on the well known DID document and new key pair.
  *
  * @param {DidWellKnownDocument} wellKnown - Well known DID document
- * @param {DidKeyPair} newKeyPair - New key pair to add to the well known DID document
+ * @param {DidDocumentKeyPair} newKeyPair - New key pair to add to the well known DID document
  * @returns {DidWellKnownDocument} - Updated well known DID document
  */
 export const generateWellKnownDid = ({
@@ -13,17 +19,22 @@ export const generateWellKnownDid = ({
   newKeyPair,
 }: {
   wellKnown?: DidWellKnownDocument;
-  newKeyPair: DidKeyPair;
+  newKeyPair: DidDocumentKeyPair;
 }): DidWellKnownDocument | undefined => {
   if (!newKeyPair) {
     return;
   }
 
-  // check if public key already exists
+  // check if KeyPair already exists
   if (
-    wellKnown?.verificationMethod?.find((s) => s?.publicKeyBase58 === newKeyPair?.publicKeyBase58)
+    wellKnown?.verificationMethod?.find((s) => {
+      return (
+        (s?.publicKeyBase58 && s?.publicKeyBase58 === newKeyPair?.publicKeyBase58) ||
+        (s?.blockchainAccountId && s?.blockchainAccountId === newKeyPair?.blockchainAccountId)
+      );
+    })
   ) {
-    throw new Error('Public key already exists');
+    throw new Error('KeyPair already exists');
   }
 
   if (!wellKnown) {
@@ -40,10 +51,7 @@ export const generateWellKnownDid = ({
   }
 
   // Context
-  const context = [
-    'https://www.w3.org/ns/did/v1',
-    'https://w3id.org/security/suites/bls12381-2020/v1',
-  ];
+  const context = ['https://www.w3.org/ns/did/v1', VerificationContext[newKeyPair.type]];
   if (!wellKnown['@context']) {
     wellKnown['@context'] = context;
   } else {
@@ -62,8 +70,14 @@ export const generateWellKnownDid = ({
     type: newKeyPair.type,
     id: newKeyPair.id,
     controller: newKeyPair.controller,
-    publicKeyBase58: newKeyPair.publicKeyBase58,
   };
+
+  if (newKeyPair.publicKeyBase58) {
+    newVerificationMethod.publicKeyBase58 = newKeyPair.publicKeyBase58;
+  } else if (newKeyPair.blockchainAccountId) {
+    newVerificationMethod.blockchainAccountId = newKeyPair.blockchainAccountId;
+  }
+
   if (!wellKnown[WellKnownEnum.VERIFICATION_METHOD]) {
     wellKnown[WellKnownEnum.VERIFICATION_METHOD] = [newVerificationMethod];
   } else if (
