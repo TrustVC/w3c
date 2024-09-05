@@ -21,7 +21,7 @@ import { signCredential } from '@trustvc/w3c-vc';
  * Parameters:
  * - credential (RawVerifiableCredential): The credential to be signed.
  * - keyPair (PrivateKeyPair): The key pair options for signing.
- * - cryptoSuite (optional): The cryptosuite to be used for signing. Defaults to "BbsBlsSignature2020".
+ * - cryptoSuite (string, optional): The cryptosuite to be used for signing. Defaults to "BbsBlsSignature2020".
  * 
  * Returns:
  * - A Promise that resolves to:
