@@ -1,3 +1,5 @@
 keypair.json
 didKeyPairs.json
 wellknown.json
+vc.json
+signed_vc.json

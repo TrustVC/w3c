@@ -1,8 +1,8 @@
 import { DIDDocument } from 'did-resolver';
 import { GenerateKeyPairOptions, VerificationType } from '../../lib/types';
 
-export type KeyPairType = GenerateKeyPairOptions & {
-  domain: string;
+export type IssuedDIDOption = GenerateKeyPairOptions & {
+  domain?: string;
 };
 
 export enum WellKnownEnum {
@@ -32,20 +32,39 @@ export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
-export type DidDocumentKeyPair = {
+// TODO: Split for BBS KeyPair and ECDSA KeyPair
+// export type KeyPair = {
+//   id: string;
+//   type: VerificationType;
+//   controller: string;
+//   publicKeyBase58?: string;
+//   blockchainAccountId?: string;
+// };
+export type KeyPair = BBSKeyPair | ECDSAKeyPair;
+export type BBSKeyPair = {
   id: string;
   type: VerificationType;
   controller: string;
   publicKeyBase58?: string;
+};
+export type ECDSAKeyPair = {
+  id: string;
+  type: VerificationType;
+  controller: string;
+  publicKeyHex?: string;
+  publicKeyMultibase?: string;
   blockchainAccountId?: string;
 };
 
-export type DidDocumentPrivateKeyPair = DidDocumentKeyPair & {
+export type PrivateKeyPair = BBSPrivateKeyPair | ECDSAPrivateKeyPair;
+export type BBSPrivateKeyPair = BBSKeyPair & {
   seedBase58?: string;
   privateKeyBase58?: string;
-
+};
+export type ECDSAPrivateKeyPair = ECDSAKeyPair & {
   path?: string;
   privateKeyHex?: string;
+  privateKeyMultibase?: string;
   mnemonics?: string;
 };
 
@@ -53,12 +72,17 @@ export type DidWellKnownDocument = DIDDocument & {
   [key in WellKnownAttributeType]?: string[];
 };
 
-export type QueryDidWellKnownDocument = {
+export type QueryDidDocumentOption = {
+  domain?: Readonly<string>;
+  did?: Readonly<string>;
+};
+
+export type QueryDidDocument = {
   did: string;
   wellKnownDid: DidWellKnownDocument | undefined;
 };
 
 export type IssuedDID = {
   wellKnownDid: DidWellKnownDocument;
-  didKeyPairs: DidDocumentPrivateKeyPair;
+  didKeyPairs: PrivateKeyPair;
 };

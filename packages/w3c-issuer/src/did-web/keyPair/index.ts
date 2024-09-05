@@ -35,7 +35,7 @@ export const generateKeyPair = async (
     publicKeyBase58,
     mnemonics,
     privateKeyHex,
-    blockchainAccountId,
+    ethereumAddress: blockchainAccountId,
   } = keyPairOptions;
 
   if (!type) {
@@ -80,7 +80,7 @@ export const generateKeyPair = async (
 
   if (mnemonics) {
     generatedKeyPair = generatedKeyPair as DidEtherGeneratedKeyPair;
-    if (blockchainAccountId && blockchainAccountId !== generatedKeyPair.blockchainAccountId) {
+    if (blockchainAccountId && blockchainAccountId !== generatedKeyPair.ethereumAddress) {
       throw new Error('Wallet public address does not match');
     }
     if (privateKeyHex && privateKeyHex !== generatedKeyPair.privateKeyHex) {

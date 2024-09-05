@@ -6,7 +6,10 @@ export type DidEtherGenerateKeyPairOptions = BaseKeyPair & {
   path?: string;
 
   privateKeyHex?: string;
-  blockchainAccountId?: string;
+  privateKeyMultibase?: string;
+  publicKeyHex?: string;
+  publicKeyMultibase?: string;
+  ethereumAddress?: string;
 };
 
 export type DidEtherGeneratedKeyPair = Required<DidEtherGenerateKeyPairOptions>;

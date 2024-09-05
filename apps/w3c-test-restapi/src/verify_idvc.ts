@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-var-requires */
 import {
   BbsBlsSignature2020,
   BbsBlsSignatureProof2020,
@@ -7,6 +7,7 @@ import {
 } from '@mattrglobal/jsonld-signatures-bbs';
 import { generateKeyPair, issueDID, VerificationType } from '@tradetrust-tt/w3c-issuer';
 import { Resolver } from 'did-resolver';
+// @ts-ignore: No types available for jsonld-signatures
 import { extendContextLoader, purposes, sign, verify } from 'jsonld-signatures';
 import * as web from 'web-did-resolver';
 
