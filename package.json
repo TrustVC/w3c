@@ -81,6 +81,7 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "@inquirer/prompts": "^5.3.8",
     "@mattrglobal/bls12381-key-pair": "^1.2.1",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
     "@tradetrust-tt/w3c-issuer": "*",
@@ -93,6 +94,7 @@
     "ethr-did-resolver": "^10.1.9",
     "express": "^4.19.2",
     "inquirer": "^10.1.2",
+    "jsonld": "^8.3.2",
     "jsonld-signatures": "^11.2.1",
     "multiformats": "^9.9.0",
     "web-did-resolver": "^2.0.27",

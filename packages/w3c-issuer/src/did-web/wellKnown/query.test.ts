@@ -1,29 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { queryWellKnownDid } from './query';
+import { queryDidDocument } from './query';
 
 describe('query', () => {
-  describe('queryWellKnownDid', () => {
-    it('should fail to queryWellKnownDid without any input', async () => {
-      await expect(queryWellKnownDid('')).rejects.toThrowError('Invalid / Missing domain');
+  describe('queryDidDocument', () => {
+    it('should fail to queryDidDocument without any input', async () => {
+      await expect(queryDidDocument({ domain: '' })).rejects.toThrowError('Missing domain');
     });
 
-    it('should fail to queryWellKnownDid with invalid did', async () => {
-      await expect(queryWellKnownDid('invalidDomain')).rejects.toThrowError(
-        'Invalid / Missing domain',
+    it('should fail to queryDidDocument with invalid did', async () => {
+      await expect(queryDidDocument({ domain: 'invalidDomain' })).rejects.toThrowError(
+        'Invalid domain',
       );
     });
 
-    it('should queryWellKnownDid with valid did', async () => {
+    it('should queryDidDocument with valid did', async () => {
       const domain = 'https://www.google.com';
-      const { did, wellKnownDid } = await queryWellKnownDid(domain);
+      const { did, wellKnownDid } = await queryDidDocument({ domain });
       expect(wellKnownDid).toBe(null);
       expect(did).toBe('did:web:www.google.com');
     });
 
     // TODO: NEED TO BE UPDATED WITH TRUST-VC DID GITHUB PAGES, REPLACING NGHANINN.COM
-    it('should queryWellKnownDid with valid did', async () => {
+    it.skip('should queryDidDocument with valid did', async () => {
       const domain = 'https://nghaninn.github.io/did/1';
-      const { did, wellKnownDid } = await queryWellKnownDid(domain);
+      const { did, wellKnownDid } = await queryDidDocument({ domain });
       expect(wellKnownDid).toMatchInlineSnapshot(`
         {
           "@context": [

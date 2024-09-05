@@ -1,17 +1,12 @@
 import { VerificationMethod } from 'did-resolver';
 import { VerificationContext } from '../../lib/types';
-import {
-  DidDocumentKeyPair,
-  DidWellKnownDocument,
-  WellKnownAttribute,
-  WellKnownEnum,
-} from './types';
+import { KeyPair, DidWellKnownDocument, WellKnownAttribute, WellKnownEnum } from './types';
 
 /**
  * Generate well known DID document based on the well known DID document and new key pair.
  *
  * @param {DidWellKnownDocument} wellKnown - Well known DID document
- * @param {DidDocumentKeyPair} newKeyPair - New key pair to add to the well known DID document
+ * @param {KeyPair} newKeyPair - New key pair to add to the well known DID document
  * @returns {DidWellKnownDocument} - Updated well known DID document
  */
 export const generateWellKnownDid = ({
@@ -19,7 +14,7 @@ export const generateWellKnownDid = ({
   newKeyPair,
 }: {
   wellKnown?: DidWellKnownDocument;
-  newKeyPair: DidDocumentKeyPair;
+  newKeyPair: KeyPair;
 }): DidWellKnownDocument | undefined => {
   if (!newKeyPair) {
     return;
