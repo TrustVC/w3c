@@ -19,11 +19,14 @@ export const queryDidDocument = async ({
   }
 
   if (!did && domain) {
-    const domainHostname = getDomain(domain);
+    let domainHostname = getDomain(domain);
 
     if (!domainHostname) {
       throw new Error('Invalid domain');
     }
+
+    domainHostname = domainHostname.replace(/\/.well-known\/did.json$/, '');
+    domainHostname = domainHostname.replace(/\/did.json$/, '');
 
     did = `did:web:${domainHostname?.replace(/\//g, ':')}`;
   }
