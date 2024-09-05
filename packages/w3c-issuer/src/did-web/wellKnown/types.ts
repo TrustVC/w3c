@@ -32,23 +32,39 @@ export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
-export type KeyPair = {
+// TODO: Split for BBS KeyPair and ECDSA KeyPair
+// export type KeyPair = {
+//   id: string;
+//   type: VerificationType;
+//   controller: string;
+//   publicKeyBase58?: string;
+//   blockchainAccountId?: string;
+// };
+export type KeyPair = BBSKeyPair | ECDSAKeyPair;
+export type BBSKeyPair = {
   id: string;
   type: VerificationType;
   controller: string;
   publicKeyBase58?: string;
+};
+export type ECDSAKeyPair = {
+  id: string;
+  type: VerificationType;
+  controller: string;
+  publicKeyHex?: string;
+  publicKeyMultibase?: string;
   blockchainAccountId?: string;
 };
 
-export type PrivateKeyPair = KeyPair & {
+export type PrivateKeyPair = BBSPrivateKeyPair | ECDSAPrivateKeyPair;
+export type BBSPrivateKeyPair = BBSKeyPair & {
   seedBase58?: string;
   privateKeyBase58?: string;
-
+};
+export type ECDSAPrivateKeyPair = ECDSAKeyPair & {
   path?: string;
   privateKeyHex?: string;
   privateKeyMultibase?: string;
-  publicKeyHex?: string;
-  publicKeyMultibase?: string;
   mnemonics?: string;
 };
 

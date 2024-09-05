@@ -24,6 +24,7 @@ import {
 async function getDocumentLoader(): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
 
+  // Set default cached files within our lib.
   resultMap.set(DID_V1_URL, {
     contextUrl: null,
     document: contexts[DID_V1_URL],

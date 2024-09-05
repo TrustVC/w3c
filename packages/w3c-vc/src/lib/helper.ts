@@ -1,4 +1,4 @@
-import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
+import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { CredentialStatus, CredentialSubject, VerifiableCredential } from './types';
@@ -17,11 +17,13 @@ export function _checkKeyPair(keyPair: PrivateKeyPair) {
   if (!keyPair.id) {
     throw new Error('"id" property in keyPair is required.');
   }
-  if (!keyPair.privateKeyBase58) {
-    throw new Error('"privateKeyBase58" property in keyPair is required.');
-  }
-  if (!keyPair.publicKeyBase58) {
-    throw new Error('"publicKeyBase58" property in keyPair is required.');
+  if (keyPair.type === VerificationType.Bls12381G2Key2020) {
+    if (!(keyPair as BBSPrivateKeyPair).privateKeyBase58) {
+      throw new Error('"privateKeyBase58" property in keyPair is required.');
+    }
+    if (!(keyPair as BBSPrivateKeyPair).publicKeyBase58) {
+      throw new Error('"publicKeyBase58" property in keyPair is required.');
+    }
   }
 }
 

@@ -1,6 +1,13 @@
 import { VerificationMethod } from 'did-resolver';
-import { VerificationContext } from '../../lib/types';
-import { KeyPair, DidWellKnownDocument, WellKnownAttribute, WellKnownEnum } from './types';
+import { VerificationContext, VerificationType } from '../../lib/types';
+import {
+  KeyPair,
+  DidWellKnownDocument,
+  WellKnownAttribute,
+  WellKnownEnum,
+  BBSKeyPair,
+  ECDSAKeyPair,
+} from './types';
 
 /**
  * Generate well known DID document based on the well known DID document and new key pair.
@@ -24,8 +31,12 @@ export const generateWellKnownDid = ({
   if (
     wellKnown?.verificationMethod?.find((s) => {
       return (
-        (s?.publicKeyBase58 && s?.publicKeyBase58 === newKeyPair?.publicKeyBase58) ||
-        (s?.blockchainAccountId && s?.blockchainAccountId === newKeyPair?.blockchainAccountId)
+        (newKeyPair.type === VerificationType.Bls12381G2Key2020 &&
+          s?.publicKeyBase58 &&
+          s?.publicKeyBase58 === (newKeyPair as BBSKeyPair)?.publicKeyBase58) ||
+        (newKeyPair.type === VerificationType.EcdsaSecp256k1RecoveryMethod2020 &&
+          s?.blockchainAccountId &&
+          s?.blockchainAccountId === (newKeyPair as ECDSAKeyPair)?.blockchainAccountId)
       );
     })
   ) {
@@ -67,10 +78,16 @@ export const generateWellKnownDid = ({
     controller: newKeyPair.controller,
   };
 
-  if (newKeyPair.publicKeyBase58) {
-    newVerificationMethod.publicKeyBase58 = newKeyPair.publicKeyBase58;
-  } else if (newKeyPair.blockchainAccountId) {
-    newVerificationMethod.blockchainAccountId = newKeyPair.blockchainAccountId;
+  if (
+    newKeyPair.type === VerificationType.Bls12381G2Key2020 &&
+    (newKeyPair as BBSKeyPair).publicKeyBase58
+  ) {
+    newVerificationMethod.publicKeyBase58 = (newKeyPair as BBSKeyPair).publicKeyBase58;
+  } else if (
+    newKeyPair.type === VerificationType.EcdsaSecp256k1RecoveryMethod2020 &&
+    (newKeyPair as ECDSAKeyPair).blockchainAccountId
+  ) {
+    newVerificationMethod.blockchainAccountId = (newKeyPair as ECDSAKeyPair).blockchainAccountId;
   }
 
   if (!wellKnown[WellKnownEnum.VERIFICATION_METHOD]) {

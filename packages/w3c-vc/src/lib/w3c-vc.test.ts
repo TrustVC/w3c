@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { signCredential, verifyCredential } from './w3c-vc';
+import { VerificationType } from '@tradetrust-tt/w3c-issuer';
 
 const modifiedCredential: any = {
   '@context': [
@@ -29,6 +30,7 @@ const modifiedCredential: any = {
 const modifiedKeyPair: any = {
   id: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-1',
   controller: 'did:web:jocular-sunflower-144c0d.netlify.app',
+  type: VerificationType.Bls12381G2Key2020,
   publicKeyBase58:
     't5Rdg91V9rVVKSGbeJ6ZJP32cED2Dad1nEjQpgMwMrmbvwryzgy8ppg9dwMNWJEKQL2dotEKAe1Z9iAe5e6wQBngCEqESavreSX8d1TfPtCyRYntYQe9pQWvaGae6NvJ68J',
 };

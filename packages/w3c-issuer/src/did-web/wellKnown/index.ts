@@ -45,15 +45,6 @@ export const issueDID = async (didInput: IssuedDIDOption): Promise<IssuedDID> =>
       privateKeyBase58: generatedKeyPair?.privateKeyBase58,
       publicKeyBase58: generatedKeyPair?.publicKeyBase58,
     };
-  } else if (generatedKeyPair.type === VerificationType.EcdsaSecp256k1RecoveryMethod2020) {
-    keyPairs = {
-      ...keyPairs,
-      mnemonics: generatedKeyPair?.mnemonics,
-      path: generatedKeyPair?.path,
-      privateKeyMultibase: generatedKeyPair?.privateKeyMultibase,
-      publicKeyMultibase: generatedKeyPair?.publicKeyMultibase,
-      blockchainAccountId: 'eip155:' + generatedKeyPair?.ethereumAddress,
-    };
   }
 
   const generatedWellKnownDid = generateWellKnownDid({
