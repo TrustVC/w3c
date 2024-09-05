@@ -79,28 +79,34 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
 }
 
 /**
- * Signs a credential using the BBS+ signature scheme.
+ * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
  * @param {object} keyPair - The key pair options for signing.
+ * @param {string} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
  * @returns {Promise<SigningResult>} The signed credential or an error message in case of failure.
  */
 export const signCredential = async (
   credential: RawVerifiableCredential,
   keyPair: PrivateKeyPair,
+  cryptoSuite = 'BbsBlsSignature2020',
 ): Promise<SigningResult> => {
   try {
-    _checkKeyPair(keyPair);
-    _checkCredential(credential, undefined, 'sign');
-    const documentLoader = await getDocumentLoader();
+    if (cryptoSuite === 'BbsBlsSignature2020') {
+      _checkKeyPair(keyPair);
+      _checkCredential(credential, undefined, 'sign');
+      const documentLoader = await getDocumentLoader();
 
-    const key = new Bls12381G2KeyPair(keyPair as KeyPairOptions);
+      const key = new Bls12381G2KeyPair(keyPair as KeyPairOptions);
 
-    const signed = await jsonldSignatures.sign(credential, {
-      suite: new BbsBlsSignature2020({ key }),
-      purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
-      documentLoader,
-    });
-    return { signed: signed };
+      const signed = await jsonldSignatures.sign(credential, {
+        suite: new BbsBlsSignature2020({ key }),
+        purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
+        documentLoader,
+      });
+      return { signed: signed };
+    } else {
+      return { error: `"${cryptoSuite}" is not supported.` };
+    }
   } catch (err: unknown) {
     if (!(err instanceof Error)) {
       return { error: 'An error occurred while signing the credential.' };
