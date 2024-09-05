@@ -1,6 +1,7 @@
+import { VerificationType } from '@tradetrust-tt/w3c-issuer';
 import { describe, expect, it } from 'vitest';
 import { signCredential, verifyCredential } from './w3c-vc';
-import { VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { SignedVerifiableCredential } from './types';
 
 const modifiedCredential: any = {
   '@context': [
@@ -50,7 +51,9 @@ describe('Credential Signing and Verification', () => {
     expect(signedCredential.signed).toBeDefined();
     expect(signedCredential.error).toBeUndefined();
 
-    const verificationResult = await verifyCredential(signedCredential.signed);
+    const verificationResult = await verifyCredential(
+      signedCredential.signed as SignedVerifiableCredential,
+    );
     expect(verificationResult.verified).toBe(true);
     expect(verificationResult.error).toBeUndefined();
   });
