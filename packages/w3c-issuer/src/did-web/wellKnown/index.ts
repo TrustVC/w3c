@@ -1,13 +1,13 @@
 import { VerificationType } from '../../lib/types';
 import { generateKeyPair } from './../keyPair';
 import { generateWellKnownDid, nextKeyId } from './generate';
-import { queryWellKnownDid } from './query';
-import { DidDocumentPrivateKeyPair, IssuedDID, KeyPairType } from './types';
+import { queryDidDocument } from './query';
+import { PrivateKeyPair, IssuedDID, IssuedDIDOption } from './types';
 
 /**
  *  Issue a DID based on the input key pair.
  *
- * @param {KeyPairType} didInput
+ * @param {IssuedDIDOption} didInput
  * @param {string} didInput.domain - Domain name
  * @param {string} didInput.type - Type of key pair to generate, supported types are Bls12381G2Key2020
  *
@@ -21,8 +21,8 @@ import { DidDocumentPrivateKeyPair, IssuedDID, KeyPairType } from './types';
  *
  * @returns {Promise<IssuedDID>} - Well known DID document and generated DID key pair
  */
-export const issueDID = async (didInput: KeyPairType): Promise<IssuedDID> => {
-  const { wellKnownDid, did } = (await queryWellKnownDid(didInput.domain)) ?? {};
+export const issueDID = async (didInput: IssuedDIDOption): Promise<IssuedDID> => {
+  const { wellKnownDid, did } = (await queryDidDocument({ domain: didInput?.domain })) ?? {};
 
   if (wellKnownDid && wellKnownDid.id !== did) {
     throw new Error('Input domain mismatch: ' + wellKnownDid.id + ' !== ' + did);
@@ -32,7 +32,7 @@ export const issueDID = async (didInput: KeyPairType): Promise<IssuedDID> => {
 
   const generatedKeyPair = await generateKeyPair(didInput);
 
-  let keyPairs: DidDocumentPrivateKeyPair = {
+  let keyPairs: PrivateKeyPair = {
     id: `${did}#keys-${keyId}`,
     type: generatedKeyPair.type,
     controller: did,
@@ -44,14 +44,6 @@ export const issueDID = async (didInput: KeyPairType): Promise<IssuedDID> => {
       seedBase58: generatedKeyPair?.seedBase58,
       privateKeyBase58: generatedKeyPair?.privateKeyBase58,
       publicKeyBase58: generatedKeyPair?.publicKeyBase58,
-    };
-  } else if (generatedKeyPair.type === VerificationType.EcdsaSecp256k1RecoveryMethod2020) {
-    keyPairs = {
-      ...keyPairs,
-      mnemonics: generatedKeyPair?.mnemonics,
-      path: generatedKeyPair?.path,
-      privateKeyHex: generatedKeyPair?.privateKeyHex,
-      blockchainAccountId: generatedKeyPair?.blockchainAccountId,
     };
   }
 

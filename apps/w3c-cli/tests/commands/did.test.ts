@@ -5,6 +5,7 @@ import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getIssuedDid, promptQuestions, saveIssuedDid } from '../../src/commands/did';
 import { IssueDidInput } from '../../src/types';
+import { IssuedDIDOption } from '@tradetrust-tt/w3c-issuer';
 
 vi.mock('inquirer');
 vi.mock('fs', async () => {
@@ -110,14 +111,14 @@ describe('did', () => {
     it('should throw error if getIssuedDid receives invalid domain name', async () => {
       const consoleLogSpy = vi.spyOn(console, 'error');
 
-      const mockKeypairData: any = {
+      const mockKeypairData: IssuedDIDOption = {
         type: VerificationType.Bls12381G1Key2020,
-        domainName: 'bad-domain-name',
+        domain: 'bad-domain-name',
       };
       await getIssuedDid(mockKeypairData);
       expect(consoleLogSpy).toHaveBeenNthCalledWith(
         1,
-        chalk.red(`Error generating DID token: Invalid / Missing domain`),
+        chalk.red(`Error generating DID token: Invalid domain`),
       );
     });
   });

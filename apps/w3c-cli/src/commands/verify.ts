@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { verifyCredential } from '@tradetrust-tt/w3c-vc';
+import { SignedVerifiableCredential, verifyCredential } from '@tradetrust-tt/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -9,6 +8,7 @@ export const command = 'verify';
 export const describe = 'Verify a verifiable credential.';
 
 // Prompt question for the verifiable credential file path
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const credentialPrompt: any = {
   name: 'credentialPath',
   type: 'input',
@@ -24,11 +24,13 @@ export const handler = async () => {
   const { credentialData } = answers;
 
   // Verify the credential
-  await verifyCredentialData(credentialData);
+  await verifyCredentialData(credentialData as SignedVerifiableCredential);
 };
 
 // Verify the verifiable credential using the `verifyCredential` method
-export const verifyCredentialData = async (credentialData: any): Promise<void> => {
+export const verifyCredentialData = async (
+  credentialData: SignedVerifiableCredential,
+): Promise<void> => {
   const result = await verifyCredential(credentialData);
   if (result.verified) {
     console.log(chalk.green(`Verification result: ${result.verified}`));
@@ -51,10 +53,10 @@ export const promptForCredential = async () => {
 };
 
 // Read and parse JSON file
-const readJsonFile = (filePath: string, fileType: string): any | null => {
+const readJsonFile = <T>(filePath: string, fileType: string): T | null => {
   try {
     const data = fs.readFileSync(filePath, { encoding: 'utf8' });
-    return JSON.parse(data);
+    return JSON.parse(data) as T;
   } catch (err) {
     console.error(chalk.red(`Invalid ${fileType} file path: ${filePath}`));
     return null;

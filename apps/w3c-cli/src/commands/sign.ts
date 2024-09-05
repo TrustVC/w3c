@@ -1,23 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { signCredential } from '@tradetrust-tt/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { CredentialQuestionType, KeyPairQuestionType, QuestionType } from '../types';
+import { VerifiableCredential } from 'packages/w3c-vc/src/lib/types';
+import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 
 export const command = 'sign';
 export const describe =
   'Sign a verifiable credential using a key pair and save the signed credential.';
 
 // Prompt questions for key pair file, credential file, and output directory paths
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const keyPairPrompt: any = {
   name: 'keyPairPath',
   type: 'input',
   message: 'Please enter the path to your key pair JSON file:',
-  default: './keypair.json',
+  default: './didKeyPairs.json',
   required: true,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const credentialPrompt: any = {
   name: 'credentialPath',
   type: 'input',
@@ -26,6 +29,7 @@ const credentialPrompt: any = {
   required: true,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const outputPathPrompt: any = {
   name: 'outputPath',
   type: 'input',
@@ -41,7 +45,10 @@ export const handler = async () => {
   const { keypairData, credentialData, outputPath } = answers;
 
   // Sign the credential
-  const signedCredential = await signCredentialWithKeyPair(credentialData, keypairData);
+  const signedCredential = await signCredentialWithKeyPair(
+    credentialData,
+    keypairData as PrivateKeyPair,
+  );
   if (!signedCredential) return;
 
   // Save the signed credential
@@ -50,9 +57,9 @@ export const handler = async () => {
 
 // Sign the credential with the provided key pair
 export const signCredentialWithKeyPair = async (
-  credentialData: any,
-  keypairData: any,
-): Promise<any> => {
+  credentialData: VerifiableCredential,
+  keypairData: PrivateKeyPair,
+): Promise<VerifiableCredential> => {
   const result = await signCredential(credentialData, keypairData);
 
   if (result?.signed) {
@@ -64,7 +71,10 @@ export const signCredentialWithKeyPair = async (
 };
 
 // Save the signed credential to the specified output path
-export const saveSignedCredential = async (signedCredential: any, outputPath: string) => {
+export const saveSignedCredential = async (
+  signedCredential: VerifiableCredential,
+  outputPath: string,
+) => {
   const filePath = `${outputPath}/signed_vc.json`;
   try {
     fs.writeFileSync(filePath, JSON.stringify(signedCredential));
@@ -94,10 +104,10 @@ export const promptForInputs = async () => {
 };
 
 // Read and parse JSON file
-const readJsonFile = (filePath: string, fileType: string): any | null => {
+const readJsonFile = <T>(filePath: string, fileType: string): T | null => {
   try {
     const data = fs.readFileSync(filePath, { encoding: 'utf8' });
-    return JSON.parse(data);
+    return JSON.parse(data) as T;
   } catch (err) {
     console.error(chalk.red(`Invalid ${fileType} file path: ${filePath}`));
     return null;

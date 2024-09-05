@@ -1,25 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-var-requires */
-const jsonld = require('jsonld');
+import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+// @ts-ignore: No types available for jsonld
+import * as jsonld from 'jsonld';
+import { CredentialStatus, CredentialSubject, VerifiableCredential } from './types';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
  * Throws an error if any of the required properties (controller, id, privateKeyBase58, publicKeyBase58) are missing.
  *
- * @param {object} keyPair - The key pair object to be validated.
+ * @param {PrivateKeyPair} keyPair - The key pair object to be validated.
  * @throws {Error} If any required property is missing in the key pair.
  */
-export function _checkKeyPair(keyPair: any) {
+export function _checkKeyPair(keyPair: PrivateKeyPair) {
   if (!keyPair.controller) {
     throw new Error('"controller" property in keyPair is required.');
   }
   if (!keyPair.id) {
     throw new Error('"id" property in keyPair is required.');
   }
-  if (!keyPair.privateKeyBase58) {
-    throw new Error('"privateKeyBase58" property in keyPair is required.');
-  }
-  if (!keyPair.publicKeyBase58) {
-    throw new Error('"publicKeyBase58" property in keyPair is required.');
+  if (keyPair.type === VerificationType.Bls12381G2Key2020) {
+    if (!(keyPair as BBSPrivateKeyPair).privateKeyBase58) {
+      throw new Error('"privateKeyBase58" property in keyPair is required.');
+    }
+    if (!(keyPair as BBSPrivateKeyPair).publicKeyBase58) {
+      throw new Error('"publicKeyBase58" property in keyPair is required.');
+    }
   }
 }
 
@@ -30,7 +34,7 @@ export function _checkKeyPair(keyPair: any) {
  * @param {object|string} obj - The object from which to retrieve the `id`, or a string.
  * @returns {string|undefined} The `id` property or the input string, or undefined if `id` is missing.
  */
-function _getId(obj: any): string | undefined {
+function _getId<T extends { id?: string }>(obj: T | string): string | undefined {
   if (typeof obj === 'string') {
     return obj;
   }
@@ -66,7 +70,13 @@ const dateRegex = new RegExp(
  * @param {string} options.prop - The property name that contains the date string.
  * @throws {Error} If the date string is invalid.
  */
-function assertDateString({ credential, prop }: { credential: any; prop: any }): any {
+function assertDateString({
+  credential,
+  prop,
+}: {
+  credential: VerifiableCredential;
+  prop: string;
+}): void {
   const value = credential[prop];
   if (!dateRegex.test(value)) {
     throw new Error(`"${prop}" must be a valid date: ${value}`);
@@ -80,7 +90,7 @@ function assertDateString({ credential, prop }: { credential: any; prop: any }):
  * @param {object} credential - The Verifiable Credential object.
  * @throws {Error} If the context is invalid.
  */
-function assertCredentialContext(credential: any): any {
+function assertCredentialContext(credential: VerifiableCredential): void {
   if (credential['@context'][0] !== 'https://www.w3.org/2018/credentials/v1') {
     throw new Error(
       "The first element of '@context' must be 'https://www.w3.org/2018/credentials/v1'",
@@ -92,12 +102,16 @@ function assertCredentialContext(credential: any): any {
  * Validates a Verifiable Credential (VC) based on a set of rules.
  * Throws an error if any validation check fails.
  *
- * @param {object} credential - The Verifiable Credential object.
+ * @param {T} credential - The Verifiable Credential object.
  * @param {string|Date} [now=new Date()] - The current date/time, used for validation.
- * @param {string} [mode='verify'] - The mode of operation, either `sign` or `verify`.
+ * @param {'sign' | 'verify'} [mode='verify'] - The mode of operation, either `sign` or `verify`.
  * @throws {Error} If any validation rule is violated.
  */
-export function _checkCredential(credential: any, now = new Date(), mode = 'verify') {
+export function _checkCredential<T extends VerifiableCredential>(
+  credential: T,
+  now = new Date(),
+  mode: 'sign' | 'verify' = 'verify',
+): void {
   if (typeof now === 'string') {
     now = new Date(now);
   }
@@ -186,7 +200,7 @@ export function _checkCredential(credential: any, now = new Date(), mode = 'veri
   }
 
   // Validate credentialStatus field if present
-  jsonld.getValues(credential, 'credentialStatus').forEach((cs: { id: any; type: any }) => {
+  jsonld.getValues(credential, 'credentialStatus').forEach((cs: CredentialStatus) => {
     if ('id' in cs) {
       _validateUriId({ id: cs.id, propertyName: 'credentialStatus.id' });
     }
@@ -216,7 +230,7 @@ export function _checkCredential(credential: any, now = new Date(), mode = 'veri
  * @param {string} name - The name of the property being validated.
  * @throws {Error} If the object is invalid.
  */
-function _checkTypedObject(obj: any, name: string) {
+function _checkTypedObject<T extends object>(obj: T, name: string): void {
   if (!isObject(obj)) {
     throw new Error(`property "${name}" must be an object.`);
   }
@@ -232,29 +246,32 @@ function _checkTypedObject(obj: any, name: string) {
  * Validates the credentialSubject field in a Verifiable Credential.
  * Throws an error if the field is missing or invalid.
  *
- * @param {object} credential - The Verifiable Credential object.
+ * @param {VerifiableCredential} credential - The Verifiable Credential object.
  * @throws {Error} If the credentialSubject field is missing or invalid.
  */
-function _checkCredentialSubjects(credential: any): any {
+function _checkCredentialSubjects(credential: VerifiableCredential): void {
   if (!credential?.credentialSubject) {
     throw new Error('"credentialSubject" property is required.');
   }
+
   if (Array.isArray(credential?.credentialSubject)) {
-    return credential?.credentialSubject.map((subject: any) =>
+    credential?.credentialSubject.map((subject: CredentialSubject) =>
       _checkCredentialSubject({ subject }),
     );
+    return;
   }
-  return _checkCredentialSubject({ subject: credential?.credentialSubject });
+
+  _checkCredentialSubject({ subject: credential?.credentialSubject });
 }
 
 /**
  * Validates a credential subject object to ensure it contains valid properties.
  * Throws an error if the credential subject is not valid.
  *
- * @param {object} subject - The credential subject object to validate.
+ * @param {CredentialSubject} subject - The credential subject object to validate.
  * @throws {Error} If the credential subject is invalid.
  */
-function _checkCredentialSubject(subject: any): any {
+function _checkCredentialSubject(subject: CredentialSubject): void {
   if (isObject(subject) === false) {
     throw new Error('"credentialSubject" must be a non-null object.');
   }
@@ -276,6 +293,7 @@ function _checkCredentialSubject(subject: any): any {
  * @param {any} obj - The value to check.
  * @returns {boolean} True if the value is a valid object, otherwise false.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isObject(obj: any): boolean {
   // return false for null even though it has type object
   if (obj === null) {
@@ -295,6 +313,7 @@ function isObject(obj: any): boolean {
  * @param {object} obj - The object to check.
  * @returns {boolean} True if the object is empty, otherwise false.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function _emptyObject(obj: any): boolean {
   // if the parameter is not an object return true
   // as a non-object is an empty object
@@ -313,7 +332,7 @@ function _emptyObject(obj: any): boolean {
  * @param {string} options.propertyName - The name of the property being validated.
  * @throws {Error} If the ID is not a valid URL.
  */
-function _validateUriId({ id, propertyName }: { id: string; propertyName: string }): any {
+function _validateUriId({ id, propertyName }: { id: string; propertyName: string }): void {
   let parsed: URL;
   try {
     parsed = new URL(id);

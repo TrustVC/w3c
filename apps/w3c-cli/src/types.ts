@@ -19,11 +19,6 @@ export type QuestionType = {
   outputPath: string;
 };
 
-export const encAlgos: VerificationType[] = [
-  VerificationType.Bls12381G2Key2020,
-  VerificationType.Ed25519VerificationKey2018,
-];
-
 export type GenerateInput = {
   encAlgo: VerificationType;
   seedBase58: string;
