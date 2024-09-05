@@ -24,7 +24,7 @@ export const handler = async () => {
   const { credentialData } = answers;
 
   // Verify the credential
-  await verifyCredentialData(credentialData);
+  await verifyCredentialData(credentialData as SignedVerifiableCredential);
 };
 
 // Verify the verifiable credential using the `verifyCredential` method
