@@ -40,9 +40,9 @@ This guide explains how to self-host a Decentralized Identifier (DID) using the 
 ```
 - **Save the document** as `did.json`.
 ### 2. Host DID Document
-1. **Determine your DID URL**: For a domain like `example.com`, the DID Document needs to be accessible at the URL https://`example.com/.well-known/did.json`.
+1. **Determine your DID URL**: For a domain like `example.com`, the DID Document needs to be accessible at the URL `https://example.com/.well-known/did.json`.
 
-2. Upload the DID Document:
+2. **Upload the DID Document**:
 - Ensure the file is accessible at `https://yourdomain.com/.well-known/did.json`.
 - Test by visiting the URL directly in your browser to ensure the file is being served correctly.
 
