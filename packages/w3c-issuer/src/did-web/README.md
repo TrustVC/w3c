@@ -20,7 +20,7 @@ This guide explains how to self-host a Decentralized Identifier (DID) using the 
 
 ## Step-by-Step Setup
 ### 1. Generate DID Document
-- **Use `TrustVC W3C Issuer` to generate your DID Document**: Our tool simplifies the process of creating a compliant DID Document. 
+- **Use [`TrustVC W3C Issuer`](../../README.md) to generate your DID Document**: Our tool simplifies the process of creating a compliant DID Document. 
 - **Review your DID Document**: Ensure the generated file contains the required properties, such as `id`, `verificationMethod`, and `authentication`. Here's an example using the `BbsBlsSignature2020` verification method:
 ```json
 {
