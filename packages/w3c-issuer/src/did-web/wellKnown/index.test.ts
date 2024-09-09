@@ -1,9 +1,9 @@
-import { issueDID } from '.';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import * as query from './query';
-import { IssuedDID } from './types';
-import { VerificationType } from '../../lib/types';
 import _ from 'lodash';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { issueDID } from '.';
+import { VerificationType } from '../../lib/types';
+import * as query from './query';
+import { BBSPrivateKeyPair, IssuedDID } from './types';
 
 const mockedQueryDidDocumentResult = {
   id: 'did:web:localhost.com',
@@ -139,8 +139,12 @@ describe('wellKnown', () => {
         expect(result.didKeyPairs).toHaveProperty('seedBase58');
         expect(result.didKeyPairs).toHaveProperty('publicKeyBase58');
         expect(result.didKeyPairs).toHaveProperty('privateKeyBase58');
-        expect(result.didKeyPairs?.publicKeyBase58).toBe(bls12381KeyPair.publicKeyBase58);
-        expect(result.didKeyPairs?.privateKeyBase58).toBe(bls12381KeyPair.privateKeyBase58);
+        expect((result.didKeyPairs as BBSPrivateKeyPair)?.publicKeyBase58).toBe(
+          bls12381KeyPair.publicKeyBase58,
+        );
+        expect((result.didKeyPairs as BBSPrivateKeyPair)?.privateKeyBase58).toBe(
+          bls12381KeyPair.privateKeyBase58,
+        );
       });
 
       it('should issueDID with valid domain, type, seed and valid hosted did', async () => {
