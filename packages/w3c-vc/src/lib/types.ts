@@ -36,6 +36,7 @@ export type SignedVerifiableCredential = {
   id: string;
   issuer: string | Record<string, any>;
   issuanceDate: string;
+  validFrom?: string;
   expirationDate?: string;
   credentialStatus?: CredentialStatus;
   credentialSubject: CredentialSubjects;

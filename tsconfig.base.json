@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "CommonJS",
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
+      "@tradetrust-tt/w3c-credential-status": ["./packages/w3c-credential-status/src"],
       "@tradetrust-tt/w3c-issuer": ["./packages/w3c-issuer/src"],
       "@tradetrust-tt/w3c-vc": ["./packages/w3c-vc/src"]
     },
@@ -26,7 +27,7 @@
     "alwaysStrict": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
-    "noEmit": true,
+    "noEmit": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "build", "tmp"]
