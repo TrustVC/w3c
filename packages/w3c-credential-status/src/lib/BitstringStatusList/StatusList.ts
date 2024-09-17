@@ -2,13 +2,9 @@
  * Implementing @digitalbazaar/vc-bitstring-status-list
  */
 import { Bitstring } from './Bitstring';
+import { BitstringStatusListOption } from './types';
 
-export type BitstringStatusListOption = {
-  length?: number;
-  buffer?: Buffer;
-};
-
-export class BitstringStatusList {
+export class StatusList {
   bitstring: Bitstring;
   length: number;
 
@@ -32,12 +28,12 @@ export class BitstringStatusList {
     return await this.bitstring.encodeBits();
   }
 
-  static async decode({ encodedList }: { encodedList: string }): Promise<BitstringStatusList> {
+  static async decode({ encodedList }: { encodedList: string }): Promise<StatusList> {
     try {
       const buffer = await Bitstring.decodeBits({
         encoded: encodedList,
       });
-      return new BitstringStatusList({ buffer });
+      return new StatusList({ buffer });
     } catch (e: unknown) {
       if (e instanceof Error) {
         throw e;

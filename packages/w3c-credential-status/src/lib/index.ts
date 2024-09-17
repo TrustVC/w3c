@@ -1,21 +1,19 @@
-import { PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import {
-  CredentialSubject as GeneralCredentialSubject,
   RawVerifiableCredential,
   signCredential,
   SignedVerifiableCredential,
   SigningResult,
   verifyCredential,
 } from '@tradetrust-tt/w3c-vc';
-import { Bitstring } from './Bitstring/Bitstring';
-import { BitstringStatusList } from './Bitstring/StatusList';
-
-export type VCCredentialStatusType = 'BitstringStatusListCredential' | 'StatusList2021Credential';
-export type VCBitstringCredentialSubjectType = 'BitstringStatusList' | 'StatusList2021';
-export type VCCredentialSubjectType = VCBitstringCredentialSubjectType;
-
-export type CredentialStatusType = 'BitstringStatusListEntry' | 'StatusList2021Entry';
-export type CredentialStatusPurpose = 'revocation' | 'suspension' | 'message';
+import { StatusList } from './BitstringStatusList/StatusList';
+import {
+  CreateVCCredentialStatusOptions,
+  CredentialStatus,
+  VCBitstringCredentialSubject,
+  VCBitstringCredentialSubjectType,
+  VCCredentialStatusType,
+} from './types';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
   VCCredentialStatusType,
@@ -25,32 +23,9 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
   BitstringStatusListCredential: 'BitstringStatusList',
 };
 
-export type VCBitstringCredentialSubject = GeneralCredentialSubject & {
-  id: string;
-  type: VCBitstringCredentialSubjectType[];
-  statusPurpose: CredentialStatusPurpose;
-  encodedList: string;
-};
-
-export type CreateVCCredentialStatusOptions = {
-  id: string; // URL: https://didrp-test.esatus.com/credentials/statuslist/1
-  type: VCCredentialStatusType;
-  credentialSubject: VCBitstringCredentialSubject;
-};
-
 export const credentialVersion = {
   v1: 'https://www.w3.org/2018/credentials/v1',
   v2: 'https://www.w3.org/ns/credentials/v2',
-};
-
-export type CredentialStatus = GeneralCredentialSubject & {
-  id: string;
-  type: CredentialStatusType;
-  statusPurpose: CredentialStatusPurpose;
-  statusListIndex: string;
-  statusListCredential: string;
-  // statusSize?: Number;
-  // statusMessage?: Object;
 };
 
 export const createCredentialStatusVC = async (
@@ -107,7 +82,7 @@ export const createCredentialStatusVC = async (
 export const verifyCredentialStatus = async (
   credentialStatus: CredentialStatus,
 ): Promise<boolean> => {
-  const { id, type, statusPurpose, statusListIndex, statusListCredential } = credentialStatus ?? {};
+  const { type, statusPurpose, statusListIndex, statusListCredential } = credentialStatus ?? {};
 
   // Check type is supported
   switch (type) {
@@ -129,7 +104,7 @@ export const verifyCredentialStatus = async (
   // Check statusListIndex is valid, e.g. number greater than or equal to 0
   const index = Number.parseInt(statusListIndex);
   if (!index && index !== 0) {
-    throw new Error(`Invalid statusListIndex: ${statusListIndex}`);
+    throw new Error(`Invalid statusListIndex: Invalid Number: ${statusListIndex}`);
   }
 
   // Check statusListCredential is valid e.g. URL
@@ -146,56 +121,23 @@ export const verifyCredentialStatus = async (
   const vcStatusListVerificationResult = await verifyCredential(vcStatusList);
 
   if (!vcStatusListVerificationResult?.verified) {
-    throw new Error(`Failed to verify statusListCredential: ${statusListCredential}`);
+    console.error(
+      `Failed to verify Credential Status - Verifiable Credential: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,
+    );
+    throw new Error(
+      `Failed to verify Credential Status - Verifiable Credential: ${vcStatusListVerificationResult.verified}`,
+    );
   }
 
   const statusList: VCBitstringCredentialSubject =
     vcStatusList.credentialSubject as VCBitstringCredentialSubject;
 
-  // @ts-ignore: No types available for @digitalbazaar/bitstring
-  const bitstringStatusList = await BitstringStatusList.decode(statusList);
+  const bitstringStatusList = await StatusList.decode(statusList);
+
+  // Check if statusListIndex is within the range of the bitstringStatusList
+  if (bitstringStatusList.length <= index || index < 0) {
+    throw new Error(`Invalid statusListIndex: Index out of range: ${statusListIndex}`);
+  }
 
   return bitstringStatusList.getStatus(index);
 };
-
-const main = async () => {
-  const bitstringStatusList = new BitstringStatusList({ length: 131000 });
-
-  const privateKeyPair: PrivateKeyPair = {
-    id: 'did:web:nghaninn.github.io:did:1#keys-1',
-    controller: 'did:web:nghaninn.github.io:did:1',
-    type: VerificationType.Bls12381G2Key2020,
-    seedBase58: 'GW1FUS9Xg7T6xsZDCVx48EM1uuo25k435U77ftZrQEYB',
-    privateKeyBase58: '5LbHsFCpW4YzCNWbqhZJkWyVnayp5gEDsUvrq47qLSN6',
-    publicKeyBase58:
-      'rDAqEpT2FJspbHL9gM1utkT2UNADn59HMiouSLoktZw8B1GsKyXB3Wd5fgDucCbMDRLcQhWHEuQrrKSf7P2NyqgFwHGbzNQ9X8EPbXakSr2cbqLghmzkGvE4ppEHVkBYc83',
-  };
-
-  const options: CreateVCCredentialStatusOptions = {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json',
-    type: 'StatusList2021Credential',
-    credentialSubject: {
-      id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json#list',
-      type: ['StatusList2021'],
-      statusPurpose: 'revocation',
-      encodedList: await bitstringStatusList.encode(),
-    },
-  };
-
-  const credentialStatusVC = await createCredentialStatusVC(options, privateKeyPair);
-  console.log('🚀 ~ main ~ credentialStatusVC:', JSON.stringify(credentialStatusVC, null, 2));
-
-  const credentialStatus = {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json#1',
-    type: 'StatusList2021Entry' as CredentialStatusType,
-    statusPurpose: 'revocation' as CredentialStatusPurpose,
-    statusListIndex: '1',
-    statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1.json',
-  };
-  console.log('🚀 ~ main ~ credentialStatus:', credentialStatus);
-
-  const verified = await verifyCredentialStatus(credentialStatus);
-  console.log('🚀 ~ main ~ verified:', verified);
-};
-
-main();

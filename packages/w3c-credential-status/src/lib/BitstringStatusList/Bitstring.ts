@@ -4,13 +4,7 @@
 import * as assert from './assertions';
 // @ts-ignore: No types available for pako
 import { gzip, ungzip } from 'pako';
-
-export type BitstringType = {
-  length?: number;
-  buffer?: Uint8Array;
-  leftToRightIndexing?: boolean;
-  littleEndianBits?: boolean;
-};
+import { BitstringType } from './types';
 
 export class Bitstring {
   leftToRightIndexing: boolean;
