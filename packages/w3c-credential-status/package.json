@@ -33,6 +33,10 @@
     }
   },
   "dependencies": {
+    "@tradetrust-tt/w3c-vc": "*",
+    "@tradetrust-tt/w3c-issuer": "*",
+    "base64url-universal": "^2.0.0",
+    "pako": "^2.1.0"
   },
   "repository": {
     "type": "git",

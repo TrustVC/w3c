@@ -1,18 +1,31 @@
 import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import {
+  CredentialContextVersion,
   RawVerifiableCredential,
   signCredential,
-  SignedVerifiableCredential,
   SigningResult,
   verifyCredential,
 } from '@tradetrust-tt/w3c-vc';
+import { BBS_V1_URL, STATUS_LIST_2021_CREDENTIAL_URL } from '@tradetrust-tt/w3c-vc/contexts';
+import {
+  _checkCredentialSubjectForStatusList2021Credential,
+  assertStatusListIndexWithinRange,
+} from './BitstringStatusList/assertions';
 import { StatusList } from './BitstringStatusList/StatusList';
+import {
+  VCBitstringCredentialSubjectType,
+  VCCredentialStatusType,
+} from './BitstringStatusList/types';
+import {
+  _checkCredentialStatus,
+  assertStatusPurposeMatches,
+  fetchCredentialStatusVC,
+} from './helper';
 import {
   CreateVCCredentialStatusOptions,
   CredentialStatus,
+  CredentialStatusResult,
   VCBitstringCredentialSubject,
-  VCBitstringCredentialSubjectType,
-  VCCredentialStatusType,
 } from './types';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
@@ -23,121 +36,112 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
   BitstringStatusListCredential: 'BitstringStatusList',
 };
 
-export const credentialVersion = {
-  v1: 'https://www.w3.org/2018/credentials/v1',
-  v2: 'https://www.w3.org/ns/credentials/v2',
-};
-
-export const createCredentialStatusVC = async (
+/**
+ * Creates a signed credential status VC.
+ * @param {object} options
+ * @param {string} options.id - The ID of the credential.
+ * @param {object} options.credentialSubject - The credential subject.
+ * @param {PrivateKeyPair} keyPair - The key pair options for signing.
+ * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'StatusList2021Credential'.
+ * @param {string} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
+ * @returns {Promise<SigningResult>} The signed credential status VC or an error message in case of failure.
+ */
+export const createSignedCredentialStatusVC = async (
   options: CreateVCCredentialStatusOptions,
   keyPair: PrivateKeyPair,
+  type: VCCredentialStatusType = 'StatusList2021Credential',
+  cryptoSuite = 'BbsBlsSignature2020',
 ): Promise<SigningResult> => {
-  const { type, id, credentialSubject } = options;
+  try {
+    const { id, credentialSubject } = options;
 
-  switch (type) {
-    case 'StatusList2021Credential':
-      if (
-        !credentialSubject.type &&
-        !credentialSubject.type?.includes(VCCredentialStatusTypeToVCCredentialSubjectType[type])
-      ) {
-        throw new Error(`Invalid type for credentialSubject: ${credentialSubject.type}`);
-      }
-      break;
-    default:
-      throw new Error(`Unsupported type: ${type}`);
+    switch (type) {
+      case 'StatusList2021Credential':
+        _checkCredentialSubjectForStatusList2021Credential(credentialSubject);
+        break;
+      default:
+        throw new Error(`Unsupported type: ${type}`);
+    }
+
+    if (!credentialSubject.id) {
+      credentialSubject.id = `${id}#list`;
+    }
+
+    const context = [CredentialContextVersion.v1];
+
+    if (cryptoSuite === 'BbsBlsSignature2020') {
+      context.push(BBS_V1_URL);
+    }
+
+    if (type === 'StatusList2021Credential') {
+      context.push(STATUS_LIST_2021_CREDENTIAL_URL);
+    }
+
+    const vc: RawVerifiableCredential = {
+      '@context': context,
+      id,
+      type: ['VerifiableCredential', type],
+      issuer: keyPair.controller,
+      issuanceDate: new Date().toISOString(),
+      validFrom: new Date().toISOString(),
+      credentialSubject,
+    };
+
+    const signedCredential = await signCredential(vc, keyPair);
+
+    return signedCredential;
+  } catch (err: unknown) {
+    if (!(err instanceof Error)) {
+      return { error: 'An error occurred while signing the credential status VC.' };
+    }
+    return { error: err.message };
   }
-
-  if (!credentialSubject.id) {
-    credentialSubject.id = `${id}#list`;
-  }
-
-  if (!credentialSubject.type) {
-    credentialSubject.type = [
-      VCCredentialStatusTypeToVCCredentialSubjectType[type],
-    ] as VCBitstringCredentialSubjectType[];
-  }
-
-  const context = [credentialVersion['v1'], 'https://w3id.org/security/bbs/v1'];
-
-  if (type === 'StatusList2021Credential') {
-    context.push('https://w3id.org/vc/status-list/2021/v1');
-  }
-
-  const vc: RawVerifiableCredential = {
-    '@context': context,
-    id,
-    type: ['VerifiableCredential', type],
-    issuer: keyPair.controller,
-    issuanceDate: new Date().toISOString(),
-    validFrom: new Date().toISOString(),
-    credentialSubject,
-  };
-  console.log('🚀 ~ createCredentialStatusVC ~ vc:', vc);
-
-  const signedCredential = await signCredential(vc, keyPair);
-
-  return signedCredential;
 };
 
+/**
+ * Verifies the credential status and returns the status of the given index.
+ * @param {CredentialStatus} credentialStatus - The credential status to be verified.
+ * @returns {Promise<CredentialStatusResult>} The result of the credential status from the index or an error message in case of failure.
+ */
 export const verifyCredentialStatus = async (
   credentialStatus: CredentialStatus,
-): Promise<boolean> => {
-  const { type, statusPurpose, statusListIndex, statusListCredential } = credentialStatus ?? {};
+): Promise<CredentialStatusResult> => {
+  try {
+    const { statusPurpose, statusListIndex, statusListCredential } = credentialStatus ?? {};
 
-  // Check type is supported
-  switch (type) {
-    case 'StatusList2021Entry':
-      break;
-    default:
-      throw new Error(`Unsupported type: ${credentialStatus.type}`);
+    _checkCredentialStatus(credentialStatus);
+    const index = Number.parseInt(statusListIndex);
+
+    const vcStatusList = await fetchCredentialStatusVC(statusListCredential);
+
+    const statusList = vcStatusList.credentialSubject as VCBitstringCredentialSubject;
+    assertStatusPurposeMatches(statusList, statusPurpose);
+
+    const bitstringStatusList = await StatusList.decode(statusList);
+
+    assertStatusListIndexWithinRange(bitstringStatusList, index);
+
+    // Check if the statusListCredential is valid
+    const vcStatusListVerificationResult = await verifyCredential(vcStatusList);
+    if (!vcStatusListVerificationResult?.verified) {
+      console.error(
+        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,
+      );
+      throw new Error(
+        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}`,
+      );
+    }
+
+    const status = bitstringStatusList.getStatus(index);
+
+    return { status };
+  } catch (err: unknown) {
+    if (!(err instanceof Error)) {
+      return { error: 'An error occurred while verifying the credential status.' };
+    }
+    if (err.message.includes('Could not decode encoded status list; reason:')) {
+      return { error: `Invalid encodedList: encodedList cannot be decoded` };
+    }
+    return { error: err.message };
   }
-
-  // Check statusPurpose is supported
-  switch (statusPurpose) {
-    case 'revocation':
-    case 'suspension':
-      break;
-    default:
-      throw new Error(`Unsupported statusPurpose: ${credentialStatus.statusPurpose}`);
-  }
-
-  // Check statusListIndex is valid, e.g. number greater than or equal to 0
-  const index = Number.parseInt(statusListIndex);
-  if (!index && index !== 0) {
-    throw new Error(`Invalid statusListIndex: Invalid Number: ${statusListIndex}`);
-  }
-
-  // Check statusListCredential is valid e.g. URL
-  if (!statusListCredential || !URL.canParse(statusListCredential)) {
-    throw new Error(`Invalid statusListCredential: ${statusListCredential}`);
-  }
-
-  const vcStatusListResp = await fetch(statusListCredential, {
-    redirect: 'follow',
-    headers: { Accept: 'application/*' },
-  });
-  const vcStatusList: SignedVerifiableCredential = await vcStatusListResp.json();
-
-  const vcStatusListVerificationResult = await verifyCredential(vcStatusList);
-
-  if (!vcStatusListVerificationResult?.verified) {
-    console.error(
-      `Failed to verify Credential Status - Verifiable Credential: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,
-    );
-    throw new Error(
-      `Failed to verify Credential Status - Verifiable Credential: ${vcStatusListVerificationResult.verified}`,
-    );
-  }
-
-  const statusList: VCBitstringCredentialSubject =
-    vcStatusList.credentialSubject as VCBitstringCredentialSubject;
-
-  const bitstringStatusList = await StatusList.decode(statusList);
-
-  // Check if statusListIndex is within the range of the bitstringStatusList
-  if (bitstringStatusList.length <= index || index < 0) {
-    throw new Error(`Invalid statusListIndex: Index out of range: ${statusListIndex}`);
-  }
-
-  return bitstringStatusList.getStatus(index);
 };

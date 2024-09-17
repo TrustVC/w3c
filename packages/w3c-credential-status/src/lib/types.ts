@@ -1,22 +1,19 @@
 import { CredentialSubject as GeneralCredentialSubject } from '@tradetrust-tt/w3c-vc';
-
-export type VCCredentialStatusType = 'BitstringStatusListCredential' | 'StatusList2021Credential';
-export type VCBitstringCredentialSubjectType = 'BitstringStatusList' | 'StatusList2021';
-export type VCCredentialSubjectType = VCBitstringCredentialSubjectType;
-
-export type CredentialStatusType = 'BitstringStatusListEntry' | 'StatusList2021Entry';
-export type CredentialStatusPurpose = 'revocation' | 'suspension' | 'message';
+import {
+  CredentialStatusPurpose,
+  CredentialStatusType,
+  VCBitstringCredentialSubjectType,
+} from './BitstringStatusList/types';
 
 export type VCBitstringCredentialSubject = GeneralCredentialSubject & {
-  id: string;
-  type: VCBitstringCredentialSubjectType[];
+  id?: string;
+  type: VCBitstringCredentialSubjectType;
   statusPurpose: CredentialStatusPurpose;
   encodedList: string;
 };
 
 export type CreateVCCredentialStatusOptions = {
-  id: string; // URL: https://didrp-test.esatus.com/credentials/statuslist/1
-  type: VCCredentialStatusType;
+  id: string;
   credentialSubject: VCBitstringCredentialSubject;
 };
 
@@ -28,4 +25,9 @@ export type CredentialStatus = GeneralCredentialSubject & {
   statusListCredential: string;
   // statusSize?: number;
   // statusMessage?: Object;
+};
+
+export type CredentialStatusResult = {
+  status?: boolean;
+  error?: string;
 };

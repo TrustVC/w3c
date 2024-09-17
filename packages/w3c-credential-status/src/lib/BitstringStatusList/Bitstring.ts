@@ -1,5 +1,6 @@
 /*!
  * Copyright (c) 2020-2023 Digital Bazaar, Inc. All rights reserved.
+ * Implementing @digitalbazaar/bitstring
  */
 import * as assert from './assertions';
 // @ts-ignore: No types available for pako
@@ -67,7 +68,7 @@ export class Bitstring {
     this.leftToRightIndexing = leftToRightIndexing;
   }
 
-  set(position: number, on: boolean) {
+  set(position: number, on: boolean): void {
     assert.isNumber(position, 'position');
     assert.isBoolean(on, 'on');
     const { length, leftToRightIndexing } = this;
@@ -86,14 +87,14 @@ export class Bitstring {
     return !!(this.bits[index] & bit);
   }
 
-  async encodeBits() {
+  async encodeBits(): Promise<string> {
     // @ts-ignore: No types available for base64url-universal
     const base64url = await import('base64url-universal');
 
     return base64url.encode(gzip(this.bits));
   }
 
-  static async decodeBits({ encoded }: { encoded: string }) {
+  static async decodeBits({ encoded }: { encoded: string }): Promise<Buffer> {
     // @ts-ignore: No types available for base64url-universal
     const base64url = await import('base64url-universal');
 
@@ -101,11 +102,11 @@ export class Bitstring {
     return ungzip(base64url.decode(encoded));
   }
 
-  async compressBits() {
+  async compressBits(): Promise<Uint8Array> {
     return gzip(this.bits);
   }
 
-  static async uncompressBits({ compressed }: { compressed: Uint8Array }) {
+  static async uncompressBits({ compressed }: { compressed: Uint8Array }): Promise<Uint8Array> {
     assert.isUint8Array(compressed, 'compressed');
     return ungzip(compressed);
   }

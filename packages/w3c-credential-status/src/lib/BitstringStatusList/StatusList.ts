@@ -1,4 +1,5 @@
-/*
+/*!
+ * Copyright (c) 2024 Digital Bazaar, Inc. All rights reserved.
  * Implementing @digitalbazaar/vc-bitstring-status-list
  */
 import { Bitstring } from './Bitstring';
