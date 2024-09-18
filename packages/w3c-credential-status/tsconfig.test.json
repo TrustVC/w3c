@@ -7,6 +7,5 @@
     "moduleResolution": "Node10",
     "declaration": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src/**/*"]
 }

@@ -1,7 +1,12 @@
 import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
-import { CredentialStatus, CredentialSubject, VerifiableCredential } from './types';
+import {
+  CredentialContextVersion,
+  CredentialStatus,
+  CredentialSubject,
+  VerifiableCredential,
+} from './types';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
@@ -91,10 +96,8 @@ function assertDateString({
  * @throws {Error} If the context is invalid.
  */
 function assertCredentialContext(credential: VerifiableCredential): void {
-  if (credential['@context'][0] !== 'https://www.w3.org/2018/credentials/v1') {
-    throw new Error(
-      "The first element of '@context' must be 'https://www.w3.org/2018/credentials/v1'",
-    );
+  if (credential['@context'][0] !== CredentialContextVersion.v1) {
+    throw new Error(`The first element of '@context' must be '${CredentialContextVersion.v1}'`);
   }
 }
 

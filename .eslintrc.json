@@ -35,7 +35,8 @@
         "ts-nocheck": "allow-with-description",
         "ts-check": false
       }
-    ]
+    ],
+    "@typescript-eslint/no-wrapper-object-types": "error"
   },
   "overrides": [
     {

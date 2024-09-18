@@ -1,4 +1,10 @@
 import { DIDDocument } from 'did-resolver';
+import { VC_V1_URL, VC_V2_URL } from '../contexts';
+
+export const CredentialContextVersion = {
+  v1: VC_V1_URL,
+  v2: VC_V2_URL,
+};
 
 // Define the type for the signing result
 export interface SigningResult {
@@ -32,10 +38,12 @@ export type VerifiableCredential = SignedVerifiableCredential | RawVerifiableCre
 
 export type SignedVerifiableCredential = {
   '@context': string | string[];
-  type: string[];
   id: string;
+  type: string[];
   issuer: string | Record<string, any>;
   issuanceDate: string;
+  validFrom?: string;
+  validUntil?: string;
   expirationDate?: string;
   credentialStatus?: CredentialStatus;
   credentialSubject: CredentialSubjects;
