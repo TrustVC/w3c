@@ -124,11 +124,8 @@ export const verifyCredentialStatus = async (
     // Check if the statusListCredential is valid
     const vcStatusListVerificationResult = await verifyCredential(vcStatusList);
     if (!vcStatusListVerificationResult?.verified) {
-      console.error(
-        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,
-      );
       throw new Error(
-        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}`,
+        `Failed to verify Credential Status VC. Error: "${vcStatusListVerificationResult.error}"`,
       );
     }
 

@@ -155,11 +155,11 @@ describe('w3c-credential-status', () => {
 
     it('should return an error if the credential is not verified', async () => {
       vi.spyOn(helper, 'fetchCredentialStatusVC').mockResolvedValue(credentialStatusVC);
-      vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: false });
+      vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: false, error: 'Error' });
 
       const { error } = await verifyCredentialStatus(credentialStatus);
 
-      expect(error).toBe('Failed to verify Credential Status VC: false');
+      expect(error).toBe('Failed to verify Credential Status VC. Error: "Error"');
     });
 
     it('should return an error if BitstringStatusList is invalid', async () => {
