@@ -21,23 +21,23 @@ const credentialStatusVC = {
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
   ],
-  id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json',
+  id: 'https://nghaninn.github.io/did/credentials/statuslist#1',
   type: ['VerifiableCredential', 'StatusList2021Credential'],
   issuer: 'did:web:nghaninn.github.io:did:1',
-  issuanceDate: '2024-09-17T06:44:34.527Z',
-  validFrom: '2024-09-17T06:44:34.527Z',
+  issuanceDate: '2024-09-18T08:32:22.707Z',
+  validFrom: '2024-09-18T08:32:22.707Z',
   credentialSubject: {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json#list',
+    id: 'https://nghaninn.github.io/did/credentials/statuslist/1#list',
     type: 'StatusList2021',
     statusPurpose: 'revocation',
     encodedList: 'H4sIAAAAAAAAA-3BMQEAAAwCoPVPZbMZwwf4HAAAAAAAAAAAAAAAAAAAALBRLLoWyfc_AAA',
   },
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-09-17T06:44:36Z',
+    created: '2024-09-18T08:32:24Z',
     proofPurpose: 'assertionMethod',
     proofValue:
-      'pTcAc0riPPIzejOcyM+7ogPFteq71UZsgZUpst5dJnMm7XduGfbeP2rBx+gjEpplD/iMJ2OcyX/970pihFWFl2iHZoOWvSdIKOyKIvA1pLUPIpr13aDnDBXGDhPCy7iUHxPT0mAgZtPPbh43L/z1GA==',
+      'iTKbuWZ7Yly0kjK4tadb42h5pkPByuaUruVGtayegepHnUYmqFlzWZOMyb4GCEslB0vbbNOar5flz5quRUU3e7CMUcXR6Ty5oqleTuBecOggMW5THwgGxgJ6rSXK6+Z1Paqv+F37FyfDfIxiv63B2Q==',
     verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1',
   },
 };
@@ -48,33 +48,33 @@ const credentialStatusVC_withInvalidEncodedList = {
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
   ],
-  id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json',
+  id: 'https://nghaninn.github.io/did/credentials/statuslist#1',
   type: ['VerifiableCredential', 'StatusList2021Credential'],
   issuer: 'did:web:nghaninn.github.io:did:1',
-  issuanceDate: '2024-09-17T07:40:28.638Z',
-  validFrom: '2024-09-17T07:40:28.638Z',
+  issuanceDate: '2024-09-18T08:41:08.157Z',
+  validFrom: '2024-09-18T08:41:08.157Z',
   credentialSubject: {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json#list',
+    id: 'https://nghaninn.github.io/did/credentials/statuslist/1#list',
     type: 'StatusList2021',
     statusPurpose: 'revocation',
     encodedList: 'encodedList',
   },
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-09-17T07:40:30Z',
+    created: '2024-09-18T08:41:09Z',
     proofPurpose: 'assertionMethod',
     proofValue:
-      'lulsFsDcSEeDEp1g6ih+CCxoKOuQiGoaM319b8QyXyV9qwBLcpSo9xTYLM7F+au5ZmzMmmoBvYp8LURrUZTN4DtGR+ucQ7lsLUE/9nyF/gFWRh5wmBQkr9EnJ1STjyVIo4h90PjouXBUjJK/p8Pnhg==',
+      'l/46gB3E+8EfhFqFkBRvvgdGvayxSrNuGsPswIUqeS8je7YRW1UIOeLYtOa7VoDcO2snTSMSDGIhZn2OZUcuFomAVutDJvpy+4AmUl4y4m0yEalOmXix+4Mf8QQm7bQiR/itcmA4puQyy4z24qk1Kg==',
     verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1',
   },
 };
 
 const credentialStatus = {
-  id: 'https://nghaninn.github.io/did/credentials/statuslist/1.json#1',
+  id: 'https://nghaninn.github.io/did/credentials/statuslist/1#1',
   type: 'StatusList2021Entry' as CredentialStatusType,
   statusPurpose: 'revocation' as CredentialStatusPurpose,
   statusListIndex: '1',
-  statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1.json',
+  statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1',
 };
 
 describe('w3c-credential-status', () => {
