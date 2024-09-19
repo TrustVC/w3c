@@ -1,5 +1,5 @@
 import didV1 from './did-v1.json';
-import { Document } from '../lib/types';
+import { Document } from './types';
 
 export const DID_V1_URL = 'https://www.w3.org/ns/did/v1';
 export const VC_V1_URL = 'https://www.w3.org/2018/credentials/v1';
@@ -10,4 +10,9 @@ export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/
 
 export const contexts: { [key: string]: Document } = {
   [DID_V1_URL]: didV1,
+};
+
+export const CredentialContextVersion = {
+  v1: VC_V1_URL,
+  v2: VC_V2_URL,
 };

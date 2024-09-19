@@ -1,14 +1,13 @@
-import { CredentialSubject as GeneralCredentialSubject } from '@tradetrust-tt/w3c-vc';
 import {
-  CredentialStatusPurpose,
-  CredentialStatusType,
+  CredentialStatusPurpose as BitstringStatusListCredentialStatusPurpose,
+  CredentialStatusType as BitstringStatusListCredentialStatusType,
   VCBitstringCredentialSubjectType,
 } from './BitstringStatusList/types';
 
-export type VCBitstringCredentialSubject = GeneralCredentialSubject & {
+export type VCBitstringCredentialSubject = {
   id?: string;
   type: VCBitstringCredentialSubjectType;
-  statusPurpose: CredentialStatusPurpose;
+  statusPurpose: BitstringStatusListCredentialStatusPurpose;
   encodedList: string;
 };
 
@@ -17,17 +16,17 @@ export type CreateVCCredentialStatusOptions = {
   credentialSubject: VCBitstringCredentialSubject;
 };
 
-export type CredentialStatus = GeneralCredentialSubject & {
-  id: string;
-  type: CredentialStatusType;
-  statusPurpose: CredentialStatusPurpose;
-  statusListIndex: string;
-  statusListCredential: string;
-  // statusSize?: number;
-  // statusMessage?: Object;
-};
+export type CredentialStatusType = BitstringStatusListCredentialStatusType;
+export type CredentialStatusPurpose = BitstringStatusListCredentialStatusPurpose;
 
-export type CredentialStatusResult = {
-  status?: boolean;
-  error?: string;
+export type RawCredentialStatusVC = {
+  '@context': string | string[];
+  id: string;
+  type: string[];
+  issuer: string | Record<string, any>;
+  issuanceDate: string;
+  validFrom?: string;
+  validUntil?: string;
+  expirationDate?: string;
+  credentialSubject: Record<string, any>;
 };

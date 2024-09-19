@@ -1,12 +1,8 @@
+import { CredentialContextVersion } from '@tradetrust-tt/w3c-context';
 import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
-import {
-  CredentialContextVersion,
-  CredentialStatus,
-  CredentialSubject,
-  VerifiableCredential,
-} from './types';
+import { CredentialStatus, CredentialSubject, VerifiableCredential } from './types';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.

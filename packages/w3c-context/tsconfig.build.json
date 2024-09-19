@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "outDir": "./dist",
+      "declaration": true,
+      "resolveJsonModule": true,
+      "types": ["node", "vite/client"],
+      "rootDir": ".",
+      "baseUrl": "."
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.json"
+    ],
+    "exclude": ["node_modules", ".coverage", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  }

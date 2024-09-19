@@ -25,15 +25,9 @@
       "require": "./dist/index.js",
       "import": "./dist/esm/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/esm/*.js",
-      "types": "./dist/*.d.ts"
     }
   },
   "dependencies": {
-    "@tradetrust-tt/w3c-vc": "*",
     "@tradetrust-tt/w3c-issuer": "*",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"
