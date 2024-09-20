@@ -10,6 +10,7 @@ import {
   VCCredentialStatusType,
 } from './BitstringStatusList/types';
 import { CreateVCCredentialStatusOptions, RawCredentialStatusVC } from './types';
+import { getValidFromDateFromCredentialStatusVC } from './utils';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
   VCCredentialStatusType,
@@ -60,13 +61,15 @@ export const createCredentialStatusPayload = async (
       context.push(STATUS_LIST_2021_CREDENTIAL_URL);
     }
 
+    const validFrom = await getValidFromDateFromCredentialStatusVC(id);
+
     const vc: RawCredentialStatusVC = {
       '@context': context,
       id,
       type: ['VerifiableCredential', type],
       issuer: keyPair.controller,
       issuanceDate: new Date().toISOString(),
-      validFrom: new Date().toISOString(),
+      validFrom,
       credentialSubject,
     };
 

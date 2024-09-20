@@ -1,8 +1,14 @@
 import { CredentialContextVersion } from '@tradetrust-tt/w3c-context';
+import {
+  BitstringStatusListCredentialStatus,
+  assertCredentialStatusType,
+  assertStatusList2021Entry,
+} from '@tradetrust-tt/w3c-credential-status';
 import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
-import { CredentialStatus, CredentialSubject, VerifiableCredential } from './types';
+import { assertCredentialStatus } from '../sign/credentialStatus';
+import { CredentialStatus, CredentialSubject, VerifiableCredential } from '../types';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
@@ -200,12 +206,7 @@ export function _checkCredential<T extends VerifiableCredential>(
 
   // Validate credentialStatus field if present
   jsonld.getValues(credential, 'credentialStatus').forEach((cs: CredentialStatus) => {
-    if ('id' in cs) {
-      _validateUriId({ id: cs.id, propertyName: 'credentialStatus.id' });
-    }
-    if (!cs.type) {
-      throw new Error('"credentialStatus" must include a type.');
-    }
+    assertCredentialStatus(cs);
   });
 
   // Validate that certain fields, if present, are objects with a type property
@@ -331,7 +332,7 @@ function _emptyObject(obj: any): boolean {
  * @param {string} options.propertyName - The name of the property being validated.
  * @throws {Error} If the ID is not a valid URL.
  */
-function _validateUriId({ id, propertyName }: { id: string; propertyName: string }): void {
+export function _validateUriId({ id, propertyName }: { id: string; propertyName: string }): void {
   let parsed: URL;
   try {
     parsed = new URL(id);
@@ -344,3 +345,19 @@ function _validateUriId({ id, propertyName }: { id: string; propertyName: string
     throw new Error(`"${propertyName}" must be a URI: "${id}".`);
   }
 }
+
+/**
+ * Asserts the credential status is valid.
+ * @param credentialStatus - The credential status to be verified.
+ * @throws {Error} - Throws an error if the credential status is invalid.
+ */
+
+export const _checkCredentialStatus = (credentialStatus: CredentialStatus): void => {
+  const { type } = credentialStatus ?? {};
+
+  if (type === 'StatusList2021Entry') {
+    assertStatusList2021Entry(credentialStatus as BitstringStatusListCredentialStatus);
+  } else {
+    assertCredentialStatusType(type);
+  }
+};

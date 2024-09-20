@@ -1,16 +1,15 @@
 import {
   assertStatusListIndexWithinRange,
   assertStatusPurposeMatches,
+  BitstringStatusListCredentialStatus,
+  fetchCredentialStatusVC,
   StatusList,
   VCBitstringCredentialSubject,
 } from '@tradetrust-tt/w3c-credential-status';
-import { _checkCredentialStatus, fetchCredentialStatusVC } from './utils';
-import {
-  BitstringStatusListCredentialStatus,
-  CredentialStatus,
-  CredentialStatusResult,
-} from './types';
+import { _checkCredentialStatus } from '../../helper';
+import { CredentialStatus, CredentialStatusResult } from './types';
 import { verifyCredential } from '../../w3c-vc';
+import { SignedVerifiableCredential } from '../../types';
 
 /**
  * Verifies the credential status and returns the status of the given index.
@@ -28,7 +27,8 @@ export const verifyCredentialStatus = async (
 
     const index = Number.parseInt(statusListIndex);
 
-    const vcStatusList = await fetchCredentialStatusVC(statusListCredential);
+    const vcStatusList: SignedVerifiableCredential =
+      await fetchCredentialStatusVC(statusListCredential);
 
     const statusList = vcStatusList.credentialSubject as VCBitstringCredentialSubject;
     assertStatusPurposeMatches(statusList, statusPurpose);

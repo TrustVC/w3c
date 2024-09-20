@@ -19,6 +19,21 @@ export type CreateVCCredentialStatusOptions = {
 export type CredentialStatusType = BitstringStatusListCredentialStatusType;
 export type CredentialStatusPurpose = BitstringStatusListCredentialStatusPurpose;
 
+export type GeneralCredentialStatus = {
+  id: string;
+  type: CredentialStatusType;
+};
+
+export type BitstringStatusListCredentialStatus = GeneralCredentialStatus & {
+  id: string;
+  type: CredentialStatusType;
+  statusPurpose: CredentialStatusPurpose;
+  statusListIndex: string;
+  statusListCredential: string;
+  // statusSize?: number;
+  // statusMessage?: Object;
+};
+
 export type RawCredentialStatusVC = {
   '@context': string | string[];
   id: string;
@@ -29,4 +44,14 @@ export type RawCredentialStatusVC = {
   validUntil?: string;
   expirationDate?: string;
   credentialSubject: Record<string, any>;
+};
+
+export type SignedCredentialStatusVC = RawCredentialStatusVC & {
+  proof: {
+    type: string;
+    created: string;
+    proofPurpose: string;
+    verificationMethod: string;
+    proofValue: string;
+  };
 };

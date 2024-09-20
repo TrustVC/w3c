@@ -1,14 +1,15 @@
+import * as w3c_credential_status from '@tradetrust-tt/w3c-credential-status';
 import {
   CredentialStatusPurpose,
   CredentialStatusType,
 } from '@tradetrust-tt/w3c-credential-status';
 import { describe, expect, it, vi } from 'vitest';
+import { SignedVerifiableCredential } from '../../types';
 import * as w3c_vc from './../../w3c-vc';
 import { verifyCredentialStatus } from './index';
-import * as utils from './utils';
 
 // First 10 (index 0 - 9) position is marked as True.
-const credentialStatusVC = {
+const credentialStatusVC: SignedVerifiableCredential = {
   '@context': [
     'https://www.w3.org/2018/credentials/v1',
     'https://w3id.org/security/bbs/v1',
@@ -72,7 +73,9 @@ const credentialStatus = {
 
 describe('verifyCredentialStatus', () => {
   it('should verify a credential status successfully', async () => {
-    vi.spyOn(utils, 'fetchCredentialStatusVC').mockResolvedValue(credentialStatusVC);
+    vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
+      credentialStatusVC,
+    );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
     const { status } = await verifyCredentialStatus(credentialStatus);
@@ -94,7 +97,9 @@ describe('verifyCredentialStatus', () => {
   });
 
   it('should return an error if the credential is not verified', async () => {
-    vi.spyOn(utils, 'fetchCredentialStatusVC').mockResolvedValue(credentialStatusVC);
+    vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
+      credentialStatusVC,
+    );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: false });
 
     const { error } = await verifyCredentialStatus(credentialStatus);
@@ -103,7 +108,7 @@ describe('verifyCredentialStatus', () => {
   });
 
   it('should return an error if BitstringStatusList is invalid', async () => {
-    vi.spyOn(utils, 'fetchCredentialStatusVC').mockResolvedValue(
+    vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
       credentialStatusVC_withInvalidEncodedList,
     );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
@@ -114,7 +119,9 @@ describe('verifyCredentialStatus', () => {
   });
 
   it('should return an error if statusPurpose does not match the statusPurpose in the VC', async () => {
-    vi.spyOn(utils, 'fetchCredentialStatusVC').mockResolvedValue(credentialStatusVC);
+    vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
+      credentialStatusVC,
+    );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
     const { error } = await verifyCredentialStatus({
@@ -156,7 +163,9 @@ describe('verifyCredentialStatus', () => {
   });
 
   it('should return an error if statusListIndex is out of range', async () => {
-    vi.spyOn(utils, 'fetchCredentialStatusVC').mockResolvedValue(credentialStatusVC);
+    vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
+      credentialStatusVC,
+    );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
     const { error } = await verifyCredentialStatus({
