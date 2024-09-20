@@ -72,7 +72,7 @@ describe('utils.ts', () => {
           statusPurpose: expect.stringMatching(/revocation|suspension/),
           encodedList: expect.any(String),
         },
-        id: 'https://nghaninn.github.io/did/credentials/statuslist#1',
+        id: 'https://nghaninn.github.io/did/credentials/statuslist/1',
         issuanceDate: expect.any(String),
         issuer: 'did:web:nghaninn.github.io:did:1',
         type: ['VerifiableCredential', 'StatusList2021Credential'],
