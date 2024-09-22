@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { CredentialStatusPurpose, VCBitstringCredentialSubject } from './types';
 import {
   assertCredentialStatusType,
@@ -5,7 +6,6 @@ import {
   assertStatusPurposeMatches,
   fetchCredentialStatusVC,
 } from './utils';
-import { describe, expect, it } from 'vitest';
 
 describe('utils.ts', () => {
   describe('assertCredentialStatusType', () => {

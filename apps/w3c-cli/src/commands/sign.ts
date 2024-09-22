@@ -1,9 +1,8 @@
-import { signCredential } from '@tradetrust-tt/w3c-vc';
+import { signCredential, VerifiableCredential } from '@tradetrust-tt/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { CredentialQuestionType, KeyPairQuestionType, QuestionType } from '../types';
-import { VerifiableCredential } from 'packages/w3c-vc/src/lib/types';
 import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 
 export const command = 'sign';

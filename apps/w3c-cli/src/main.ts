@@ -1,6 +1,7 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 import path from 'path';
 import yargs from 'yargs';
+import chalk from 'chalk';
 import { hideBin } from 'yargs/helpers';
 
 yargs(hideBin(process.argv))
@@ -11,6 +12,6 @@ yargs(hideBin(process.argv))
   .help()
   .fail((msg, err, yargs) => {
     if (err) throw err; // preserve stack
-    console.error('Error:', msg);
+    console.error(chalk.red('Error:', msg));
     console.error(yargs.help());
   }).argv;

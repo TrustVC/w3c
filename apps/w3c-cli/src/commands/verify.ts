@@ -1,4 +1,8 @@
-import { SignedVerifiableCredential, verifyCredential } from '@tradetrust-tt/w3c-vc';
+import {
+  SignedVerifiableCredential,
+  verifyCredential,
+  verifyCredentialStatus,
+} from '@tradetrust-tt/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -32,12 +36,30 @@ export const verifyCredentialData = async (
   credentialData: SignedVerifiableCredential,
 ): Promise<void> => {
   const result = await verifyCredential(credentialData);
+
+  let credentialStatusResult;
+  if (credentialData?.credentialStatus) {
+    credentialStatusResult = await verifyCredentialStatus(credentialData.credentialStatus);
+  }
+
   if (result.verified) {
     console.log(chalk.green(`Verification result: ${result.verified}`));
   } else {
     console.error(chalk.red(`Verification result: ${result.verified}`));
     if (result.error) {
       console.error(chalk.red(`Error: ${result.error}`));
+    }
+  }
+
+  if (credentialStatusResult) {
+    if ('status' in credentialStatusResult) {
+      console.log(
+        chalk.green(
+          `Credential status verification result: "${credentialStatusResult.purpose}:${credentialStatusResult.status}"`,
+        ),
+      );
+    } else if (credentialStatusResult.error) {
+      console.error(chalk.red(`Error: ${credentialStatusResult.error}`));
     }
   }
 };
