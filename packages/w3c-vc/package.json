@@ -14,7 +14,10 @@
     "build": "nx run @tradetrust-tt/w3c-vc:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
-  "keywords": [],
+  "keywords": [
+    "trustvc",
+    "w3c-vc"
+  ],
   "author": "",
   "license": "ISC",
   "engines": {
@@ -48,6 +51,7 @@
     "@tradetrust-tt/w3c-issuer": "*",
     "@tradetrust-tt/w3c-credential-status": "*",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
+    "did-resolver": "^4.1.0",
     "jsonld-signatures": "7.0.0",
     "jsonld": "^8.3.2"
   },

@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { KeyPairQuestionType, QuestionType } from '../types';
+import { writeFile } from '../utils';
 
 export const command = 'generate-did';
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
@@ -43,15 +44,6 @@ export const saveIssuedDid = async (wellKnownDid: IssuedDID, outputPath: string)
   writeFile(wellknownPath, wellKnownDid.wellKnownDid);
   const keypairsPath = `${outputPath}/didKeyPairs.json`;
   writeFile(keypairsPath, wellKnownDid.didKeyPairs);
-};
-
-const writeFile = <T>(path: string, data: T) => {
-  try {
-    fs.writeFileSync(path, JSON.stringify(data));
-    console.log(chalk.green(`File written successfully to ${path}`));
-  } catch (err) {
-    console.error(chalk.red(`Unable to write file to ${path}`));
-  }
 };
 
 export const promptQuestions = async () => {

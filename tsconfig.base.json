@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "CommonJS",
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
@@ -28,7 +29,15 @@
     "alwaysStrict": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
-    "noEmit": true
+    "noEmit": true,
+    "downlevelIteration": true
+  },
+  "buildOptions": {
+    "outDir": "./dist",
+    "format": ["cjs", "esm"],
+  },
+  "ts-node": {
+    "experimentalResolver": true,
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "build", "tmp"]

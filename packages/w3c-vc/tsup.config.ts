@@ -1,5 +1,5 @@
 import cpy from 'cpy';
-import { execa } from 'execa';
+import fs from 'fs';
 import { rimraf } from 'rimraf';
 import { defineConfig } from 'tsup';
 
@@ -35,6 +35,18 @@ const onSuccess = async (): Promise<void> => {
   //   stderr: process.stderr,
   // })`npx resolve-tspaths -p tsconfig.build.json -s ./dist/cjs -o ./dist/cjs --verbose`;
 
+  // remove .d.mts
+  /**
+   * Unable to clean up .d.mts files
+   * https://github.com/egoist/tsup/pull/1024
+   */
+  // fs.readdirSync('dist').forEach(async (file) => {
+  //   console.log('Removing', file);
+  //   if (file.endsWith('.d.mts')) {
+  //     await rimraf(file);
+  //   }
+  // });
+
   // Copy all json files
   await cpy(['src/**/*.json'], 'dist', {
     overwrite: true,
@@ -53,11 +65,11 @@ export default defineConfig([
     clean: true,
     legacyOutput: true,
     outDir: 'dist',
-    platform: 'node',
+    platform: 'neutral',
     entry: ['src/**/*.ts', '!src/**/*.{test,spec}.ts'],
     format: ['cjs', 'esm'],
     tsconfig: 'tsconfig.build.json',
-    shims: true,
+    shims: false,
     bundle: false,
     minify: false,
     keepNames: true,
