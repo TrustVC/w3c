@@ -86,6 +86,7 @@
     "@inquirer/prompts": "^5.3.8",
     "@mattrglobal/bls12381-key-pair": "^1.2.1",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
+    "@tradetrust-tt/w3c-context": "*",
     "@tradetrust-tt/w3c-credential-status": "*",
     "@tradetrust-tt/w3c-issuer": "*",
     "@tradetrust-tt/w3c-vc": "*",

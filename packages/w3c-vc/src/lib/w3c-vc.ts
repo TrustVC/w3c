@@ -1,11 +1,11 @@
 import { KeyPairOptions } from '@mattrglobal/bls12381-key-pair';
 import { BbsBlsSignature2020, Bls12381G2KeyPair } from '@mattrglobal/jsonld-signatures-bbs';
+import { contexts, DID_V1_URL } from '@tradetrust-tt/w3c-context';
 import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
 import { getResolver as webGetResolver } from 'web-did-resolver';
-import { contexts, DID_V1_URL } from '../contexts';
 import { _checkCredential, _checkKeyPair } from './helper';
 import {
   DocumentLoader,
@@ -147,9 +147,7 @@ export const verifyCredential = async (
 
     if (verificationResult.verified) {
       return { verified: true };
-    }
-
-    if (verificationResult.error && verificationResult.error.errors) {
+    } else if (verificationResult.error && verificationResult.error.errors) {
       const errorMessage = verificationResult.error.errors[0].message;
 
       // Handle scenario where the verification method is not found

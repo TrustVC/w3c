@@ -1,5 +1,5 @@
 {
-  "name": "@tradetrust-tt/w3c-vc",
+  "name": "@tradetrust-tt/w3c-context",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -9,9 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "test": "npx vitest --run --test-timeout=15000",
+    "test": "npx vitest --run",
     "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
-    "build": "nx run @tradetrust-tt/w3c-vc:'clean' && tsup",
+    "build": "nx run @tradetrust-tt/w3c-context:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
   "keywords": [],
@@ -26,30 +26,20 @@
       "import": "./dist/esm/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./contexts": {
-      "require": "./dist/contexts/index.js",
-      "import": "./dist/esm/contexts/index.js",
-      "types": "./dist/contexts/index.d.ts"
+    "./did-web": {
+      "require": "./dist/did-web/*",
+      "import": "./dist/esm/did-web/*",
+      "types": "./dist/did-web/*"
     },
-    "./**/*": {
-      "require": "./dist/**/*.js",
-      "import": "./dist/esm/**/*.js",
-      "types": "./dist/**/*.d.ts"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "contexts": [
-        "dist/contexts/index.d.ts"
-      ]
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/esm/*.js",
+      "types": "./dist/*.d.ts"
     }
   },
   "dependencies": {
-    "@tradetrust-tt/w3c-issuer": "*",
-    "@tradetrust-tt/w3c-credential-status": "*",
-    "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
-    "jsonld-signatures": "7.0.0",
-    "jsonld": "^8.3.2"
+  },
+  "devDependencies": {
   },
   "repository": {
     "type": "git",
