@@ -6,10 +6,9 @@ import {
   SignedCredentialStatusVC,
   StatusList,
 } from '@tradetrust-tt/w3c-credential-status';
-import fs from 'fs';
+import { signCredential } from '@tradetrust-tt/w3c-vc';
 import chalk from 'chalk';
-import { signCredential, SignedVerifiableCredential } from '@tradetrust-tt/w3c-vc';
-import { writeFile } from '../../utils';
+import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';
 import { saveSignedCredentialStatus } from './create';
 
