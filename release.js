@@ -1,4 +1,4 @@
-const { releaseVersion, releaseChangelog, releasePublish } = require('nx/release');
+const { releaseVersion, releaseChangelog } = require('nx/release');
 const nx = require('./nx.json');
 const yargs = require('yargs');
 const chalk = require('chalk');
@@ -70,7 +70,7 @@ const chalk = require('chalk');
     return;
   }
 
-  const changelog = await releaseChangelog({
+  const _changelog = await releaseChangelog({
     projects,
     version: workspaceVersion,
     versionData: projectsVersionData,
