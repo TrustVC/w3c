@@ -46,6 +46,7 @@
   ],
   "release": {
     "projects": [
+      "@tradetrust-tt/w3c",
       "@tradetrust-tt/w3c-context",
       "@tradetrust-tt/w3c-credential-status",
       "@tradetrust-tt/w3c-issuer",
