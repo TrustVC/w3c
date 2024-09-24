@@ -11,7 +11,7 @@
       "@tradetrust-tt/w3c-context": ["packages/w3c-context/src"],
       "@tradetrust-tt/w3c-credential-status": ["./packages/w3c-credential-status/src"],
       "@tradetrust-tt/w3c-issuer": ["./packages/w3c-issuer/src"],
-      "@tradetrust-tt/w3c-vc": ["./packages/w3c-vc/src"],
+      "@tradetrust-tt/w3c-vc": ["./packages/w3c-vc/src"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
@@ -34,10 +34,10 @@
   },
   "buildOptions": {
     "outDir": "./dist",
-    "format": ["cjs", "esm"],
+    "format": ["cjs", "esm"]
   },
   "ts-node": {
-    "experimentalResolver": true,
+    "experimentalResolver": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "build", "tmp"]

@@ -1,0 +1,54 @@
+name: 'Publish'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: false
+        default: ''
+      projects:
+        description: 'Package to publish (comma separated)'
+        required: false
+        default: ''
+  push:
+    tags:
+      - 'tradetrust-tt/*@*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          TAG_PROJECT=${{github.event.release.tag_name | cut -d'@' -f2}}
+          TAG_VERSION=${{github.event.release.tag_name | cut -d'@' -f3}}
+          PROJECT=${{ github.event.inputs.project || $TAG_PROJECT }}
+          VERSION=${{ github.event.inputs.verision || $TAG_VERSION }}
+          npx nx release publish --projects=$PROJECT --version=$VERSION
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}

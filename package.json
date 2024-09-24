@@ -19,7 +19,8 @@
     "cli:install": "npm install --prefix apps/w3c-cli",
     "cli:dev": "npm run dev --prefix apps/w3c-cli",
     "cli:exec": "npm run cli --prefix apps/w3c-cli",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release": "node release.js"
   },
   "keywords": [],
   "author": "",

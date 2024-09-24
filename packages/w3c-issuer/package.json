@@ -25,16 +25,6 @@
       "require": "./dist/index.js",
       "import": "./dist/esm/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./did-web": {
-      "require": "./dist/did-web/*",
-      "import": "./dist/esm/did-web/*",
-      "types": "./dist/did-web/*"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/esm/*.js",
-      "types": "./dist/*.d.ts"
     }
   },
   "dependencies": {
@@ -47,10 +37,6 @@
     "jsonld-signatures": "^11.2.1",
     "multiformats": "^9.9.0",
     "web-did-resolver": "^2.0.27"
-  },
-  "devDependencies": {
-    "resolve-tspaths": "^0.8.19",
-    "typescript": "^5.5.4"
   },
   "repository": {
     "type": "git",
