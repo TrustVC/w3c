@@ -1,4 +1,4 @@
-const { releaseVersion, releaseChangelog } = require('nx/release');
+const { releaseVersion, releaseChangelog, releasePublish: _releasePublish } = require('nx/release');
 const nx = require('./nx.json');
 const yargs = require('yargs');
 const chalk = require('chalk');
@@ -52,9 +52,10 @@ const chalk = require('chalk');
     dryRun: options.dryRun,
     verbose: options.verbose,
     specifier: options.forceUpgradeTo,
-    gitCommit: false,
-    stageChanges: true,
-    gitTag: true,
+
+    gitCommit: !options.dryRun && false,
+    stageChanges: !options.dryRun && true,
+    gitTag: !options.dryRun && false,
     generatorOptionsOverrides: {
       currentVersionResolver: 'git-tag',
       specifierSource: 'conventional-commits',
@@ -76,14 +77,17 @@ const chalk = require('chalk');
     versionData: projectsVersionData,
     dryRun: options.dryRun,
     verbose: options.verbose,
-    gitCommit: true,
-    stageChanges: true,
+    gitCommit: !options.dryRun && true,
+    gitTag: !options.dryRun && true,
+    stageChanges: !options.dryRun && true,
+    createRelease: false,
   });
 
-  // await releasePublish({
+  // await _releasePublish({
+  //   firstRelease: options.firstRelease,
   //   projects: updatedProjects,
   //   version: workspaceVersion,
-  //   changelog,
+  //   changelog: _changelog,
   //   dryRun: options.dryRun,
   // });
 

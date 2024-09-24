@@ -55,7 +55,7 @@
     ],
     "changelog": {
       "projectChangelogs": {
-        "createRelease": "github"
+        "createRelease": false
       },
       "automaticFromRef": true
     },
