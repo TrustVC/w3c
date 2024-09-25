@@ -16,11 +16,6 @@
     "lint": {
       "dependsOn": ["^lint"],
       "cache": true
-    },
-    "@nx/esbuild:esbuild": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["default", "^default"]
     }
   },
   "defaultBase": "main",

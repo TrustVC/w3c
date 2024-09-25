@@ -1,0 +1,50 @@
+{
+  "name": "@tradetrust-tt/w3c",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npx vitest --run --test-timeout=15000",
+    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "build": "nx run @tradetrust-tt/w3c:'clean' && tsup",
+    "clean": "rm -rf dist/"
+  },
+  "keywords": [
+    "trustvc",
+    "w3c"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@tradetrust-tt/w3c-context": "*",
+    "@tradetrust-tt/w3c-credential-status": "*",
+    "@tradetrust-tt/w3c-issuer": "*",
+    "@tradetrust-tt/w3c-vc": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TradeTrust/w3c.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TradeTrust/w3c/issues"
+  },
+  "homepage": "https://github.com/TradeTrust/w3c#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
