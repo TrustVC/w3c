@@ -4,6 +4,12 @@
   "sourceRoot": "packages/w3c-credential-status/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project w3c-credential-status --web",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "packages/w3c-credential-status"
+      }
+    }
+  },
   "targets": {}
 }

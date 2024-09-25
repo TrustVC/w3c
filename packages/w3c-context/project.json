@@ -4,6 +4,12 @@
   "sourceRoot": "packages/w3c-context/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project w3c-context --web",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "packages/w3c-context"
+      }
+    }
+  },
   "targets": {}
 }

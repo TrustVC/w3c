@@ -1,37 +1,57 @@
 {
-  "name": "w3c-cli",
+  "name": "@tradetrust-tt/w3c-cli",
   "version": "1.0.0",
+  "description": "CLI for TrustVC W3C",
   "main": "dist/cjs/main.js",
   "types": "dist/types/main.d.ts",
   "bin": {
     "w3c-cli": "dist/cjs/main.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "npx vitest --run",
     "lint": "npx eslint . --color --format=table --max-warnings=0",
     "start": "node dist/cjs/main.js",
     "dev": "tsx src/main.ts",
     "cli": "node dist/main.js",
-    "build": "nx run w3c-cli:clean && nx run w3c-cli:build:cjs && nx run w3c-cli:build:type",
+    "build": "nx run @tradetrust-tt/w3c-cli:clean && nx run @tradetrust-tt/w3c-cli:build:cjs && nx run @tradetrust-tt/w3c-cli:build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs --project ./tsconfig.build.json",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types --project ./tsconfig.build.json",
-    "serve": "nx run w3c-cli:build && node dist/cjs/main.js",
-    "clean": "rm -rf dist/",
-    "pkg": "npx pkg ./package.json --out-path dist/@w3c-cli"
+    "serve": "nx run @tradetrust-tt/w3c-cli:build && node dist/cjs/main.js",
+    "clean": "rm -rf dist/"
   },
-  "keywords": [],
+  "keywords": [
+    "trustvc",
+    "w3c",
+    "w3c-cli"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
+    "@tradetrust-tt/w3c-context": "*",
+    "@tradetrust-tt/w3c-credential-status": "*",
+    "@tradetrust-tt/w3c-vc": "*",
     "@tradetrust-tt/w3c-issuer": "*",
     "@types/yargs": "^17.0.32",
     "chalk": "^4.1.2",
     "inquirer": "^10.0.1",
     "yargs": "^17.7.2"
   },
-  "devDependencies": {
-    "pkg": "^5.8.1"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TradeTrust/w3c.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TradeTrust/w3c/issues"
+  },
+  "homepage": "https://github.com/TradeTrust/w3c#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }

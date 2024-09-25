@@ -28,6 +28,7 @@
     }
   },
   "dependencies": {
+    "@tradetrust-tt/w3c-context": "*",
     "@tradetrust-tt/w3c-issuer": "*",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"

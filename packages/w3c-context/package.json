@@ -14,7 +14,11 @@
     "build": "nx run @tradetrust-tt/w3c-context:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
-  "keywords": [],
+  "keywords": [
+    "trustvc",
+    "w3c",
+    "w3c-context"
+  ],
   "author": "",
   "license": "ISC",
   "engines": {
@@ -25,21 +29,10 @@
       "require": "./dist/index.js",
       "import": "./dist/esm/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./did-web": {
-      "require": "./dist/did-web/*",
-      "import": "./dist/esm/did-web/*",
-      "types": "./dist/did-web/*"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/esm/*.js",
-      "types": "./dist/*.d.ts"
     }
   },
   "dependencies": {
-  },
-  "devDependencies": {
+    "did-resolver": "^4.1.0"
   },
   "repository": {
     "type": "git",

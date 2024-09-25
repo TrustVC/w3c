@@ -5,16 +5,24 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^test"],
-      "outputs": ["{projectRoot}/coverage"],
+      "dependsOn": [
+        "^test"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ],
       "cache": true
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true
     },
     "lint": {
-      "dependsOn": ["^lint"],
+      "dependsOn": [
+        "^lint"
+      ],
       "cache": true
     }
   },
@@ -31,13 +39,26 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [""]
+      "exclude": [
+        ""
+      ]
     }
   ],
   "release": {
-    "projects": ["@tradetrust-tt/w3c-issuer"],
-    "version": {
-      "conventionalCommits": true
-    }
+    "projects": [
+      "@tradetrust-tt/w3c",
+      "@tradetrust-tt/w3c-context",
+      "@tradetrust-tt/w3c-credential-status",
+      "@tradetrust-tt/w3c-issuer",
+      "@tradetrust-tt/w3c-vc",
+      "@tradetrust-tt/w3c-cli"
+    ],
+    "changelog": {
+      "projectChangelogs": {
+        "createRelease": false
+      },
+      "automaticFromRef": true
+    },
+    "projectsRelationship": "independent"
   }
 }
