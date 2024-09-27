@@ -43,6 +43,8 @@
   },
   "homepage": "https://github.com/TradeTrust/w3c#readme",
   "publishConfig": {
-    "access": "public"
-  }
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false
 }

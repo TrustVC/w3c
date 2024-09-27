@@ -3,7 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/w3c-cli",
   "projectType": "application",
-  "tags": [],
   "release": {
     "version": {
       "generatorOptions": {
@@ -11,5 +10,18 @@
       }
     }
   },
-  "targets": {}
+  "tags": [],
+  "targets": {
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "github": true,
+        "changelog": true,
+        "npm": true,
+        "outputPath": "${PROJECT_DIR}/dist",
+        "buildTarget": "${PROJECT_NAME}:build",
+        "tagFormat": "${PROJECT_NAME}@${VERSION}"
+      }
+    }
+  }
 }
