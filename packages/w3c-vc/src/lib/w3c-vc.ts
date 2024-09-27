@@ -1,6 +1,6 @@
 import { KeyPairOptions } from '@mattrglobal/bls12381-key-pair';
 import { BbsBlsSignature2020, Bls12381G2KeyPair } from '@mattrglobal/jsonld-signatures-bbs';
-import { contexts, DID_V1_URL } from '@tradetrust-tt/w3c-context';
+import { contexts, trContexts, DID_V1_URL, TR_CONTEXT_URL } from '@tradetrust-tt/w3c-context';
 import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
@@ -29,6 +29,12 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
     contextUrl: null,
     document: contexts[DID_V1_URL],
     documentUrl: DID_V1_URL,
+  });
+
+  resultMap.set(TR_CONTEXT_URL, {
+    contextUrl: null,
+    document: trContexts[TR_CONTEXT_URL],
+    documentUrl: TR_CONTEXT_URL,
   });
 
   const resolveDid = async (did: string) => {
