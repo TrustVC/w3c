@@ -17,7 +17,7 @@ import {
  * @throws {Error} - Throws an error if the type is not supported.
  */
 export const assertCredentialStatusType = <T>(type: T): void => {
-  const supportedTypes: T[] = ['StatusList2021Entry' as T];
+  const supportedTypes: T[] = ['StatusList2021Entry', 'TransferableRecords'] as T[];
 
   if (!supportedTypes.includes(type)) {
     throw new Error(`Unsupported type: ${type}`);

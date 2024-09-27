@@ -9,13 +9,15 @@ const modifiedCredential: any = {
     'https://didrp-test.esatus.com/schemas/basic-did-lei-mapping/v1',
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
+    'https://trustvc.io/context/transferable-records-context.json',
   ],
   credentialStatus: {
-    id: 'https://didrp-test.esatus.com/credentials/statuslist/1#27934',
-    statusListCredential: 'https://didrp-test.esatus.com/credentials/statuslist/1',
-    statusListIndex: 27934,
-    statusPurpose: 'revocation',
-    type: 'StatusList2021Entry',
+    type: 'TransferableRecords',
+    tokenNetwork: {
+      chain: 'MATIC',
+      chainId: '80001',
+    },
+    tokenRegistry: '0xE0a94770B8e969B5D9179d6dA8730B01e19279e2',
   },
   credentialSubject: {
     entityName: 'IMDA',
