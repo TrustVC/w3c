@@ -1,10 +1,10 @@
-import { CredentialContextVersion } from '@tradetrust-tt/w3c-context';
+import { CredentialContextVersion } from '@trustvc/w3c-context';
 import {
   BitstringStatusListCredentialStatus,
   assertCredentialStatusType,
   assertStatusList2021Entry,
-} from '@tradetrust-tt/w3c-credential-status';
-import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+} from '@trustvc/w3c-credential-status';
+import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { assertCredentialStatus } from '../sign/credentialStatus';

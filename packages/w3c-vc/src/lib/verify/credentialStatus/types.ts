@@ -1,7 +1,7 @@
 import {
   BitstringStatusListCredentialStatus,
   CredentialStatusPurpose,
-} from '@tradetrust-tt/w3c-credential-status';
+} from '@trustvc/w3c-credential-status';
 import { CredentialStatus as GeneralCredentialStatus } from '../../types';
 
 export type CredentialStatus = GeneralCredentialStatus | BitstringStatusListCredentialStatus;

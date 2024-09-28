@@ -3,8 +3,8 @@ import {
   createCredentialStatusPayload,
   CredentialStatusPurpose,
   StatusList,
-} from '@tradetrust-tt/w3c-credential-status';
-import { signCredential, SignedVerifiableCredential } from '@tradetrust-tt/w3c-vc';
+} from '@trustvc/w3c-credential-status';
+import { signCredential, SignedVerifiableCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';

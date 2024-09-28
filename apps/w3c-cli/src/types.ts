@@ -1,5 +1,5 @@
-import { CredentialStatusPurpose, StatusList } from '@tradetrust-tt/w3c-credential-status';
-import { VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { CredentialStatusPurpose, StatusList } from '@trustvc/w3c-credential-status';
+import { VerificationType } from '@trustvc/w3c-issuer';
 
 export type IssueDidInput = {
   keyPairPath: string;

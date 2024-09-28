@@ -1,4 +1,4 @@
-const regex = new RegExp(/^chore\(release\): @nghaninn\//g);
+const regex = new RegExp(/^chore\(release\): /g);
 
 module.exports = {
   extends: ['@commitlint/config-conventional', '@commitlint/config-nx-scopes'],

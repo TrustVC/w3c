@@ -2,8 +2,8 @@ import {
   BBS_V1_URL,
   CredentialContextVersion,
   STATUS_LIST_2021_CREDENTIAL_URL,
-} from '@tradetrust-tt/w3c-context';
-import { PrivateKeyPair } from '@tradetrust-tt/w3c-issuer';
+} from '@trustvc/w3c-context';
+import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { _checkCredentialSubjectForStatusList2021Credential } from './BitstringStatusList/assertions';
 import {
   VCBitstringCredentialSubjectType,

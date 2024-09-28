@@ -5,8 +5,8 @@ import {
   fetchCredentialStatusVC,
   SignedCredentialStatusVC,
   StatusList,
-} from '@tradetrust-tt/w3c-credential-status';
-import { signCredential } from '@tradetrust-tt/w3c-vc';
+} from '@trustvc/w3c-credential-status';
+import { signCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';

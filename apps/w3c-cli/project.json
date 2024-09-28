@@ -1,5 +1,5 @@
 {
-  "name": "@tradetrust-tt/w3c-cli",
+  "name": "@trustvc/w3c-cli",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/w3c-cli",
   "projectType": "application",

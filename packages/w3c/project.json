@@ -1,5 +1,5 @@
 {
-  "name": "@tradetrust-tt/w3c",
+  "name": "@trustvc/w3c",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/w3c/src",
   "projectType": "library",

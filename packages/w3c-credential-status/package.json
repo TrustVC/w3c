@@ -1,6 +1,6 @@
 {
-  "name": "@tradetrust-tt/w3c-credential-status",
-  "version": "1.0.0",
+  "name": "@trustvc/w3c-credential-status",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "test": "npx vitest --run --test-timeout=15000",
     "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
-    "build": "nx run @tradetrust-tt/w3c-credential-status:'clean' && tsup",
+    "build": "nx run @trustvc/w3c-credential-status:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
   "keywords": [],
@@ -28,19 +28,19 @@
     }
   },
   "dependencies": {
-    "@tradetrust-tt/w3c-context": "*",
-    "@tradetrust-tt/w3c-issuer": "*",
+    "@trustvc/w3c-context": "*",
+    "@trustvc/w3c-issuer": "*",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TradeTrust/w3c.git"
+    "url": "https://github.com/trustvc/w3c.git"
   },
   "bugs": {
-    "url": "https://github.com/TradeTrust/w3c/issues"
+    "url": "https://github.com/trustvc/w3c/issues"
   },
-  "homepage": "https://github.com/TradeTrust/w3c#readme",
+  "homepage": "https://github.com/trustvc/w3c#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

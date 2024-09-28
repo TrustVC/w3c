@@ -1,4 +1,4 @@
-import { IssuedDID, IssuedDIDOption, issueDID } from '@tradetrust-tt/w3c-issuer';
+import { IssuedDID, IssuedDIDOption, issueDID } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
