@@ -66,7 +66,9 @@ export const verifyCredentialData = async (
 
 // Prompt user for the credential file path
 export const promptForCredential = async () => {
-  const { credentialPath }: CredentialQuestionType = await inquirer.prompt(credentialPrompt);
+  const { credentialPath }: CredentialQuestionType = (await inquirer.prompt(
+    credentialPrompt,
+  )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
   if (!credentialData) return null;

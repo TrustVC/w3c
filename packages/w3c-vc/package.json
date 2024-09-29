@@ -25,26 +25,10 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts",
       "import": "./dist/esm/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./contexts": {
-      "require": "./dist/contexts/index.js",
-      "import": "./dist/esm/contexts/index.js",
-      "types": "./dist/contexts/index.d.ts"
-    },
-    "./**/*": {
-      "require": "./dist/**/*.js",
-      "import": "./dist/esm/**/*.js",
-      "types": "./dist/**/*.d.ts"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "contexts": [
-        "dist/contexts/index.d.ts"
-      ]
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "dependencies": {

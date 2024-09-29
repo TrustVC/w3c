@@ -102,13 +102,13 @@ const chalk = require('chalk');
         //   await execa({
         //     stdout: process.stdout,
         //     stderr: process.stderr,
-        //   })`git push nghaninn`;
+        //   })`git push origin`;
 
         //   console.log(`git push origin tags ${key}@${projectsVersionData[key].newVersion}`);
         //   await execa({
         //     stdout: process.stdout,
         //     stderr: process.stderr,
-        //   })`git push nghaninn tags ${key}@${projectsVersionData[key].newVersion}`;
+        //   })`git push origin tags ${key}@${projectsVersionData[key].newVersion}`;
 
         //   return;
         // })

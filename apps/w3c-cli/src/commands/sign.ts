@@ -85,17 +85,21 @@ export const saveSignedCredential = async (
 
 // Prompt user for key pair, credential, and output path
 export const promptForInputs = async () => {
-  const { keyPairPath }: KeyPairQuestionType = await inquirer.prompt(keyPairPrompt);
+  const { keyPairPath }: KeyPairQuestionType = (await inquirer.prompt(
+    keyPairPrompt,
+  )) as KeyPairQuestionType;
 
   const keypairData = readJsonFile(keyPairPath, 'key pair');
   if (!keypairData) return null;
 
-  const { credentialPath }: CredentialQuestionType = await inquirer.prompt(credentialPrompt);
+  const { credentialPath }: CredentialQuestionType = (await inquirer.prompt(
+    credentialPrompt,
+  )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
   if (!credentialData) return null;
 
-  const { outputPath }: QuestionType = await inquirer.prompt(outputPathPrompt);
+  const { outputPath }: QuestionType = (await inquirer.prompt(outputPathPrompt)) as QuestionType;
 
   if (!isDirectoryValid(outputPath)) return null;
 
