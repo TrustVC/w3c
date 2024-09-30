@@ -2,7 +2,7 @@ import {
   SignedVerifiableCredential,
   verifyCredential,
   verifyCredentialStatus,
-} from '@tradetrust-tt/w3c-vc';
+} from '@trustvc/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -66,7 +66,9 @@ export const verifyCredentialData = async (
 
 // Prompt user for the credential file path
 export const promptForCredential = async () => {
-  const { credentialPath }: CredentialQuestionType = await inquirer.prompt(credentialPrompt);
+  const { credentialPath }: CredentialQuestionType = (await inquirer.prompt(
+    credentialPrompt,
+  )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
   if (!credentialData) return null;

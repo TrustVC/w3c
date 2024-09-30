@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "pkgRoot": "${PROJECT_DIR}"
+      }
+    ]
+  ]
+}

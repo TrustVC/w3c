@@ -1,4 +1,4 @@
-import { IssuedDID, IssuedDIDOption, issueDID } from '@tradetrust-tt/w3c-issuer';
+import { IssuedDID, IssuedDIDOption, issueDID } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -77,7 +77,9 @@ export const promptQuestions = async () => {
   ];
 
   // Prompt for the key pair path
-  const { keyPairPath }: KeyPairQuestionType = await inquirer.prompt(keypairQuestions);
+  const { keyPairPath }: KeyPairQuestionType = (await inquirer.prompt(
+    keypairQuestions,
+  )) as KeyPairQuestionType;
 
   // Validate and read the key pair file
   let data: string;
@@ -91,7 +93,9 @@ export const promptQuestions = async () => {
   const keypairData: IssuedDIDOption = JSON.parse(data);
 
   // Prompt for the domain name and output path
-  const { domainName, outputPath }: QuestionType = await inquirer.prompt(questions);
+  const { domainName, outputPath }: QuestionType = (await inquirer.prompt(
+    questions,
+  )) as QuestionType;
   try {
     fs.readdirSync(outputPath, { encoding: 'utf-8' });
   } catch (err) {

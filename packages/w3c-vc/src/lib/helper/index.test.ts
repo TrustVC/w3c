@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import * as w3c_credential_status from '@tradetrust-tt/w3c-credential-status';
+import * as w3c_credential_status from '@trustvc/w3c-credential-status';
 import { _checkCredentialStatus } from '.';
 
 describe('helper', () => {

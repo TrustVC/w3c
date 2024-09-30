@@ -4,10 +4,10 @@
     "rootDir": null,
     "noEmit": null,
     "paths": {
-      "@tradetrust-tt/w3c-context": ["packages/w3c-context"],
-      "@tradetrust-tt/w3c-credential-status": ["packages/w3c-credential-status"],
-      "@tradetrust-tt/w3c-issuer": ["packages/w3c-issuer"],
-      "@tradetrust-tt/w3c-vc": ["packages/w3c-vc"]
+      "@trustvc/w3c-context": ["packages/w3c-context"],
+      "@trustvc/w3c-credential-status": ["packages/w3c-credential-status"],
+      "@trustvc/w3c-issuer": ["packages/w3c-issuer"],
+      "@trustvc/w3c-vc": ["packages/w3c-vc"]
     }
   },
   "exclude": ["tests"]

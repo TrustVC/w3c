@@ -1,6 +1,6 @@
 import * as prompts from '@inquirer/prompts';
-import * as w3cIssuer from '@tradetrust-tt/w3c-issuer';
-import { VerificationType } from '@tradetrust-tt/w3c-issuer';
+import * as w3cIssuer from '@trustvc/w3c-issuer';
+import { VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

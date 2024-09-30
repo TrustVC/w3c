@@ -5,7 +5,7 @@ import {
   fetchCredentialStatusVC,
   StatusList,
   VCBitstringCredentialSubject,
-} from '@tradetrust-tt/w3c-credential-status';
+} from '@trustvc/w3c-credential-status';
 import { _checkCredentialStatus } from '../../helper';
 import { CredentialStatus, CredentialStatusResult } from './types';
 import { verifyCredential } from '../../w3c-vc';

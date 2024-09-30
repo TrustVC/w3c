@@ -1,4 +1,4 @@
-import { VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { VerificationType } from '@trustvc/w3c-issuer';
 import { describe, expect, it } from 'vitest';
 import { SignedVerifiableCredential } from './types';
 import { signCredential, verifyCredential } from './w3c-vc';

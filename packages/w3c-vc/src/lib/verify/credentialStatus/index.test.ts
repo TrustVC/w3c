@@ -1,8 +1,5 @@
-import * as w3c_credential_status from '@tradetrust-tt/w3c-credential-status';
-import {
-  CredentialStatusPurpose,
-  CredentialStatusType,
-} from '@tradetrust-tt/w3c-credential-status';
+import * as w3c_credential_status from '@trustvc/w3c-credential-status';
+import { CredentialStatusPurpose, CredentialStatusType } from '@trustvc/w3c-credential-status';
 import { describe, expect, it, vi } from 'vitest';
 import { SignedVerifiableCredential } from '../../types';
 import * as w3c_vc from './../../w3c-vc';

@@ -1,4 +1,4 @@
-import { PrivateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 import { describe, expect, it } from 'vitest';
 import { createCredentialStatusPayload } from './index';
 

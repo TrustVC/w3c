@@ -83,17 +83,38 @@ const chalk = require('chalk');
     createRelease: false,
   });
 
-  // await _releasePublish({
-  //   firstRelease: options.firstRelease,
-  //   projects: updatedProjects,
-  //   version: workspaceVersion,
-  //   changelog: _changelog,
-  //   dryRun: options.dryRun,
-  // });
+  await _releasePublish({
+    firstRelease: options.firstRelease,
+    projects: updatedProjects,
+    version: workspaceVersion,
+    changelog: _changelog,
+    dryRun: options.dryRun,
+  });
 
-  return;
+  return projectsVersionData;
 })()
-  .then(() => {
+  .then(async (projectsVersionData) => {
+    if (projectsVersionData) {
+      await Promise
+        .all
+        // Object.keys(projectsVersionData).map(async (key) => {
+        //   const { execa } = await import('execa');
+        //   await execa({
+        //     stdout: process.stdout,
+        //     stderr: process.stderr,
+        //   })`git push origin`;
+
+        //   console.log(`git push origin tags ${key}@${projectsVersionData[key].newVersion}`);
+        //   await execa({
+        //     stdout: process.stdout,
+        //     stderr: process.stderr,
+        //   })`git push origin tags ${key}@${projectsVersionData[key].newVersion}`;
+
+        //   return;
+        // })
+        ();
+    }
+
     console.log(chalk.green('Release completed'));
     process.exit(0);
   })
@@ -126,4 +147,4 @@ const chalk = require('chalk');
  * To run the script with force upgrade, execute the following command:
  */
 // node release.js --forceUpgradeTo=1.0.0 --projects=project1
-// node release.js --forceUpgradeTo=1.0.0 --projects=@tradetrust-tt/w3c-context,@tradetrust-tt/w3c-credential-status,@tradetrust-tt/w3c-issuer,@tradetrust-tt/w3c-vc,@tradetrust-tt/w3c-cli
+// node release.js --forceUpgradeTo=1.0.0 --projects=@trustvc/w3c-context,@trustvc/w3c-credential-status,@trustvc/w3c-issuer,@trustvc/w3c-vc,@trustvc/w3c-cli

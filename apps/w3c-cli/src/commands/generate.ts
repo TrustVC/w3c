@@ -1,6 +1,6 @@
 import { input, select } from '@inquirer/prompts';
-import type { GeneratedKeyPair, GenerateKeyPairOptions } from '@tradetrust-tt/w3c-issuer';
-import { generateKeyPair, VerificationType } from '@tradetrust-tt/w3c-issuer';
+import type { GeneratedKeyPair, GenerateKeyPairOptions } from '@trustvc/w3c-issuer';
+import { generateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import { GenerateInput } from '../types';

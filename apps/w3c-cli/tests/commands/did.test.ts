@@ -1,11 +1,11 @@
-import { VerificationType } from '@tradetrust-tt/w3c-issuer';
+import { VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getIssuedDid, promptQuestions, saveIssuedDid } from '../../src/commands/did';
 import { IssueDidInput } from '../../src/types';
-import { IssuedDIDOption } from '@tradetrust-tt/w3c-issuer';
+import { IssuedDIDOption } from '@trustvc/w3c-issuer';
 
 vi.mock('inquirer');
 vi.mock('fs', async () => {
