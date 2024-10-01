@@ -41,6 +41,7 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      # - name: Install Commit Lint Dependencies
-      #   run: npm install --force @commitlint/config-conventional@v17 @commitlint/config-nx-scopes@^17 nx@^17
+      - name: Install Commit Lint Dependencies
+        run: npm ci
+        # run: npm install --force @commitlint/config-conventional@v17 @commitlint/config-nx-scopes@^17 nx@^17
       - uses: wagoid/commitlint-github-action@v6
