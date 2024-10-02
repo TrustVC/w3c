@@ -45,8 +45,6 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
     required: true,
   });
 
-  // Validate and read the key pair file
-  // let data: string;
   try {
     answers.keypairData = JSON.parse(
       fs.readFileSync(answers.keyPairPath, { encoding: 'utf8', flag: 'r' }),
@@ -56,7 +54,6 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
     return;
   }
 
-  // hosting url for credential status
   answers.hostingUrl = await input({
     message: `Please enter the URL where you'd like to host your credential status. (e.g., https://example.com/credentials/statuslist/1):`,
     required: true,

@@ -32,8 +32,8 @@
     }
   },
   "dependencies": {
-    "@trustvc/w3c-issuer": "*",
-    "@trustvc/w3c-credential-status": "*",
+    "@trustvc/w3c-issuer": "^0.0.0",
+    "@trustvc/w3c-credential-status": "^0.0.0",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
     "did-resolver": "^4.1.0",
     "jsonld-signatures": "7.0.0",

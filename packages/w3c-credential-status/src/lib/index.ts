@@ -21,7 +21,7 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
 };
 
 /**
- * Creates a signed credential status VC.
+ * Creates a credential status VC payload.
  * @param {object} options
  * @param {string} options.id - The ID of the credential.
  * @param {object} options.credentialSubject - The credential subject.

@@ -1,64 +1,84 @@
 # w3c-cli
 
-`w3c-cli` is a command-line interface tool designed to demonstrate how to interact with verifiable credentials and DIDs (Decentralized Identifiers) using functions from the `w3c-issuer` and `w3c-vc` repositories. This CLI serves as a quick and straightforward way for users to generate well-known DIDs, create DID key pairs, and sign and verify verifiable credentials via the command line.
+`w3c-cli` is a command-line interface tool designed to demonstrate how to interact with Verifiable Credentials (VCs) and Decentralized Identifiers (DIDs) using functions from the following repositories:
+- [`w3c-issuer`]()
+- [`w3c-vc`]()
+- [`w3c-credential-status`]()
+
+This CLI provides a quick and straightforward way for users to:
+- Create key pairs
+- Generate well-known DIDs
+- Generate a signed Credential Status
+- Sign and verify VCs via the command line.
 
 ## Table of Contents
 
 - 1. [Installation](#installation)
 - 2. [How It Works](#how-it-works)
 - 3. [Commands](#commands)
-  - 1. [npm run dev did](#npm-run-dev-did)
-  - 2. [npm run dev generate](#npm-run-dev-generate)
-  - 3. [npm run dev sign](#npm-run-dev-sign)
-  - 4. [npm run dev verify](#npm-run-dev-verify)
+  - 1. [w3c-cli key-pair](#w3c-cli-key-pair)
+  - 2. [w3c-cli did](#w3c-cli-did)
+  - 3. [w3c-cli sign](#w3c-cli-sign)
+  - 4. [w3c-cli verify](#w3c-cli-verify)
+  - 5. [w3c-cli credential-status create](#w3c-cli-credential-status-create)
 - 3. [Directory Structure](#directory-structure)
 
 ## Installation
-1. Clone the repository:
+1. Install CLI:
 ```sh
-git clone <repository-url>
-cd w3c-cli
-```
-2. Install dependencies:
-```sh
-npm install
+npm install @trustvc/w3c-cli
 ```
 
-3. Run the CLI commands as needed:
+2. Run the CLI commands as needed:
 ```sh
-npm run dev <command>
+w3c-cli <command>
 ```
 
 ## How It Works
-- **Generating Well-Known DID**: The CLI uses the `issueDID` function from the `w3c-issuer`repository to generate a well-known DID. This allows users to self-host their DID, serving as a unique identifier in decentralized systems.
+- **Generating Key Pairs**: The CLI utilizes the `generateKeyPair` function from the `w3c-issuer` repository to generate key pairs, These key pairs are essential for creating DIDs and signing VCs.
 
-- **Generating DID Key Pairs**: The CLI utilizes the `generateKeyPair` function from the `w3c-issuer` repository to generate DID key pairs. These key pairs are essential for both creating and signing DIDs, as well as for signing Verifiable Credentials (VCs).
+- **Generating Well-Known DID**: The CLI uses the `issueDID` function from the `w3c-issuer`repository to generate a well-known DID. This allows users to self-host their DID as a unique identifier in decentralized systems.
 
-- **Signing Verifiable Credentials**: Using the `signCredential` function from the `w3c-vc` repository, the CLI digitally signs a Verifiable Credential, ensuring that the credential is tamper-evident and can be trusted by external verifiers.
+- **Signing Verifiable Credentials**: The CLI digitally signs a Verifiable Credential using the `signCredential` function from the `w3c-vc` repository, ensuring that the credential is tamper-evident and can be trusted by external verifiers.
 
-- **Verifying Verifiable Credentials:**: The `verifyCredential` function from the `w3c-vc` repository verifies the authenticity of a signed Verifiable Credential by checking the cryptographic proof, ensuring that the credential has not been altered and confirming the validity of the issuer’s signature.
+- **Verifying Verifiable Credentials**: The CLI verifies the authenticity of a signed Verifiable Credential using the `verifyCredential` function from the `w3c-vc` repository, checking the cryptographic proof to ensure the credential has not been altered and confirming the validity of the issuer's signature.
+
+- **Generating a Signed Credential Status**: The CLI creates a Bitstring `StatusList` from the `w3c-credential-status` repository and uses the `createCredentialStatusPayload` function to generate the pre-signed VC. It is then signed with the `signCredential` function from the `w3c-vc` repository, returning a signed Credential Status VC, which users can self-host.
+
+- **Updating a Signed Credential Status**: The CLI updates a signed Credential Status VC by downloading the hosted Credential Status VC. It then validates and parses the Bitstring `StatusList`, iteratively updating the `StatusList`, and signing the updated Credential Status using the `signCredential` function from the `w3c-vc` repository. Finally, it returns an updated signed Credential Status VC, which users can self-host.
 
 ## Commands
 The CLI provides several commands to help users interact with DIDs and Verifiable Credentials:
-### `npm run dev did`
+
+### `w3c-cli key-pair`
+This command generates a DID key pair, importing functions from the `w3c-issuer` repository. The generated key pairs are used to create DIDs and sign VCs.
+
+### `w3c-cli did`
 This command generates a well-known DID using functionality from the `w3c-issuer` repository, allowing users to self-host their own DID.
 
-### `npm run dev generate`
-This command generates a DID key pair, importing functions from the `w3c-issuer` repository. The key pairs are used for creating and signing DIDs, as well as for signing verifiable credentials.
+### `w3c-cli sign`
+The sign command digitally signs a Verifiable Credential, leveraging the `w3c-vc` repository to create cryptographic proofs for the credentials, ensuring that the data remains tamper-evident and can be verified by any party.
 
-### `npm run dev sign`
-The sign command allows you to digitally sign a Verifiable Credential. It leverages the `w3c-vc` repository to create cryptographic proofs for the credentials, ensuring that the data remains tamper-evident and can be verified by any trusted party.
-
-### `npm run dev verify`
+### `w3c-cli verify`
 This command verifies the authenticity of a signed Verifiable Credential using the cryptographic proofs generated by the `w3c-vc` repository. It ensures that the credential has not been altered and confirms the validity of the issuer’s signature.
 
+### `w3c-cli credential-status create`
+This command creates a signed Credential Status VC using the Bitstring StatusList.
+
+### `w3c-cli creadential-status update`
+This command updates any existing Credential Status VC and resign the Credential Status after it has been updated.
+
 ## Directory Structure
-Each command file (`did.ts`, `generate.ts`, `sign.ts`, `verify.ts`) is located in the `src/commands` directory and imports relevant functions from the `w3c-issuer` and `w3c-vc` repositories.
+Each command file is located in the `src/commands` directory and imports relevant functions from the `w3c-issuer`, `w3c-vc` and `w3c-credential-status` repositories.
 ```css
 ├── src
 │   └── commands
+│       ├── credentialStatus
+│       |   ├── create.ts
+│       |   └── update.ts
+│       ├── credential-status.ts
 │       ├── did.ts
-│       ├── generate.ts
+│       ├── key-pair.ts
 │       ├── sign.ts
 │       └── verify.ts
 ├── package.json
