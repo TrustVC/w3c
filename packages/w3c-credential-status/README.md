@@ -1,7 +1,10 @@
-# w3c-credential-status
+# TrustVC W3C Credential Status
 
-This library was generated with [Nx](https://nx.dev).
+A package to...
 
-## Running unit tests
+## Installation
+To install the package, use:
 
-Run `nx test w3c-credential-status` to execute the unit tests via [Jest](https://jestjs.io).
+```sh
+npm install @trustvc/w3c-credential-status
+```

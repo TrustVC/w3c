@@ -2,6 +2,13 @@
 
 A library to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) DIDs v1, specifically [`did:web`](https://w3c-ccg.github.io/did-method-web/), for the signing of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) v1.1.
 
+## Installation
+To install the package, use:
+
+```sh
+npm install @trustvc/w3c-issuer
+```
+
 ## Features
 - Create private key pairs for specific [Signature Suites](https://w3c-ccg.github.io/ld-cryptosuite-registry/) used for signing Verifiable Credentials (e.g., BBS).
 - Generate DID private key pairs and DID documents.
@@ -10,7 +17,7 @@ A library to facilitate the creation of [Decentralized Identifiers](https://www.
 
 ________________________________
 
-## Functions
+## Usage
 ### 1. Create Private Key
 
 `generateKeyPair` function helps to generate a signature Key Pair.
