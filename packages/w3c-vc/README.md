@@ -1,4 +1,4 @@
-# w3c-vc
+# TrustVC W3C VC
 
 This repository provides utilities for signing and verifying Verifiable Credentials (VCs) using the BBS+ signature scheme. These functions can be used to ensure the authenticity and integrity of VCs within a W3C-compliant ecosystem.
 

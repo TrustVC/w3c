@@ -1,9 +1,3 @@
-# w3c-context
+# TrustVC W3C Context
 
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `nx test w3c-context` to execute the unit tests via [Jest](https://jestjs.io).
- 
- 
+Module to cache the commonly served JSON context schema in the `@context` within VCs. 

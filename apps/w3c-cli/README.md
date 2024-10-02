@@ -66,7 +66,7 @@ This command verifies the authenticity of a signed Verifiable Credential using t
 ### `w3c-cli credential-status create`
 This command creates a signed Credential Status VC using the Bitstring StatusList.
 
-### `w3c-cli creadential-status update`
+### `w3c-cli credential-status update`
 This command updates any existing Credential Status VC and resign the Credential Status after it has been updated.
 
 ## Directory Structure
