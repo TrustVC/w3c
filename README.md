@@ -20,10 +20,11 @@ For more details on each packages, refer to the individual README doc.
 | [@trustvc/w3c-cli](https://github.com/TrustVC/w3c/tree/main/apps/w3c-cli) | [npm](https://www.npmjs.com/package/@trustvc/w3c-cli) |
 
 ## Getting Started 
-### 1. Pre Requisite
-  1. Generate a signature specific key pair. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#1-create-private-key)
 
-  2. Generate and host a DID web idenity. [link](https://github.com/TrustVC/w3c/tree/main/packagesw3c-issuer#2-generate-did-key-pair-and-did-document)
+1. Pre Requisite
+    1. Generate a signature specific key pair. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#1-create-private-key)
+
+    2. Generate and host a DID web idenity. [link](https://github.com/TrustVC/w3c/tree/main/packagesw3c-issuer#2-generate-did-key-pair-and-did-document)
 ### 2. Sign and Verify VC
 
   #### 1. Sign
