@@ -21,17 +21,17 @@ For more details on each packages, refer to the individual README doc.
 
 ## Getting Started 
 
-1. Pre Requisite
+1. **Pre Requisite**
     1. Generate a signature specific key pair. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#1-create-private-key)
     2. Generate and host a DID web idenity. [link](https://github.com/TrustVC/w3c/tree/main/packagesw3c-issuer#2-generate-did-key-pair-and-did-document)
 
-2. Sign and Verify VC
+2. **Sign and Verify VC**
     1. Sign
         1. Prepare and Sign the VC payload. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-vc#1-signing-a-credential)
     2. Verify
         1. Verify the signed VC. [link](https://github.com/TradeTrust/w3c/tree/main/packages/w3c-vc#2-verifying-a-credential)
 
-3. Sign and Verify VC with Credential Status
+3. **Sign and Verify VC with Credential Status**
     1. Generate Credential Status
         1. Preapre and Sign the paylaod for Credential Status. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-credential-status#w3c-credential-status)
     2. Sign

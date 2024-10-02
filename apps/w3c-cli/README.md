@@ -13,15 +13,16 @@ This CLI provides a quick and straightforward way for users to:
 
 ## Table of Contents
 
-- 1. [Installation](#installation)
-- 2. [How It Works](#how-it-works)
-- 3. [Commands](#commands)
-  - 1. [w3c-cli key-pair](#w3c-cli-key-pair)
-  - 2. [w3c-cli did](#w3c-cli-did)
-  - 3. [w3c-cli sign](#w3c-cli-sign)
-  - 4. [w3c-cli verify](#w3c-cli-verify)
-  - 5. [w3c-cli credential-status create](#w3c-cli-credential-status-create)
-- 3. [Directory Structure](#directory-structure)
+1. [Installation](#installation)
+2. [How It Works](#how-it-works)
+3. [Commands](#commands)
+    1. [w3c-cli key-pair](#w3c-cli-key-pair)
+    2. [w3c-cli did](#w3c-cli-did)
+    3. [w3c-cli sign](#w3c-cli-sign)
+    4. [w3c-cli verify](#w3c-cli-verify)
+    5. [w3c-cli credential-status create](#w3c-cli-credential-status-create)
+    6. [w3c-cli credential-status update](#w3c-cli-credential-status-update)
+4. [Directory Structure](#directory-structure)
 
 ## Installation
 1. Install CLI:
