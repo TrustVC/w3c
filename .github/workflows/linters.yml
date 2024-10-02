@@ -42,5 +42,5 @@ jobs:
           fetch-depth: 0
 
       - name: Install Commit Lint Dependencies
-        run: npm install --no-package-lock --no-save --force @commitlint/config-conventional@^17 @commitlint/config-nx-scopes@^17 nx@^17
-      - uses: wagoid/commitlint-github-action@v5
+        run: npm install --force @commitlint/config-conventional@v17 @commitlint/config-nx-scopes@^17 nx@^17
+      - uses: JulienKode/pull-request-name-linter-action@v0.5.0
