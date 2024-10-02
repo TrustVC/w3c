@@ -56,7 +56,7 @@ const credential = {
   "credentialSubject": {
     "id": "did:example:b34ca6cd37bbf23",
     "type": ["Person"],
-    "name": "Trust"
+    "name": "TrustVC"
   },
   "expirationDate": "2029-12-03T12:19:52Z",
   "issuer": "did:web:nghaninn.github.io:did:1",
@@ -96,16 +96,16 @@ if (signedCredential.signed) {
     credentialSubject: {
       id: 'did:example:b34ca6cd37bbf23',
       type: [ 'Person' ],
-      name: 'Trust'
+      name: 'TrustVC'
     },
     expirationDate: '2029-12-03T12:19:52Z',
     issuer: 'did:web:nghaninn.github.io:did:1',
     type: [ 'VerifiableCredential' ],
     proof: {
       type: 'BbsBlsSignature2020',
-      created: '2024-10-02T08:30:25Z',
+      created: '2024-10-02T08:33:00Z',
       proofPurpose: 'assertionMethod',
-      proofValue: 'kTvXoG/A8AV3fEk1Hq/vS1L6joLcJsbprbTLXHtrZvMgyk8TUN/4Qi6mNLAFBeX+PsSoP86bAQHXoEfaR1yD8bFRTQjdj3ju8LzPNy3BNJRXbMSpobXdwvbdc0EZHif/NwHdzzOYMzD2Y4QCl26bxQ==',
+      proofValue: 'sIfRmqFYgFMJgp0vbUMitkaiN7/YQjrpGB4hUQd5u+LMMq8hnSSvJeWZmzzomZRzEOmOujgAwamaKvwB9FwRX50F2Iq7rPFPlsnsFcde72wS9jGven/6bqc6fYgNp7iOzafE1IlHG8tpJm7L0ZvW0Q==',
       verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1'
     }
   }
