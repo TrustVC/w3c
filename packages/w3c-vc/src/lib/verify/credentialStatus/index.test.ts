@@ -12,24 +12,24 @@ const credentialStatusVC: SignedVerifiableCredential = {
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
   ],
-  id: 'https://nghaninn.github.io/did/credentials/statuslist#1',
+  id: 'https://trustvc.github.io/did/credentials/statuslist/1',
   type: ['VerifiableCredential', 'StatusList2021Credential'],
-  issuer: 'did:web:nghaninn.github.io:did:1',
-  issuanceDate: '2024-09-18T08:32:22.707Z',
-  validFrom: '2024-09-18T08:32:22.707Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  issuanceDate: '2024-10-02T08:49:52.749Z',
+  validFrom: '2024-10-02T08:49:52.435Z',
   credentialSubject: {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1#list',
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#list',
     type: 'StatusList2021',
     statusPurpose: 'revocation',
-    encodedList: 'H4sIAAAAAAAAA-3BMQEAAAwCoPVPZbMZwwf4HAAAAAAAAAAAAAAAAAAAALBRLLoWyfc_AAA',
+    encodedList: 'H4sIAAAAAAAAA-3BMQEAAAwCoH32b7RoxvAB8gcAAAAAAAAAAAAAAAAAAACMFVeOQ9sAQAAA',
   },
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-09-18T08:32:24Z',
+    created: '2024-10-02T08:49:54Z',
     proofPurpose: 'assertionMethod',
     proofValue:
-      'iTKbuWZ7Yly0kjK4tadb42h5pkPByuaUruVGtayegepHnUYmqFlzWZOMyb4GCEslB0vbbNOar5flz5quRUU3e7CMUcXR6Ty5oqleTuBecOggMW5THwgGxgJ6rSXK6+Z1Paqv+F37FyfDfIxiv63B2Q==',
-    verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1',
+      'ohxpxgF6BUhGkSLBSGknWAVgx2flaQ4Hvl8MpD+tvVVEESXlQf0PbefZgg0Kj4+AUQS9wzJ/DjfbmkEkqiQU4RSKC82uPmoL5K7QWQRL4G8tymiY5ITLuRtYeACoiZz/dhF1wxxyJArGEI8ZWGCGNw==',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
   },
 };
 
@@ -39,33 +39,33 @@ const credentialStatusVC_withInvalidEncodedList = {
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
   ],
-  id: 'https://nghaninn.github.io/did/credentials/statuslist#1',
+  id: 'https://trustvc.github.io/did/credentials/statuslist/1',
   type: ['VerifiableCredential', 'StatusList2021Credential'],
-  issuer: 'did:web:nghaninn.github.io:did:1',
-  issuanceDate: '2024-09-18T08:41:08.157Z',
-  validFrom: '2024-09-18T08:41:08.157Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  issuanceDate: '2024-10-02T09:09:50.410Z',
+  validFrom: '2024-10-02T08:49:52.435Z',
   credentialSubject: {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1#list',
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#list',
     type: 'StatusList2021',
     statusPurpose: 'revocation',
     encodedList: 'encodedList',
   },
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-09-18T08:41:09Z',
+    created: '2024-10-02T09:09:51Z',
     proofPurpose: 'assertionMethod',
     proofValue:
-      'l/46gB3E+8EfhFqFkBRvvgdGvayxSrNuGsPswIUqeS8je7YRW1UIOeLYtOa7VoDcO2snTSMSDGIhZn2OZUcuFomAVutDJvpy+4AmUl4y4m0yEalOmXix+4Mf8QQm7bQiR/itcmA4puQyy4z24qk1Kg==',
-    verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1',
+      'qIxEb/9zDvjESQGkrBs6D+ilnloRfgFUkEZaBu6qNJfd48QD5XGg834pUu7l6HwKXsW19OKA1DRgKp9j+9zTm52YMl4GiMqZW/rXh8Cf6zsefU4guMtYMQa8MDaxy51rc8mnE09LqP8qcJGH6iwm7Q==',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
   },
 };
 
 const credentialStatus = {
-  id: 'https://nghaninn.github.io/did/credentials/statuslist/1#1',
+  id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
   type: 'StatusList2021Entry' as CredentialStatusType,
   statusPurpose: 'revocation' as CredentialStatusPurpose,
-  statusListIndex: '1',
-  statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1',
+  statusListIndex: '5',
+  statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
 };
 
 describe('verifyCredentialStatus', () => {
@@ -170,6 +170,6 @@ describe('verifyCredentialStatus', () => {
       statusListIndex: '200000',
     });
 
-    expect(error).toBe('Invalid statusListIndex: Index out of range: min=0, max=130999');
+    expect(error).toBe('Invalid statusListIndex: Index out of range: min=0, max=131071');
   });
 });

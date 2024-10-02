@@ -30,12 +30,12 @@ import { signCredential } from '@trustvc/w3c-vc';
  */
 
 const keyPair = {
-  "id": "did:web:nghaninn.github.io:did:1#keys-1",
-  "controller": "did:web:nghaninn.github.io:did:1",
+  "id": "did:web:trustvc.github.io:did:1#keys-1",
   "type": "Bls12381G2Key2020",
-  "seedBase58": "GW1FUS9Xg7T6xsZDCVx48EM1uuo25k435U77ftZrQEYB",
-  "privateKeyBase58": "5LbHsFCpW4YzCNWbqhZJkWyVnayp5gEDsUvrq47qLSN6",
-  "publicKeyBase58": "rDAqEpT2FJspbHL9gM1utkT2UNADn59HMiouSLoktZw8B1GsKyXB3Wd5fgDucCbMDRLcQhWHEuQrrKSf7P2NyqgFwHGbzNQ9X8EPbXakSr2cbqLghmzkGvE4ppEHVkBYc83"
+  "controller": "did:web:trustvc.github.io:did:1",
+  "seedBase58": "GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS",
+  "privateKeyBase58": "4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF",
+  "publicKeyBase58": "oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ"
 };
 
 const credential = {
@@ -46,8 +46,8 @@ const credential = {
     "https://w3id.org/vc/status-list/2021/v1"
   ],
   "credentialStatus": {
-    "id": "https://nghaninn.github.io/did/credentials/statuslist/1#1",
-    "statusListCredential": "https://nghaninn.github.io/did/credentials/statuslist/1",
+    "id": "https://trustvc.github.io/did/credentials/statuslist/1#1",
+    "statusListCredential": "https://trustvc.github.io/did/credentials/statuslist/1",
     "statusListIndex": "1",
     "statusPurpose": "revocation",
     "type": "StatusList2021Entry"
@@ -59,7 +59,7 @@ const credential = {
     "name": "TrustVC"
   },
   "expirationDate": "2029-12-03T12:19:52Z",
-  "issuer": "did:web:nghaninn.github.io:did:1",
+  "issuer": "did:web:trustvc.github.io:did:1",
   "type": [
     "VerifiableCredential"
   ]
@@ -86,8 +86,8 @@ if (signedCredential.signed) {
       'https://w3id.org/vc/status-list/2021/v1'
     ],
     credentialStatus: {
-      id: 'https://nghaninn.github.io/did/credentials/statuslist/1#1',
-      statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1',
+      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
       statusListIndex: '1',
       statusPurpose: 'revocation',
       type: 'StatusList2021Entry'
@@ -99,14 +99,14 @@ if (signedCredential.signed) {
       name: 'TrustVC'
     },
     expirationDate: '2029-12-03T12:19:52Z',
-    issuer: 'did:web:nghaninn.github.io:did:1',
+    issuer: 'did:web:trustvc.github.io:did:1',
     type: [ 'VerifiableCredential' ],
     proof: {
       type: 'BbsBlsSignature2020',
-      created: '2024-10-02T08:33:00Z',
+      created: '2024-10-02T09:04:07Z',
       proofPurpose: 'assertionMethod',
-      proofValue: 'sIfRmqFYgFMJgp0vbUMitkaiN7/YQjrpGB4hUQd5u+LMMq8hnSSvJeWZmzzomZRzEOmOujgAwamaKvwB9FwRX50F2Iq7rPFPlsnsFcde72wS9jGven/6bqc6fYgNp7iOzafE1IlHG8tpJm7L0ZvW0Q==',
-      verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1'
+      proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
+      verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
     }
   }
   ```
@@ -136,8 +136,8 @@ const credential = {
     'https://w3id.org/vc/status-list/2021/v1'
   ],
   credentialStatus: {
-    id: 'https://nghaninn.github.io/did/credentials/statuslist/1#1',
-    statusListCredential: 'https://nghaninn.github.io/did/credentials/statuslist/1',
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
     statusListIndex: '1',
     statusPurpose: 'revocation',
     type: 'StatusList2021Entry'
@@ -149,14 +149,14 @@ const credential = {
     name: 'TrustVC'
   },
   expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:nghaninn.github.io:did:1',
+  issuer: 'did:web:trustvc.github.io:did:1',
   type: [ 'VerifiableCredential' ],
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-10-02T08:33:00Z',
+    created: '2024-10-02T09:04:07Z',
     proofPurpose: 'assertionMethod',
-    proofValue: 'sIfRmqFYgFMJgp0vbUMitkaiN7/YQjrpGB4hUQd5u+LMMq8hnSSvJeWZmzzomZRzEOmOujgAwamaKvwB9FwRX50F2Iq7rPFPlsnsFcde72wS9jGven/6bqc6fYgNp7iOzafE1IlHG8tpJm7L0ZvW0Q==',
-    verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1'
+    proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
   }
 };
 

@@ -4,7 +4,7 @@ import { VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { generateAndSaveKeyPair, promptQuestions } from '../../src/commands/generate';
+import { generateAndSaveKeyPair, promptQuestions } from '../../src/commands/key-pair';
 import { GenerateInput } from '../../src/types';
 
 vi.mock('@inquirer/prompts');
@@ -28,7 +28,7 @@ vi.mock('chalk', async () => {
 // GLOBAL CONSTANTS
 const mockSeed = 'FVj12jBiBUqYFaEUkTuwAD73p9Hx5NzCJBge74nTguQN';
 
-describe('generate', () => {
+describe('key-pair', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });

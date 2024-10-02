@@ -20,9 +20,8 @@ describe('query', () => {
       expect(did).toBe('did:web:www.google.com');
     });
 
-    // TODO: NEED TO BE UPDATED WITH TRUST-VC DID GITHUB PAGES, REPLACING NGHANINN.COM
-    it.skip('should queryDidDocument with valid did', async () => {
-      const domain = 'https://nghaninn.github.io/did/1';
+    it('should queryDidDocument with valid did', async () => {
+      const domain = 'https://trustvc.github.io/did/1';
       const { did, wellKnownDid } = await queryDidDocument({ domain });
       expect(wellKnownDid).toMatchInlineSnapshot(`
         {
@@ -31,29 +30,29 @@ describe('query', () => {
             "https://w3id.org/security/suites/bls12381-2020/v1",
           ],
           "assertionMethod": [
-            "did:web:nghaninn.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#keys-1",
           ],
           "authentication": [
-            "did:web:nghaninn.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#keys-1",
           ],
           "capabilityDelegation": [
-            "did:web:nghaninn.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#keys-1",
           ],
           "capabilityInvocation": [
-            "did:web:nghaninn.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#keys-1",
           ],
-          "id": "did:web:nghaninn.github.io:did:1",
+          "id": "did:web:trustvc.github.io:did:1",
           "verificationMethod": [
             {
-              "controller": "did:web:nghaninn.github.io:did:1",
-              "id": "did:web:nghaninn.github.io:did:1#keys-1",
-              "publicKeyBase58": "rDAqEpT2FJspbHL9gM1utkT2UNADn59HMiouSLoktZw8B1GsKyXB3Wd5fgDucCbMDRLcQhWHEuQrrKSf7P2NyqgFwHGbzNQ9X8EPbXakSr2cbqLghmzkGvE4ppEHVkBYc83",
+              "controller": "did:web:trustvc.github.io:did:1",
+              "id": "did:web:trustvc.github.io:did:1#keys-1",
+              "publicKeyBase58": "oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ",
               "type": "Bls12381G2Key2020",
             },
           ],
         }
       `);
-      expect(did).toBe('did:web:nghaninn.github.io:did:1');
+      expect(did).toBe('did:web:trustvc.github.io:did:1');
     });
   });
 });
