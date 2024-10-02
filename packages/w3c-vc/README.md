@@ -146,17 +146,17 @@ const credential = {
   credentialSubject: {
     id: 'did:example:b34ca6cd37bbf23',
     type: [ 'Person' ],
-    name: 'Trust'
+    name: 'TrustVC'
   },
   expirationDate: '2029-12-03T12:19:52Z',
   issuer: 'did:web:nghaninn.github.io:did:1',
   type: [ 'VerifiableCredential' ],
   proof: {
     type: 'BbsBlsSignature2020',
-    created: '2024-10-02T08:21:26Z',
+    created: '2024-10-02T08:33:00Z',
     proofPurpose: 'assertionMethod',
-    proofValue: 'prIO8mNBjgvvEzvh94eamfjHwF7zNOms23n1BcoQe5teLWpdJxDuB25dCfWYsu+UTqbfonSktBIjTorzQPdTuHwVKZt/t0Z+9j5uMj+65hxtIW5Osz33833c0z6UhQuh2CsUpfYXtVuDtUZADWGDYw==',
-    verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-4'
+    proofValue: 'sIfRmqFYgFMJgp0vbUMitkaiN7/YQjrpGB4hUQd5u+LMMq8hnSSvJeWZmzzomZRzEOmOujgAwamaKvwB9FwRX50F2Iq7rPFPlsnsFcde72wS9jGven/6bqc6fYgNp7iOzafE1IlHG8tpJm7L0ZvW0Q==',
+    verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1'
   }
 };
 
