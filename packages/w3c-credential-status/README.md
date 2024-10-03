@@ -184,12 +184,7 @@ const signedCredentialStatusVC = signed;
   <summary>createCredentialStatusPayload Result</summary>
 
 ```js
-generatedKeyPair: {
-  type: 'Bls12381G2Key2020',
-  seedBase58: 'Bi3PwkefLww65R5X1pBjfMoMGQU1JEYLNScYEFGof2jU',
-  privateKeyBase58: '6YA2TufSGoEycKZQYAgceQW8ctsyvfLaRyujA5vChC7Y',
-  publicKeyBase58: '26JYXd5XRLLoLohrc9RxRXkCazujKknDsEN4ft9911APQD8WbcNCKQ8d65jrAGohUpwitXzGXn7FwMqQGZtGP48n3tsR1pMNW1WoKQLkAaoeY1CweAyKoYqj1M3YzmFimmr1'
-}
+to be added
 ```
 
 </details>
