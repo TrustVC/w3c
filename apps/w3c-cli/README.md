@@ -1,4 +1,4 @@
-# w3c-cli
+# TrustVC W3C CLI
 
 `w3c-cli` is a command-line interface tool designed to demonstrate how to interact with Verifiable Credentials (VCs) and Decentralized Identifiers (DIDs) using functions from the following repositories:
 - [`w3c-issuer`]()
