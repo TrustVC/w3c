@@ -1,4 +1,4 @@
-import _, { omit } from 'lodash';
+import _ from 'lodash';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { VerificationContext, VerificationType } from '../../lib/types';
 import { generateWellKnownDid, nextKeyId } from './generate';
@@ -57,7 +57,7 @@ describe('generate', () => {
         privateKeyBase58,
         publicKeyBase58,
       };
-      const verificationMethod = omit(keyPair, ['seedBase58', 'privateKeyBase58']);
+      const verificationMethod = _.omit(keyPair, ['seedBase58', 'privateKeyBase58']);
       it('should generateWellKnownDid with keyPair - Bls12381', async () => {
         const result = generateWellKnownDid({
           newKeyPair: keyPair,
@@ -181,7 +181,7 @@ describe('generate', () => {
         blockchainAccountId: '0xe0A71284EF59483795053266CB796B65E48B5124',
         privateKeyHex: '0xe82294532bcfcd8e0763ee5cef194f36f00396be59b94fb418f5f8d83140d9a7',
       };
-      const verificationMethod = omit(keyPair, ['mnemonics', 'path', 'privateKeyHex']);
+      const verificationMethod = _.omit(keyPair, ['mnemonics', 'path', 'privateKeyHex']);
 
       it('should generateWellKnownDid with keyPair - EcdsaSecp256k1RecoveryMethod2020', async () => {
         const result = generateWellKnownDid({

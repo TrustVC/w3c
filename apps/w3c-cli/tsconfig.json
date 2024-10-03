@@ -3,14 +3,7 @@
   "files": [],
   "compilerOptions": {
     "types": ["node"],
-    "outDir": "./dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
     "declaration": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src/**/*", "tests/**/*"]
 }

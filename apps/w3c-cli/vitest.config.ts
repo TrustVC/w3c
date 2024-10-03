@@ -1,5 +1,5 @@
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import dts from 'vite-plugin-dts';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -7,7 +7,9 @@ export default defineConfig({
     'import.meta.vitest': 'undefined',
   },
   plugins: [
-    nxViteTsPaths(),
+    tsconfigPaths({
+      configNames: ['tsconfig.test.json'],
+    }),
     dts({
       entryRoot: 'src',
       tsconfigPath: 'tsconfig.test.json',

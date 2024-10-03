@@ -40,6 +40,5 @@
   "ts-node": {
     "experimentalResolver": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "build", "tmp"]
+  "exclude": ["dist", "build", "tmp"]
 }
