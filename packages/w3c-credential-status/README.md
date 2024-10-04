@@ -1,6 +1,8 @@
 # W3C Credential Status
 
-[Bitstring Status List](https://www.w3.org/TR/vc-bitstring-status-list/) refers to a method of representing the revocation/suspension status of multiple items (such as digital certificates or credentials) using a bitstring (a sequence of bits). This technique allows for efficient tracking and management of which items are valid or revoked without needing to maintain extensive individual records for each item.
+Implements credential status management for Verifiable Credentials (VCs) using @trustvc/w3c-credential-status. It supports lifecycle operations such as revocation and suspension without altering the original credential, enabling verifiers to check a credential's current status. The project utilizes status lists and handles the credential validation process.
+
+[Bitstring Status List](https://www.w3.org/TR/2023/WD-vc-status-list-20230427/) refers to a method of representing the revocation/suspension status of multiple items (such as digital certificates or credentials) using a bitstring (a sequence of bits). This technique allows for efficient tracking and management of which items are valid or revoked without needing to maintain extensive individual records for each item.
 
 ## Revoking/Suspending a VC
 
@@ -9,11 +11,10 @@ The revocation or suspension of a [Verifiable Credentials v1.1.
 
 This module provides functionality to create/updat a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports the creation of different types of credential status VCs such as [StatusList2021Credential](https://www.w3.org/TR/2023/WD-vc-status-list-20230427/).
 
-# Table of Contents
+## Table of Contents
 
 - [W3C Credential Status](#w3c-credential-status)
   - [Revoking/Suspending a VC](#revokingsuspending-a-vc)
-- [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Features](#features)
   - [Usage](#usage)
@@ -31,14 +32,8 @@ This module provides functionality to create/updat a signed Verifiable Credentia
       - [Step 4 - Encode and Sign the Credential Status](#step-4---encode-and-sign-the-credential-status)
   - [API Reference](#api-reference)
     - [`createCredentialStatusPayload`](#createcredentialstatuspayload)
-      - [Parameters:](#parameters)
     - [`signCredential`](#signcredential)
-      - [Parameters:](#parameters-1)
     - [`StatusList`](#statuslist)
-      - [Constructor](#constructor)
-      - [Parameters:](#parameters-2)
-      - [Methods](#methods)
-  - [License](#license)
 
 ---
 
@@ -111,11 +106,13 @@ The `getStatus` method allows you to check whether a specific index in the statu
 
 ```typescript
 // Check the status of a specific index in the list
-const currentIndexStatus: boolean = credentialStatus.getStatus(index); //pick index of your choice between length 0 - credentialStatus.length;
+//pick index of your choice between length 0 - credentialStatus.length;
+const currentIndexStatus: boolean = credentialStatus.getStatus(index);
 
 console.log(currentIndexStatus); // to check current index status
 
-//To change the status (revoked/suspended or active), use the setStatus method:(true = revoked/suspended, false = active)
+//To change the status (revoked/suspended or active),
+//use the setStatus method:(true = revoked/suspended, false = active)
 
 credentialStatus.setStatus(index, false);
 ```
@@ -159,10 +156,15 @@ const options = {
       statusPurpose: purpose,
       encodedList,
     };
+}
 
-const keyPair: PrivateKeyPair = {
-  controller: 'did:web:example.com',
-  // Add additional key pair properties here (privateKeyBase58, publicKeyBase58)
+const keyPair = {
+  "id": "did:web:trustvc.github.io:did:1#keys-1",
+  "type": "Bls12381G2Key2020",
+  "controller": "did:web:trustvc.github.io:did:1",
+  "seedBase58": "<seedBase58>",
+  "privateKeyBase58": "<privateKeyBase58>",
+  "publicKeyBase58": "oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ"
 };
 
 const credentialStatusVC = await createCredentialStatusPayload(options, keyPair);
@@ -181,10 +183,40 @@ const signedCredentialStatusVC = signed;
 ```
 
 <details>
-  <summary>createCredentialStatusPayload Result</summary>
+  <summary>signCredential Result</summary>
 
 ```js
-to be added
+Signed Credential: {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
+    'https://w3id.org/security/bbs/v1',
+    'https://w3id.org/vc/status-list/2021/v1'
+  ],
+  credentialStatus: {
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
+    statusListIndex: '1',
+    statusPurpose: 'revocation',
+    type: 'StatusList2021Entry'
+  },
+  issuanceDate: '2024-04-01T12:19:52Z',
+  credentialSubject: {
+    id: 'did:example:b34ca6cd37bbf23',
+    type: [ 'Person' ],
+    name: 'TrustVC'
+  },
+  expirationDate: '2029-12-03T12:19:52Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  type: [ 'VerifiableCredential' ],
+  proof: {
+    type: 'BbsBlsSignature2020',
+    created: '2024-10-02T09:04:07Z',
+    proofPurpose: 'assertionMethod',
+    proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
+  }
+}
 ```
 
 </details>
@@ -219,7 +251,7 @@ let credentialStatusVC: SignedCredentialStatusVC;
 try {
   credentialStatusVC = await fetchCredentialStatusVC(hostingUrl);
 } catch (err: unknown) {
-  console.error(chalk.red(`Invalid URL provided: ${hostingUrl}`));
+  console.error(`Invalid URL provided: ${hostingUrl}`);
   throw err;
 }
 ```
@@ -283,54 +315,48 @@ const signedCredentialStatusVC = signed;
 
 ### `createCredentialStatusPayload`
 
-Creates a credential status payload.
-
-#### Parameters:
-
-`credentialStatusData (object)`: The data for the credential status.
-
-`keypairData (object)`: The key pair data used for signing.
-
-`credentialType (string)`: The type of credential (e.g., 'StatusList2021Credential').
+> Creates a credential status payload.
+>
+> #### Parameters:
+>
+> `credentialStatusData (object)`: The data for the credential status.
+>
+> `keypairData (object)`: The key pair data used for signing.
+>
+> `credentialType (string)`: The type of credential (e.g., >'StatusList2021Credential').
 
 ### `signCredential`
 
-Signs the credential status payload.
-
-#### Parameters:
-
-`credentialPayload (object)`: The credential status payload.
-
-`keypairData (object)`: The key pair data used for signing.
+> Signs the credential status payload.
+>
+> #### Parameters:
+>
+> `credentialPayload (object)`: The credential status payload.
+>
+> `keypairData (object)`: The key pair data used for signing.
 
 ### `StatusList`
 
-Creates a new StatusList instance with a specified length and an optional initial buffer.
-
-#### Constructor
-
-```typescript
-constructor({ length, buffer }: BitstringStatusListOption)
-```
-
-#### Parameters:
-
-`length (number)`: The length of the bitstring.
-
-`buffer (Buffer | undefined)`: An optional buffer containing the initial state of the bitstring.
-
-#### Methods
-
-`setStatus(index: number, status: boolean): void`
-
-`getStatus(index: number): boolean`
-
-`encode(): Promise<string>`
-
-`static decode({ encodedList }: { encodedList: string }): Promise<StatusList>`
-
----
-
-## License
-
----
+> Creates a new StatusList instance with a specified length and an optional >initial buffer.
+>
+> #### Constructor
+>
+> ```typescript
+> constructor({ length, buffer }: BitstringStatusListOption)
+> ```
+>
+> #### Parameters:
+>
+> `length (number)`: The length of the bitstring.
+>
+> `buffer (Buffer | undefined)`: An optional buffer containing the initial >state of the bitstring.
+>
+> #### Methods
+>
+> `setStatus(index: number, status: boolean): void`
+>
+> `getStatus(index: number): boolean`
+>
+> `encode(): Promise<string>`
+>
+> `static decode({ encodedList }: { encodedList: string }): >Promise<StatusList>`
