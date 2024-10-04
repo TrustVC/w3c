@@ -1,5 +1,5 @@
-import didV1 from './did-v1.json';
-import trContext from './transferable-records-context.json';
+import didV1 from '../context/did-v1.json';
+import trContext from '../context/transferable-records-context.json';
 import { Document } from './types';
 
 export const DID_V1_URL = 'https://www.w3.org/ns/did/v1';

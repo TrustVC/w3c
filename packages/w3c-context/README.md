@@ -1,9 +1,9 @@
-# w3c-context
+# TrustVC W3C Context
+A package to cache the commonly served JSON context schema in the `@context` within VCs. 
 
-This library was generated with [Nx](https://nx.dev).
+## Installation
+To install the package, use:
 
-## Running unit tests
-
-Run `nx test w3c-context` to execute the unit tests via [Jest](https://jestjs.io).
- 
- 
+```sh
+npm install @trustvc/w3c-context
+```

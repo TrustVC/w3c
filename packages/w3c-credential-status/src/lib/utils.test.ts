@@ -58,7 +58,7 @@ describe('utils.ts', () => {
   describe('fetchCredentialStatusVC', () => {
     it('should fetch a credential status VC successfully', async () => {
       const vc = await fetchCredentialStatusVC(
-        'https://nghaninn.github.io/did/credentials/statuslist/1',
+        'https://trustvc.github.io/did/credentials/statuslist/1',
       );
       expect(vc).toMatchObject({
         '@context': [
@@ -67,14 +67,14 @@ describe('utils.ts', () => {
           'https://w3id.org/vc/status-list/2021/v1',
         ],
         credentialSubject: {
-          id: 'https://nghaninn.github.io/did/credentials/statuslist/1#list',
+          id: 'https://trustvc.github.io/did/credentials/statuslist/1#list',
           type: 'StatusList2021',
           statusPurpose: expect.stringMatching(/revocation|suspension/),
           encodedList: expect.any(String),
         },
-        id: 'https://nghaninn.github.io/did/credentials/statuslist/1',
+        id: 'https://trustvc.github.io/did/credentials/statuslist/1',
         issuanceDate: expect.any(String),
-        issuer: 'did:web:nghaninn.github.io:did:1',
+        issuer: 'did:web:trustvc.github.io:did:1',
         type: ['VerifiableCredential', 'StatusList2021Credential'],
         validFrom: expect.any(String),
         proof: {
@@ -82,14 +82,14 @@ describe('utils.ts', () => {
           created: expect.any(String),
           proofPurpose: 'assertionMethod',
           proofValue: expect.any(String),
-          verificationMethod: 'did:web:nghaninn.github.io:did:1#keys-1',
+          verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
         },
       });
     });
 
     it('should throw an error if the VC is not found', async () => {
       expect(
-        fetchCredentialStatusVC('https://nghaninn.github.io/did/credentials/statuslist/2'),
+        fetchCredentialStatusVC('https://trustvc.github.io/did/credentials/statuslist/2'),
       ).rejects.toThrowError('Credential Status VC not found');
     });
 

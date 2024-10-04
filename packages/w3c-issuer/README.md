@@ -2,6 +2,13 @@
 
 A library to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) DIDs v1, specifically [`did:web`](https://w3c-ccg.github.io/did-method-web/), for the signing of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) v1.1.
 
+## Installation
+To install the package, use:
+
+```sh
+npm install @trustvc/w3c-issuer
+```
+
 ## Features
 - Create private key pairs for specific [Signature Suites](https://w3c-ccg.github.io/ld-cryptosuite-registry/) used for signing Verifiable Credentials (e.g., BBS).
 - Generate DID private key pairs and DID documents.
@@ -10,7 +17,7 @@ A library to facilitate the creation of [Decentralized Identifiers](https://www.
 
 ________________________________
 
-## Functions
+## Usage
 ### 1. Create Private Key
 
 `generateKeyPair` function helps to generate a signature Key Pair.
@@ -49,9 +56,9 @@ console.log('generatedKeyPair: ', generatedKeyPair)
   ```js
   generatedKeyPair: {
     type: 'Bls12381G2Key2020',
-    seedBase58: 'Bi3PwkefLww65R5X1pBjfMoMGQU1JEYLNScYEFGof2jU',
-    privateKeyBase58: '6YA2TufSGoEycKZQYAgceQW8ctsyvfLaRyujA5vChC7Y',
-    publicKeyBase58: '26JYXd5XRLLoLohrc9RxRXkCazujKknDsEN4ft9911APQD8WbcNCKQ8d65jrAGohUpwitXzGXn7FwMqQGZtGP48n3tsR1pMNW1WoKQLkAaoeY1CweAyKoYqj1M3YzmFimmr1'
+    seedBase58: '<seedBase58>',
+    privateKeyBase58: '<privateKeyBase58',
+    publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
   }
   ```
 </details>
@@ -87,9 +94,9 @@ import { VerificationType, issueDID } from '@trustvc/w3c-issuer';
 const options = {
   domain: 'https://example.com/.well-known/did.json',
   type: VerificationType.Bls12381G2Key2020,
-  seedBase58: 'Bi3PwkefLww65R5X1pBjfMoMGQU1JEYLNScYEFGof2jU',
-  privateKeyBase58: '6YA2TufSGoEycKZQYAgceQW8ctsyvfLaRyujA5vChC7Y',
-  publicKeyBase58: '26JYXd5XRLLoLohrc9RxRXkCazujKknDsEN4ft9911APQD8WbcNCKQ8d65jrAGohUpwitXzGXn7FwMqQGZtGP48n3tsR1pMNW1WoKQLkAaoeY1CweAyKoYqj1M3YzmFimmr1'
+  seedBase58: '<seedBase58>',
+  privateKeyBase58: '<privateKeyBase58>',
+  publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
 }
 
 const issuedDID = await issueDID(options);
@@ -109,7 +116,7 @@ console.log("didKeyPairs:", didKeyPairs)
         type: 'Bls12381G2Key2020',
         id: 'did:web:example.com#keys-1',
         controller: 'did:web:example.com',
-        publicKeyBase58: '26JYXd5XRLLoLohrc9RxRXkCazujKknDsEN4ft9911APQD8WbcNCKQ8d65jrAGohUpwitXzGXn7FwMqQGZtGP48n3tsR1pMNW1WoKQLkAaoeY1CweAyKoYqj1M3YzmFimmr1'
+        publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
       }
     ],
     '@context': [
@@ -125,9 +132,9 @@ console.log("didKeyPairs:", didKeyPairs)
     id: 'did:web:example.com#keys-1',
     type: 'Bls12381G2Key2020',
     controller: 'did:web:example.com',
-    seedBase58: 'Bi3PwkefLww65R5X1pBjfMoMGQU1JEYLNScYEFGof2jU',
-    privateKeyBase58: '6YA2TufSGoEycKZQYAgceQW8ctsyvfLaRyujA5vChC7Y',
-    publicKeyBase58: '26JYXd5XRLLoLohrc9RxRXkCazujKknDsEN4ft9911APQD8WbcNCKQ8d65jrAGohUpwitXzGXn7FwMqQGZtGP48n3tsR1pMNW1WoKQLkAaoeY1CweAyKoYqj1M3YzmFimmr1'
+    seedBase58: '<seedBase58>',
+    privateKeyBase58: '<privateKeyBase58>',
+    publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
   }
   ```
 </details>

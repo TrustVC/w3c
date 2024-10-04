@@ -1,13 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "types": ["jest", "node"]
-  },
-  "include": [
-    "jest.config.ts",
-    "tests/**/*.test.ts",
-    "tests/**/*.spec.ts",
-    "tests/**/*.d.ts"
-  ]
+  "compilerOptions": {},
+  "exclude": ["dist"]
 }

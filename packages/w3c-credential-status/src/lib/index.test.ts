@@ -3,12 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { createCredentialStatusPayload } from './index';
 
 const PRIVATE_KEY_PAIR: PrivateKeyPair = {
-  id: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-1',
-  controller: 'did:web:jocular-sunflower-144c0d.netlify.app',
-  type: VerificationType.Bls12381G2Key2020,
-  privateKeyBase58: '44ToWFUFdm9eUa5So3fc1tCTpziiZLYM4qy5vZaGds1c',
+  id: 'did:web:trustvc.github.io:did:1#keys-1',
+  type: 'Bls12381G2Key2020' as VerificationType,
+  controller: 'did:web:trustvc.github.io:did:1',
+  seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
+  privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
   publicKeyBase58:
-    't5Rdg91V9rVVKSGbeJ6ZJP32cED2Dad1nEjQpgMwMrmbvwryzgy8ppg9dwMNWJEKQL2dotEKAe1Z9iAe5e6wQBngCEqESavreSX8d1TfPtCyRYntYQe9pQWvaGae6NvJ68J',
+    'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
 };
 
 describe('w3c-credential-status', () => {
@@ -41,7 +42,7 @@ describe('w3c-credential-status', () => {
         },
         id: 'https://example.com/credentials/3732',
         issuanceDate: expect.any(String),
-        issuer: 'did:web:jocular-sunflower-144c0d.netlify.app',
+        issuer: 'did:web:trustvc.github.io:did:1',
         type: ['VerifiableCredential', 'StatusList2021Credential'],
         validFrom: expect.any(String),
       });

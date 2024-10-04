@@ -6,7 +6,7 @@ import { signCredential, verifyCredential } from './w3c-vc';
 const modifiedCredential: any = {
   '@context': [
     'https://www.w3.org/2018/credentials/v1',
-    'https://didrp-test.esatus.com/schemas/basic-did-lei-mapping/v1',
+    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
     'https://w3id.org/security/bbs/v1',
     'https://w3id.org/vc/status-list/2021/v1',
     'https://trustvc.io/context/transferable-records-context.json',
@@ -20,22 +20,21 @@ const modifiedCredential: any = {
     tokenRegistry: '0xE0a94770B8e969B5D9179d6dA8730B01e19279e2',
   },
   credentialSubject: {
-    entityName: 'IMDA',
-    id: 'did:ethr:0x433097a1C1b8a3e9188d8C54eCC057B1D69f1638',
-    lei: '391200WCZAYD47QIKX37',
-    type: ['BasicDIDLEIMapping'],
+    name: 'TrustVC',
+    birthDate: '2024-04-01T12:19:52Z',
+    type: ['PermanentResident', 'Person'],
   },
   expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:jocular-sunflower-144c0d.netlify.app',
+  issuer: 'did:web:trustvc.github.io:did:1',
   type: ['VerifiableCredential'],
 };
 
 const modifiedKeyPair: any = {
-  id: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-1',
-  controller: 'did:web:jocular-sunflower-144c0d.netlify.app',
+  id: 'did:web:trustvc.github.io:did:1#keys-1',
+  controller: 'did:web:trustvc.github.io:did:1',
   type: VerificationType.Bls12381G2Key2020,
   publicKeyBase58:
-    't5Rdg91V9rVVKSGbeJ6ZJP32cED2Dad1nEjQpgMwMrmbvwryzgy8ppg9dwMNWJEKQL2dotEKAe1Z9iAe5e6wQBngCEqESavreSX8d1TfPtCyRYntYQe9pQWvaGae6NvJ68J',
+    'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
 };
 
 describe('Credential Signing and Verification', () => {
@@ -43,7 +42,7 @@ describe('Credential Signing and Verification', () => {
     let signingKeyPair = modifiedKeyPair;
     signingKeyPair = {
       ...signingKeyPair,
-      privateKeyBase58: '44ToWFUFdm9eUa5So3fc1tCTpziiZLYM4qy5vZaGds1c',
+      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
     };
 
     let credential = modifiedCredential;
@@ -74,7 +73,7 @@ describe('Credential Signing and Verification', () => {
     let signingKeyPair = modifiedKeyPair;
     signingKeyPair = {
       ...signingKeyPair,
-      privateKeyBase58: '44ToWFUFdm9eUa5So3fc1tCTpziiZLYM4qy5vZaGds1c',
+      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
     };
 
     const signedCredential = await signCredential(modifiedCredential, signingKeyPair);
@@ -94,7 +93,7 @@ describe('Credential Signing and Verification', () => {
         proofPurpose: 'assertionMethod',
         proofValue:
           'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-1',
+        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
       },
     };
 
@@ -114,7 +113,7 @@ describe('Credential Signing and Verification', () => {
         proofPurpose: 'assertionMethod',
         proofValue:
           'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-1',
+        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
       },
     };
 
@@ -134,7 +133,7 @@ describe('Credential Signing and Verification', () => {
         proofPurpose: 'assertionMethod',
         proofValue:
           'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:jocular-sunflower-144c0d.netlify.app#keys-2',
+        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-2',
       },
     };
 

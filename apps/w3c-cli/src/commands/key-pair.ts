@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { GenerateInput } from '../types';
 
-export const command = 'generate';
+export const command = 'key-pair';
 export const describe = 'Generate a new key pair file';
 
 export const handler = async () => {
@@ -16,7 +16,6 @@ export const handler = async () => {
 };
 
 export const promptQuestions = async (): Promise<GenerateInput> => {
-  // const answers = await inquirer.prompt(questions);
   const answers: GenerateInput = {} as GenerateInput;
 
   answers.encAlgo = await select({
@@ -26,14 +25,6 @@ export const promptQuestions = async (): Promise<GenerateInput> => {
         name: VerificationType.Bls12381G2Key2020,
         value: VerificationType.Bls12381G2Key2020,
         description: 'Generate KeyPair for BBS+ signature suite',
-        // }, {
-        //   name: VerificationType.Ed25519VerificationKey2018,
-        //   value: VerificationType.Ed25519VerificationKey2018,
-        //   description: 'Generate KeyPair for Ed25519 signature suite'
-        // }, {
-        //   name: VerificationType.EcdsaSecp256k1RecoveryMethod2020,
-        //   value: VerificationType.EcdsaSecp256k1RecoveryMethod2020,
-        //   description: 'Generate KeyPair for ethereum address'
       },
     ],
   });

@@ -5,7 +5,7 @@ import inquirer from 'inquirer';
 import { KeyPairQuestionType, QuestionType } from '../types';
 import { writeFile } from '../utils';
 
-export const command = 'generate-did';
+export const command = 'did';
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
 
 export const handler = async () => {
