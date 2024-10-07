@@ -1,0 +1,31 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "TransferableRecords": {
+      "@id": "https://example.com/terms#TransferableRecords",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "tokenNetwork": {
+          "@id": "https://example.com/terms#tokenNetwork",
+          "@context": {
+            "@protected": true,
+            "chain": {
+              "@id": "https://example.com/terms#chain",
+              "@type": "http://www.w3.org/2001/XMLSchema#string"
+            },
+            "chainId": {
+              "@id": "https://example.com/terms#chainId",
+              "@type": "http://www.w3.org/2001/XMLSchema#integer"
+            }
+          }
+        },
+        "tokenRegistry": {
+          "@id": "https://example.com/terms#tokenRegistry",
+          "@type": "@id"
+        }
+      }
+    }
+  }
+}
