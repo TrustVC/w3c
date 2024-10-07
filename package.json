@@ -20,7 +20,7 @@
     "cli:dev": "npm run dev --prefix apps/w3c-cli",
     "cli:exec": "npm run cli --prefix apps/w3c-cli",
     "prepare": "husky",
-    "release": "nx run-many --target=semantic-release --parallel=1 --repositoryUrl=https://github.com/trustvc/w3c.git --branches=main --verbose"
+    "release": "nx run-many --target=semantic-release --parallel=1 --verbose"
   },
   "keywords": [],
   "author": "IMDA",
