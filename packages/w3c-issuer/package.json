@@ -15,10 +15,10 @@
     "clean": "rm -rf dist/"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "IMDA",
+  "license": "Apache-2.0",
   "engines": {
-    "node": "18.x"
+    "node": ">=18.x"
   },
   "exports": {
     ".": {

@@ -23,8 +23,8 @@
     "release": "nx run-many --target=semantic-release --parallel=1 --repositoryUrl=https://github.com/trustvc/w3c.git --branches=main --verbose"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "IMDA",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
@@ -124,7 +124,7 @@
     "@rollup/rollup-linux-x64-gnu": "^4.22.5"
   },
   "engines": {
-    "node": ">=18.17.0 <20.0.0"
+    "node": ">=18.17.0"
   },
   "lint-staged": {
     "*.{js,ts}": [
