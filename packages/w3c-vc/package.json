@@ -1,0 +1,55 @@
+{
+  "name": "@trustvc/w3c-vc",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npx vitest --run --test-timeout=15000",
+    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "build": "nx run @trustvc/w3c-vc:'clean' && tsup",
+    "clean": "rm -rf dist/"
+  },
+  "keywords": [
+    "trustvc",
+    "w3c-vc"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@trustvc/w3c-issuer": "^0.0.0",
+    "@trustvc/w3c-credential-status": "^0.0.0",
+    "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
+    "did-resolver": "^4.1.0",
+    "jsonld-signatures": "7.0.0",
+    "jsonld": "^8.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trustvc/w3c.git"
+  },
+  "bugs": {
+    "url": "https://github.com/trustvc/w3c/issues"
+  },
+  "homepage": "https://github.com/trustvc/w3c#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false
+}

@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "@trustvc/w3c": ["./packages/w3c/src"],
+      "@trustvc/w3c-context": ["./packages/w3c-context/src"],
+      "@trustvc/w3c-credential-status": ["./packages/w3c-credential-status/src"],
+      "@trustvc/w3c-issuer": ["./packages/w3c-issuer/src"],
+      "@trustvc/w3c-vc": ["./packages/w3c-vc/src"]
+    },
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "downlevelIteration": true
+  },
+  "buildOptions": {
+    "outDir": "./dist",
+    "format": ["cjs", "esm"]
+  },
+  "ts-node": {
+    "experimentalResolver": true
+  },
+  "exclude": ["dist", "build", "tmp"]
+}

@@ -1,0 +1,64 @@
+{
+  "installation": {
+    "version": "19.4.2"
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "test": {
+      "dependsOn": [
+        "^test"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ],
+      "cache": true
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": true
+    },
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ],
+      "cache": true
+    }
+  },
+  "defaultBase": "main",
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "eslint:lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      },
+      "exclude": [
+        ""
+      ]
+    }
+  ],
+  "release": {
+    "projects": [
+      "@trustvc/w3c",
+      "@trustvc/w3c-context",
+      "@trustvc/w3c-credential-status",
+      "@trustvc/w3c-issuer",
+      "@trustvc/w3c-vc",
+      "@trustvc/w3c-cli"
+    ],
+    "changelog": {
+      "projectChangelogs": {
+        "createRelease": false
+      },
+      "automaticFromRef": true
+    },
+    "projectsRelationship": "independent"
+  }
+}

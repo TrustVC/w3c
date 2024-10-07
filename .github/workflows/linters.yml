@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+
+env:
+  NODE_ENV: ci
+
+name: 'Linters'
+
+jobs:
+  lint:
+    name: Code Lint
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v4
+      - run: npx nx affected -t lint
+
+  commit-lint:
+    name: Commit Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Install Commit Lint Dependencies
+        run: npm install --force @commitlint/config-conventional@v17 @commitlint/config-nx-scopes@^17 nx@^17
+      - uses: JulienKode/pull-request-name-linter-action@v0.5.0

@@ -1,0 +1,27 @@
+{
+  "name": "@trustvc/w3c-credential-status",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/w3c-credential-status/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "packages/w3c-credential-status"
+      }
+    }
+  },
+  "tags": [],
+  "targets": {
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "github": true,
+        "changelog": true,
+        "npm": true,
+        "outputPath": "${PROJECT_DIR}/dist",
+        "buildTarget": "${PROJECT_NAME}:build",
+        "tagFormat": "${PROJECT_NAME}@${VERSION}"
+      }
+    }
+  }
+}
