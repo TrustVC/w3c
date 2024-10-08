@@ -34,6 +34,18 @@ const onSuccess = async (): Promise<void> => {
   //   stderr: process.stderr,
   // })`npx resolve-tspaths -p tsconfig.build.json -s ./dist/cjs -o ./dist/cjs --verbose`;
 
+  // remove .d.mts
+  /**
+   * Unable to clean up .d.mts files
+   * https://github.com/egoist/tsup/pull/1024
+   */
+  // fs.readdirSync('dist').forEach(async (file) => {
+  //   console.log('Removing', file);
+  //   if (file.endsWith('.d.mts')) {
+  //     await rimraf(file);
+  //   }
+  // });
+
   // Copy all json files
   await cpy(['src/**/*.json'], 'dist', {
     overwrite: true,
@@ -47,22 +59,22 @@ const onSuccess = async (): Promise<void> => {
 
 export default defineConfig([
   {
-    dts: true,
+    dts: false,
     sourcemap: false,
     treeshake: true,
     splitting: false,
     clean: true,
     legacyOutput: true,
     outDir: 'dist',
-    platform: 'node',
-    entry: ['src/**/*.ts', '!src/**/*.{test,spec}.ts'],
-    format: ['cjs', 'esm'],
+    platform: 'neutral',
+    entry: ['src/**/*.ts', '!tests/**/*.{test,spec}.ts'],
+    format: ['cjs'],
     tsconfig: 'tsconfig.build.json',
-    shims: true,
+    shims: false,
     bundle: false,
     minify: false,
     keepNames: true,
     // outExtension,
-    // onSuccess,
+    onSuccess,
   },
 ]);

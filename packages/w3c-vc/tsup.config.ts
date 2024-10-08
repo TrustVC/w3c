@@ -1,7 +1,6 @@
 import cpy from 'cpy';
-import fs from 'fs';
-import { rimraf } from 'rimraf';
 import { defineConfig } from 'tsup';
+import updateDependenciesToPublishedVersion from '../../scripts/updateDependenciesToPublishedVersion';
 
 const outExtension = ({ options, format }) => {
   const formatMap = {
@@ -54,6 +53,8 @@ const onSuccess = async (): Promise<void> => {
   await cpy(['src/**/*.json'], 'dist/esm', {
     overwrite: true,
   });
+
+  updateDependenciesToPublishedVersion();
 };
 
 export default defineConfig([

@@ -1,7 +1,6 @@
 import cpy from 'cpy';
-import { execa } from 'execa';
-import { rimraf } from 'rimraf';
 import { defineConfig } from 'tsup';
+import updateDependenciesToPublishedVersion from '../../scripts/updateDependenciesToPublishedVersion';
 
 const outExtension = ({ options, format }) => {
   const formatMap = {
@@ -15,27 +14,37 @@ const outExtension = ({ options, format }) => {
 };
 
 const onSuccess = async (): Promise<void> => {
-  await cpy(['package.json'], 'dist', {
-    dot: true,
+  // await cpy(['package.json'], 'dist', {
+  //   dot: true,
+  //   overwrite: true,
+  // });
+
+  // await Promise.all(
+  //   ['dist/w3c-issuer/', 'dist/w3c-utils/', 'dist/esm/w3c-issuer/', 'dist/esm/w3c-utils/'].map(
+  //     async (path) => {
+  //       const r = await new Promise((resolve) => {
+  //         const r = rimraf(path);
+  //         rimraf.moveRemoveSync(path);
+  //         resolve(r);
+  //       });
+  //     },
+  //   ),
+  // );
+
+  // await execa({
+  //   stdout: process.stdout,
+  //   stderr: process.stderr,
+  // })`npx resolve-tspaths -p tsconfig.build.json -s ./dist/cjs -o ./dist/cjs --verbose`;
+
+  // Copy all json files
+  await cpy(['src/**/*.json'], 'dist', {
+    overwrite: true,
+  });
+  await cpy(['src/**/*.json'], 'dist/esm', {
     overwrite: true,
   });
 
-  await Promise.all(
-    ['dist/w3c-issuer/', 'dist/w3c-utils/', 'dist/esm/w3c-issuer/', 'dist/esm/w3c-utils/'].map(
-      async (path) => {
-        const r = await new Promise((resolve) => {
-          const r = rimraf(path);
-          rimraf.moveRemoveSync(path);
-          resolve(r);
-        });
-      },
-    ),
-  );
-
-  await execa({
-    stdout: process.stdout,
-    stderr: process.stderr,
-  })`npx resolve-tspaths -p tsconfig.build.json -s ./dist/cjs -o ./dist/cjs --verbose`;
+  updateDependenciesToPublishedVersion();
 };
 
 export default defineConfig([
@@ -56,6 +65,6 @@ export default defineConfig([
     minify: false,
     keepNames: true,
     // outExtension,
-    // onSuccess,
+    onSuccess,
   },
 ]);
