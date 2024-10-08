@@ -59,8 +59,8 @@ jobs:
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
-      - run: node scripts/setDependenciesForPublish.js
       - run: npm ci
+      - run: node scripts/setDependenciesForPublish.js
       - run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
