@@ -36,10 +36,10 @@
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
     "did-resolver": "^4.1.0",
     "jsonld-signatures": "7.0.0",
-    "jsonld": "^8.3.2"
+    "jsonld": "^6.0.0"
   },
   "overrides": {
-    "jsonld": "^8.3.2"
+    "jsonld": "^6.0.0"
   },
   "repository": {
     "type": "git",
