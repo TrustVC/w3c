@@ -7,10 +7,6 @@ on:
         description: 'Version to publish'
         required: false
         default: ''
-      projects:
-        description: 'Package to publish (comma separated)'
-        required: false
-        default: ''
   push:
     branches:
       - main
@@ -22,11 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - uses: actions/setup-node@v4
         with:
           node-version: 18
       - run: npm ci
       - run: npm run test
+      - run: npm run build
 
   publish-npm:
     needs: test
@@ -56,4 +60,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-          # NPM_CONFIG_PROVENANCE: true
