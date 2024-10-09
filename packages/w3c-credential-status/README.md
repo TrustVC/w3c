@@ -1,4 +1,4 @@
-# W3C Credential Status
+# TrustVC W3C Credential Status
 
 Implements credential status management for Verifiable Credentials (VCs) using @trustvc/w3c-credential-status. It supports lifecycle operations such as revocation and suspension without altering the original credential, enabling verifiers to check a credential's current status. The project utilizes status lists and handles the credential validation process.
 
