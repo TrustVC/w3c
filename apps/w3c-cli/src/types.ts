@@ -15,6 +15,10 @@ export type CredentialQuestionType = {
   credentialPath: string;
 };
 
+export type RevealQuestionType = {
+  revealPath: string;
+};
+
 export type QuestionType = {
   domainName: string;
   outputPath: string;

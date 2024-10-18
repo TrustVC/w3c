@@ -1,7 +1,6 @@
 import { VerificationType } from '@trustvc/w3c-issuer';
 import { describe, expect, it } from 'vitest';
-import { SignedVerifiableCredential } from './types';
-import { signCredential, verifyCredential } from './w3c-vc';
+import { deriveCredential, signCredential, verifyCredential } from './w3c-vc';
 
 const modifiedCredential: any = {
   '@context': [
@@ -29,6 +28,22 @@ const modifiedCredential: any = {
   type: ['VerifiableCredential'],
 };
 
+const revealDocument: any = {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
+    'https://w3id.org/security/bbs/v1',
+    'https://w3id.org/vc/status-list/2021/v1',
+    'https://trustvc.io/context/transferable-records-context.json',
+  ],
+  credentialSubject: {
+    type: ['PermanentResident', 'Person'],
+    '@explicit': true,
+    name: {},
+  },
+  type: ['VerifiableCredential'],
+};
+
 const modifiedKeyPair: any = {
   id: 'did:web:trustvc.github.io:did:1#keys-1',
   controller: 'did:web:trustvc.github.io:did:1',
@@ -38,7 +53,7 @@ const modifiedKeyPair: any = {
 };
 
 describe('Credential Signing and Verification', () => {
-  it('should successfully sign and verify a credential', async () => {
+  it('should successfully sign, derive and verify a credential', async () => {
     let signingKeyPair = modifiedKeyPair;
     signingKeyPair = {
       ...signingKeyPair,
@@ -52,9 +67,15 @@ describe('Credential Signing and Verification', () => {
     expect(signedCredential.signed).toBeDefined();
     expect(signedCredential.error).toBeUndefined();
 
-    const verificationResult = await verifyCredential(
-      signedCredential.signed as SignedVerifiableCredential,
-    );
+    let verificationResult = await verifyCredential(signedCredential.signed);
+    expect(verificationResult.verified).toBe(true);
+    expect(verificationResult.error).toBeUndefined();
+
+    const derivedCredential = await deriveCredential(signedCredential.signed, revealDocument);
+    expect(derivedCredential.derived).toBeDefined();
+    expect(derivedCredential.error).toBeUndefined();
+
+    verificationResult = await verifyCredential(derivedCredential.derived);
     expect(verificationResult.verified).toBe(true);
     expect(verificationResult.error).toBeUndefined();
   });

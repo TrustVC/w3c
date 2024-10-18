@@ -192,7 +192,9 @@ export function _checkCredential<T extends VerifiableCredential>(
       throw new Error('"proof" property can only have one value.');
     }
     // check proof type
-    if (credential.proof.type !== 'BbsBlsSignature2020') {
+    const proofType = jsonld.getValues(credential, 'proof')[0].type;
+    const validProofTypes = ['BbsBlsSignature2020', 'BbsBlsSignatureProof2020'];
+    if (!validProofTypes.includes(proofType)) {
       throw new Error('"proof" type is not of BbsBlsSignature2020.');
     }
   }

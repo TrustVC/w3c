@@ -1,13 +1,22 @@
 import { KeyPairOptions } from '@mattrglobal/bls12381-key-pair';
-import { BbsBlsSignature2020, Bls12381G2KeyPair } from '@mattrglobal/jsonld-signatures-bbs';
+import {
+  BbsBlsSignature2020,
+  BbsBlsSignatureProof2020,
+  Bls12381G2KeyPair,
+  deriveProof,
+} from '@mattrglobal/jsonld-signatures-bbs';
 import { contexts, trContexts, DID_V1_URL, TR_CONTEXT_URL } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
+// @ts-ignore: No types available for jsonld
+import * as jsonld from 'jsonld';
 import { getResolver as webGetResolver } from 'web-did-resolver';
 import { _checkCredential, _checkKeyPair } from './helper';
 import {
+  ContextDocument,
+  DerivedResult,
   DocumentLoader,
   DocumentLoaderObject,
   RawVerifiableCredential,
@@ -145,11 +154,21 @@ export const verifyCredential = async (
     _checkCredential(credential);
     const documentLoader = await getDocumentLoader();
 
-    const verificationResult = await jsonldSignatures.verify(credential, {
-      suite: new BbsBlsSignature2020(),
-      purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
-      documentLoader,
-    });
+    let verificationResult;
+    const proofType = jsonld.getValues(credential, 'proof')[0].type;
+
+    if (proofType === 'BbsBlsSignature2020')
+      verificationResult = await jsonldSignatures.verify(credential, {
+        suite: new BbsBlsSignature2020(),
+        purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
+        documentLoader,
+      });
+    else if (proofType === 'BbsBlsSignatureProof2020')
+      verificationResult = await jsonldSignatures.verify(credential, {
+        suite: new BbsBlsSignatureProof2020(),
+        purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
+        documentLoader,
+      });
 
     if (verificationResult.verified) {
       return { verified: true };
@@ -184,5 +203,35 @@ export const verifyCredential = async (
       return { verified: false, error: 'An error occurred while verifying the credential.' };
     }
     return { verified: false, error: err.message };
+  }
+};
+
+/**
+ * Derives a credential with selective disclosure based on revealed attributes.
+ * @param {object} credential - The verifiable credential to be selectively disclosed.
+ * @param {object} revealedAttributes - The attributes from the credential that should be revealed in the derived proof.
+ * @returns {Promise<DerivedResult>} A DerivedResult containing the derived proof or an error message.
+ */
+export const deriveCredential = async (
+  credential: SignedVerifiableCredential,
+  revealedAttributes: ContextDocument,
+): Promise<DerivedResult> => {
+  try {
+    _checkCredential(credential);
+    const documentLoader = await getDocumentLoader();
+
+    // Generate a derived proof with selective disclosure using the BbsBlsSignatureProof2020 suite
+    const derivedProof = await deriveProof(credential, revealedAttributes, {
+      suite: new BbsBlsSignatureProof2020(),
+      documentLoader,
+    });
+
+    return { derived: derivedProof };
+  } catch (err: unknown) {
+    // Handle any errors that occur during the proof derivation process
+    if (!(err instanceof Error)) {
+      return { error: 'An error occurred while deriving the proof.' };
+    }
+    return { error: err.message };
   }
 };

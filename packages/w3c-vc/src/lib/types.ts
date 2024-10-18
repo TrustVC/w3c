@@ -6,6 +6,12 @@ export interface SigningResult {
   error?: string; // The error message, if an error occurred
 }
 
+// Define the type for the derived result
+export interface DerivedResult {
+  derived?: SignedVerifiableCredential; // The derived credential, if successful
+  error?: string; // The error message, if an error occurred
+}
+
 // Define the type for the verification result
 export interface VerificationResult {
   verified: boolean; // Indicates the verification result
@@ -26,6 +32,7 @@ export type Proof = {
   proofPurpose: string;
   verificationMethod: string;
   proofValue: string;
+  nonce?: string;
 } & Record<string, any>;
 
 export type VerifiableCredential = SignedVerifiableCredential | RawVerifiableCredential;
