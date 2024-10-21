@@ -36,6 +36,10 @@ module.exports = {
       release: 'major',
     },
     {
+      footer: '*BREAKING CHANGE*',
+      release: 'major',
+    },
+    {
       type: 'feat',
       release: 'minor',
     },

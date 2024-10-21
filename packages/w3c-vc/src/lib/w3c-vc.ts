@@ -5,9 +5,10 @@ import {
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import { contexts, trContexts, DID_V1_URL, TR_CONTEXT_URL } from '@trustvc/w3c-context';
+import { contexts, DID_V1_URL, TR_CONTEXT_URL, trContexts } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
+import { sha256 } from 'ethers';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
 // @ts-ignore: No types available for jsonld
@@ -95,6 +96,24 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
   return jsonldSignatures.extendContextLoader(customDocLoader);
 }
 
+export const isRawDocument = (document: unknown): boolean => {
+  try {
+    _checkCredential(document, undefined, 'sign');
+  } catch (err) {
+    return false;
+  }
+  return typeof document === 'object';
+};
+
+export const isSignedDocument = (document: unknown): boolean => {
+  try {
+    _checkCredential(document, undefined, 'verify');
+  } catch (err) {
+    return false;
+  }
+  return typeof document === 'object' && 'proof' in document;
+};
+
 /**
  * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
@@ -120,6 +139,11 @@ export const signCredential = async (
         purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
         documentLoader,
       });
+
+      if (signed?.proof?.proofValue) {
+        signed.proof.sha256ProofValue = sha256(signed?.proof?.proofValue);
+      }
+
       return { signed: signed };
     } else {
       return { error: `"${cryptoSuite}" is not supported.` };
