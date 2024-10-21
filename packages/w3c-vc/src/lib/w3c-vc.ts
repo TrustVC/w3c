@@ -5,7 +5,7 @@ import {
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import { contexts, trContexts, DID_V1_URL, TR_CONTEXT_URL } from '@trustvc/w3c-context';
+import { contexts, DID_V1_URL, TR_CONTEXT_URL, trContexts } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
@@ -96,6 +96,34 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
 }
 
 /**
+ * Checks if the input document is a raw credential.
+ * @param {RawVerifiableCredential | unknown} document - The raw credential to be checked.
+ * @returns {boolean} - Returns true if the document is a raw credential, false otherwise.
+ */
+export const isRawDocument = (document: RawVerifiableCredential | unknown): boolean => {
+  try {
+    _checkCredential(document, undefined, 'sign');
+  } catch (err) {
+    return false;
+  }
+  return typeof document === 'object';
+};
+
+/**
+ * Checks if the input document is a signed credential.
+ * @param {SignedVerifiableCredential | unknown} document - The signed credential to be checked.
+ * @returns {boolean} - Returns true if the document is a signed credential, false otherwise.
+ */
+export const isSignedDocument = (document: SignedVerifiableCredential | unknown): boolean => {
+  try {
+    _checkCredential(document, undefined, 'verify');
+  } catch (err) {
+    return false;
+  }
+  return typeof document === 'object' && 'proof' in document;
+};
+
+/**
  * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
  * @param {object} keyPair - The key pair options for signing.
@@ -120,6 +148,7 @@ export const signCredential = async (
         purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
         documentLoader,
       });
+
       return { signed: signed };
     } else {
       return { error: `"${cryptoSuite}" is not supported.` };

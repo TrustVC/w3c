@@ -9,6 +9,11 @@ To install the package, use:
 npm install @trustvc/w3c-vc
 ```
 
+## Feature
+- Sign and Verify for BBS+ signature for W3C VC
+- Derive a new VC with selective disclosure using BBS+ signature
+- Checks if payload matches W3C VC schema
+
 ## Usage
 ### 1. Signing a Credential
 
@@ -288,3 +293,27 @@ if (derivedResult.derived) {
   }
   ```
 </details>
+
+### 4. Validate if payload meets the schema
+
+```ts
+import { isRawDocument, isSignedDocument } from '@trustvc/w3c-vc';
+
+/**
+ * Parameters:
+ * - document (RawVerifiableCredential | SignedVerifiableCredential | unknown): The raw credential to be checked.
+ * 
+ * Returns:
+ * - Returns true if the document is a raw credential, false otherwise.
+ */
+
+const document = {
+  ...
+}
+
+const result1 = isRawDocument(document);
+console.log('isRawDocument', result1);
+
+const result2 = isSignedDocument(document);
+console.log('isSignedDocument', result2);
+```

@@ -4,7 +4,6 @@ import { parseMultibase } from '../../lib';
 import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from '../../lib/types';
 import { generateEthrKeyPair } from './../../did-ethr';
 import { generateBls12381KeyPair } from './bls12381';
-import { generateEd25519KeyPair } from './ed25519';
 import { DidWebGeneratedKeyPair } from './types';
 
 /**
@@ -55,8 +54,7 @@ export const generateKeyPair = async (
 
   switch (type) {
     case VerificationType.Ed25519VerificationKey2018:
-      generatedKeyPair = await generateEd25519KeyPair(keyPairOptions);
-      break;
+      throw new Error('Unsupported key pair type');
     case VerificationType.Bls12381G2Key2020:
       generatedKeyPair = await generateBls12381KeyPair(keyPairOptions);
       break;
