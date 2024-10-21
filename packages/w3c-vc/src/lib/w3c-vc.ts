@@ -95,7 +95,12 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
   return jsonldSignatures.extendContextLoader(customDocLoader);
 }
 
-export const isRawDocument = (document: unknown): boolean => {
+/**
+ * Checks if the input document is a raw credential.
+ * @param {RawVerifiableCredential | unknown} document - The raw credential to be checked.
+ * @returns {boolean} - Returns true if the document is a raw credential, false otherwise.
+ */
+export const isRawDocument = (document: RawVerifiableCredential | unknown): boolean => {
   try {
     _checkCredential(document, undefined, 'sign');
   } catch (err) {
@@ -104,7 +109,12 @@ export const isRawDocument = (document: unknown): boolean => {
   return typeof document === 'object';
 };
 
-export const isSignedDocument = (document: unknown): boolean => {
+/**
+ * Checks if the input document is a signed credential.
+ * @param {SignedVerifiableCredential | unknown} document - The signed credential to be checked.
+ * @returns {boolean} - Returns true if the document is a signed credential, false otherwise.
+ */
+export const isSignedDocument = (document: SignedVerifiableCredential | unknown): boolean => {
   try {
     _checkCredential(document, undefined, 'verify');
   } catch (err) {
