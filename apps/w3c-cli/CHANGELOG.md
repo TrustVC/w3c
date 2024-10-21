@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.0.0-alpha.1...@trustvc/w3c-cli@1.0.0-alpha.2) (2024-10-21)
+
+
+### Features
+
+* selective disclosure with bbs ([#26](https://github.com/TrustVC/w3c/issues/26)) ([8f834c2](https://github.com/TrustVC/w3c/commit/8f834c28ee3151ce20c8e0265ff8c73beae8cfd3))
+
 # [1.0.0-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@0.0.0...@trustvc/w3c-cli@1.0.0-alpha.1) (2024-10-08)
 
 
