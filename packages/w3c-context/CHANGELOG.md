@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.0.0-alpha.2...@trustvc/w3c-context@1.0.0-alpha.3) (2024-10-21)
+
+
+### Bug Fixes
+
+* remove unused signature lib ([#27](https://github.com/TrustVC/w3c/issues/27)) ([92072a9](https://github.com/TrustVC/w3c/commit/92072a999b8e003666833ecc7090b9388d6550c6))
+
 # [1.0.0-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.0.0-alpha.1...@trustvc/w3c-context@1.0.0-alpha.2) (2024-10-21)
 
 
