@@ -8,7 +8,6 @@ import {
 import { contexts, DID_V1_URL, TR_CONTEXT_URL, trContexts } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
-import { sha256 } from 'ethers';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
 // @ts-ignore: No types available for jsonld
@@ -139,10 +138,6 @@ export const signCredential = async (
         purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
         documentLoader,
       });
-
-      if (signed?.proof?.proofValue) {
-        signed.proof.sha256ProofValue = sha256(signed?.proof?.proofValue);
-      }
 
       return { signed: signed };
     } else {
