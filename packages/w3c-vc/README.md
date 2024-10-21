@@ -176,3 +176,115 @@ if (verificationResult.verified) {
   Credential verified successfully.
   ```
 </details>
+
+### 3. Deriving a Credential
+
+The deriveCredential function allows you to derive a new credential with selective disclosure using the BBS+ signature proof.
+
+```ts
+import { deriveCredential } from '@trustvc/w3c-vc';
+
+/**
+ * Parameters:
+ * - credential (SignedVerifiableCredential): The verifiable credential to be selectively disclosed.
+ * - revealedAttributes (ContextDocument): The attributes from the credential that should be revealed in the derived proof.
+ * 
+ * Returns:
+ * - A Promise that resolves to:
+ *   - derived (DerivedProof): The selectively disclosed credential with the derived proof.
+ *   - error (string): The error message in case of failure.
+ */
+
+const credential = {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
+    'https://w3id.org/security/bbs/v1',
+    'https://w3id.org/vc/status-list/2021/v1'
+  ],
+  credentialStatus: {
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
+    statusListIndex: '1',
+    statusPurpose: 'revocation',
+    type: 'StatusList2021Entry'
+  },
+  issuanceDate: '2024-04-01T12:19:52Z',
+  credentialSubject: {
+    id: 'did:example:b34ca6cd37bbf23',
+    type: [ 'Person' ],
+    name: 'TrustVC'
+  },
+  expirationDate: '2029-12-03T12:19:52Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  type: [ 'VerifiableCredential' ],
+  proof: {
+    type: 'BbsBlsSignature2020',
+    created: '2024-10-02T09:04:07Z',
+    proofPurpose: 'assertionMethod',
+    proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
+  }
+};
+
+const revealedAttributes = {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
+    'https://w3id.org/security/bbs/v1',
+    'https://w3id.org/vc/status-list/2021/v1'
+  ],
+  credentialSubject: {
+    type: [ 'Person' ],
+    '@explicit': true
+  },
+  type: [ 'VerifiableCredential' ]
+};
+
+const derivedResult = await deriveCredential(credential, revealedAttributes);
+
+if (derivedResult.derived) {
+  console.log('Derived Credential:', derivedResult.derived);
+} else {
+  console.error('Error:', derivedResult.error);
+}
+```
+
+<details>
+  <summary>deriveCredential Result</summary>
+
+  ```js
+  Derived Credential: {
+    '@context': [
+      'https://www.w3.org/2018/credentials/v1',
+      'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
+      'https://w3id.org/security/bbs/v1',
+      'https://w3id.org/vc/status-list/2021/v1'
+    ],
+    credentialStatus: {
+      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
+      statusListIndex: '1',
+      statusPurpose: 'revocation',
+      type: 'StatusList2021Entry'
+    },
+    issuanceDate: '2024-04-01T12:19:52Z',
+    credentialSubject: {
+      id: 'did:example:b34ca6cd37bbf23',
+      type: [ 'Person' ]
+    },
+    expirationDate: '2029-12-03T12:19:52Z',
+    issuer: 'did:web:trustvc.github.io:did:1',
+    id: 'urn:bnid:_:c14n0',
+    type: [ 'VerifiableCredential' ],
+    proof: {
+      type: 'BbsBlsSignatureProof2020',
+      created: '2024-10-02T09:04:07Z',
+      nonce: 'YsFIiujnENBLMsuuXhyctszyGC72SLqiOvlT8OcvSOD6eDcehcGJgbTx5k+tfK00K5M=',
+      proofPurpose: 'assertionMethod',
+      proofValue: 'ABAA/++QJhxxPdA340RTSEwPfgmB1Z3kUnhOCE4ReITG6nSNhHvZxdP24jsvBUzyecIArsS2FZdgscCNVP2K2LvEXJteLh/pDjOVsTMOyuVuDaOPYclXxOJR4D3UQtL0DFhu4wC0NaZ+NXV8j1xG/zyJ+lzn4jrKaPhHyuySKFjCZnlQNVx01Cm3pKzgL94GdKsXsEsAAAB0p7aO6wVq4hcyOKmEK4UALxZHTIMet/QMoVlHI017QSQi8hHu+hnGEmmmpuyluTgrAAAAAnIbawi/noqB4Fb+Q3C8ck73LxWVeqBrisWfadhCfep0FVRp/l2McLCsr9mfcDwhFpDoPfh8jza82Mk0s15Q9J+LwH39CGtwjatgL22bM4Ulnwe+GsyYoOgcN6vbtkmYdw7TNJ+H76mRq1K82vDJ6sQAAAADDUVU/P0Exnz7Dvs5V0rSHEur/ySddDgjU7cZZVRjTARzCr7xpcs/yd9W6FGzvxDSIqwTjBgnah9I6v4QDOAdvVyjoZ+Joppjt1rIER9AYXxIN++wCqQtWqaC/X7jPtPb',
+      verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
+    }
+  }
+  ```
+</details>
