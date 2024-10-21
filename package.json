@@ -98,8 +98,6 @@
     "@inquirer/prompts": "^5.3.8",
     "@mattrglobal/bls12381-key-pair": "^1.2.1",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
-    "@transmute/did-key-ed25519": "^0.3.0-unstable.10",
-    "@transmute/did-key.js": "^0.3.0-unstable.10",
     "@trustvc/w3c-context": "*",
     "@trustvc/w3c-credential-status": "*",
     "@trustvc/w3c-issuer": "*",
