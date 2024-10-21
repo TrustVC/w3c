@@ -1,3 +1,4 @@
+import { BbsBlsSignature2020, BbsBlsSignatureProof2020 } from '@mattrglobal/jsonld-signatures-bbs';
 import { DIDDocument } from 'did-resolver';
 
 // Define the type for the signing result
@@ -68,3 +69,13 @@ export type DocumentLoaderObject = {
 
 // Define a type for the context loader function
 export type DocumentLoader = (url: string) => Promise<DocumentLoaderObject>;
+
+export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020';
+
+export const proofTypeMapping: Record<
+  ProofType,
+  typeof BbsBlsSignature2020 | typeof BbsBlsSignatureProof2020
+> = {
+  BbsBlsSignature2020: BbsBlsSignature2020,
+  BbsBlsSignatureProof2020: BbsBlsSignatureProof2020,
+};

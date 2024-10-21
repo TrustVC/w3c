@@ -8,7 +8,13 @@ import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { assertCredentialStatus } from '../sign/credentialStatus';
-import { CredentialStatus, CredentialSubject, VerifiableCredential } from '../types';
+import {
+  CredentialStatus,
+  CredentialSubject,
+  ProofType,
+  proofTypeMapping,
+  VerifiableCredential,
+} from '../types';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
@@ -192,9 +198,8 @@ export function _checkCredential<T extends VerifiableCredential>(
       throw new Error('"proof" property can only have one value.');
     }
     // check proof type
-    const proofType = jsonld.getValues(credential, 'proof')[0].type;
-    const validProofTypes = ['BbsBlsSignature2020', 'BbsBlsSignatureProof2020'];
-    if (!validProofTypes.includes(proofType)) {
+    const proofType = jsonld.getValues(credential, 'proof')[0].type as ProofType;
+    if (!proofTypeMapping[proofType]) {
       throw new Error('"proof" type is not of BbsBlsSignature2020.');
     }
   }

@@ -19,6 +19,8 @@ import {
   DerivedResult,
   DocumentLoader,
   DocumentLoaderObject,
+  ProofType,
+  proofTypeMapping,
   RawVerifiableCredential,
   SignedVerifiableCredential,
   SigningResult,
@@ -155,17 +157,12 @@ export const verifyCredential = async (
     const documentLoader = await getDocumentLoader();
 
     let verificationResult;
-    const proofType = jsonld.getValues(credential, 'proof')[0].type;
+    const proofType = jsonld.getValues(credential, 'proof')[0].type as ProofType;
+    const SuiteClass = proofTypeMapping[proofType];
 
-    if (proofType === 'BbsBlsSignature2020')
+    if (SuiteClass)
       verificationResult = await jsonldSignatures.verify(credential, {
-        suite: new BbsBlsSignature2020(),
-        purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
-        documentLoader,
-      });
-    else if (proofType === 'BbsBlsSignatureProof2020')
-      verificationResult = await jsonldSignatures.verify(credential, {
-        suite: new BbsBlsSignatureProof2020(),
+        suite: new SuiteClass(),
         purpose: new jsonldSignatures.purposes.AssertionProofPurpose(),
         documentLoader,
       });
