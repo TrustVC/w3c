@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.0.0-alpha.3...@trustvc/w3c-credential-status@1.0.0-alpha.4) (2024-10-22)
+
+
+### Bug Fixes
+
+* update tokenId to context ([#28](https://github.com/TrustVC/w3c/issues/28)) ([651863d](https://github.com/TrustVC/w3c/commit/651863d686174b7d527bb8eab1f5833807db7db5))
+
 # [1.0.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.0.0-alpha.2...@trustvc/w3c-credential-status@1.0.0-alpha.3) (2024-10-21)
 
 
