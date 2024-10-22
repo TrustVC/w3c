@@ -5,7 +5,7 @@ import {
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import { contexts, DID_V1_URL, TR_CONTEXT_URL, trContexts } from '@trustvc/w3c-context';
+import { contexts, trContexts } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
@@ -36,16 +36,14 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
 
   // Set default cached files within our lib.
-  resultMap.set(DID_V1_URL, {
-    contextUrl: null,
-    document: contexts[DID_V1_URL],
-    documentUrl: DID_V1_URL,
-  });
-
-  resultMap.set(TR_CONTEXT_URL, {
-    contextUrl: null,
-    document: trContexts[TR_CONTEXT_URL],
-    documentUrl: TR_CONTEXT_URL,
+  [contexts, trContexts].forEach((context) => {
+    Object.entries(context).forEach(([url, document]) => {
+      resultMap.set(url, {
+        contextUrl: null,
+        document: document,
+        documentUrl: url,
+      });
+    });
   });
 
   const resolveDid = async (did: string) => {
