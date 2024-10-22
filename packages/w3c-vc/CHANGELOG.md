@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.0.0-alpha.4...@trustvc/w3c-vc@1.0.0-alpha.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* cache credentials v1 and v2 ([b426155](https://github.com/TrustVC/w3c/commit/b426155b3b9d0ecebfd9ec2fd0a51cb724038b46))
+
 # [1.0.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.0.0-alpha.3...@trustvc/w3c-vc@1.0.0-alpha.4) (2024-10-22)
 
 
