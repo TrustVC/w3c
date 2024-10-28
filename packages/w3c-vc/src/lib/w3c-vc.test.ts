@@ -90,6 +90,28 @@ describe('Credential Signing and Verification', () => {
     expect(signedCredential.error).equals('"privateKeyBase58" property in keyPair is required.');
   });
 
+  it('should fail to sign if the id field is present in the credential', async () => {
+    let signingKeyPair = modifiedKeyPair;
+    signingKeyPair = {
+      ...signingKeyPair,
+      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
+    };
+
+    let credential = modifiedCredential;
+    credential = {
+      ...credential,
+      issuanceDate: '2024-04-01T12:19:52Z',
+      id: 'urn:uuid:0192d19c-d82c-7cc7-9431-cb495374f43b',
+    };
+
+    const signedCredential = await signCredential(credential, signingKeyPair);
+    expect(signedCredential.signed).toBeUndefined();
+    expect(signedCredential.error).toBeDefined();
+    expect(signedCredential.error).equals(
+      '"id" is a defined field and should not be set by the user.',
+    );
+  });
+
   it('should fail to sign if a required property in the credential is missing', async () => {
     let signingKeyPair = modifiedKeyPair;
     signingKeyPair = {

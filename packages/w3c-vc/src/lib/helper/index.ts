@@ -204,10 +204,15 @@ export function _checkCredential<T extends VerifiableCredential>(
     }
   }
 
-  // Ensure the proof field is absent when signing
+  // Ensure the proof and id field is absent when signing
   if (mode === 'sign') {
     if (credential.proof) {
       throw new Error('"proof" property is already there.');
+    }
+
+    // The "id" is generated programmatically later on
+    if (credential.id) {
+      throw new Error('"id" is a defined field and should not be set by the user.');
     }
   }
 
