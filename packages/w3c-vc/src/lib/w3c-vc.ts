@@ -26,6 +26,7 @@ import {
   SigningResult,
   VerificationResult,
 } from './types';
+import { v7 as uuidv7 } from 'uuid';
 
 /**
  * Creates and returns a custom document loader for JSON-LD contexts.
@@ -140,6 +141,9 @@ export const signCredential = async (
       const documentLoader = await getDocumentLoader();
 
       const key = new Bls12381G2KeyPair(keyPair as KeyPairOptions);
+
+      // This ensures each credential has a distinct, system-generated ID in the UUIDv7 format
+      credential.id = `urn:bnid:_:${uuidv7()}`;
 
       const signed = await jsonldSignatures.sign(credential, {
         suite: new BbsBlsSignature2020({ key }),
