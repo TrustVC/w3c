@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.0.0-alpha.3...@trustvc/w3c-issuer@1.0.0-alpha.4) (2024-10-30)
+
+
+### Features
+
+* auto generated id when signing credentials ([#29](https://github.com/TrustVC/w3c/issues/29)) ([24798c1](https://github.com/TrustVC/w3c/commit/24798c1b1aa009f928792e5cde446f54fedc41e2))
+
 # [1.0.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.0.0-alpha.2...@trustvc/w3c-issuer@1.0.0-alpha.3) (2024-10-21)
 
 
