@@ -1,3 +1,10 @@
+# [1.0.0-alpha.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.0.0-alpha.6...@trustvc/w3c-vc@1.0.0-alpha.7) (2024-11-07)
+
+
+### Bug Fixes
+
+* credential status id bug ([#30](https://github.com/TrustVC/w3c/issues/30)) ([523107d](https://github.com/TrustVC/w3c/commit/523107df2ebbb0b0da3ed7bb15cfe3e98d60790b))
+
 # [1.0.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.0.0-alpha.5...@trustvc/w3c-vc@1.0.0-alpha.6) (2024-10-30)
 
 
