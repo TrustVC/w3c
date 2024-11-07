@@ -40,7 +40,6 @@ describe('w3c-credential-status', () => {
           statusPurpose: 'revocation',
           type: 'StatusList2021',
         },
-        id: 'https://example.com/credentials/3732',
         issuanceDate: expect.any(String),
         issuer: 'did:web:trustvc.github.io:did:1',
         type: ['VerifiableCredential', 'StatusList2021Credential'],
