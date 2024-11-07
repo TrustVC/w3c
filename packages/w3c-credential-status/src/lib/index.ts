@@ -47,7 +47,7 @@ export const createCredentialStatusPayload = async (
         throw new Error(`Unsupported type: ${type}`);
     }
 
-    if (!credentialSubject.id) {
+    if (!credentialSubject.id && id) {
       credentialSubject.id = `${id}#list`;
     }
 
@@ -65,7 +65,6 @@ export const createCredentialStatusPayload = async (
 
     const vc: RawCredentialStatusVC = {
       '@context': context,
-      id,
       type: ['VerifiableCredential', type],
       issuer: keyPair.controller,
       issuanceDate: new Date().toISOString(),

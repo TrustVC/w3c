@@ -12,7 +12,7 @@ export type VCBitstringCredentialSubject = {
 };
 
 export type CreateVCCredentialStatusOptions = {
-  id: string;
+  id?: string;
   credentialSubject: VCBitstringCredentialSubject;
 };
 
@@ -36,7 +36,6 @@ export type BitstringStatusListCredentialStatus = GeneralCredentialStatus & {
 
 export type RawCredentialStatusVC = {
   '@context': string | string[];
-  id: string;
   type: string[];
   issuer: string | Record<string, any>;
   issuanceDate: string;
