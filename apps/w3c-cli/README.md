@@ -26,8 +26,12 @@ This CLI provides a quick and straightforward way for users to:
 
 ## Installation
 1. Install CLI:
+
+> [!NOTE]
+> Remember to install the cli globally
+
 ```sh
-npm install @trustvc/w3c-cli
+npm install -g @trustvc/w3c-cli
 ```
 
 2. Run the CLI commands as needed:
