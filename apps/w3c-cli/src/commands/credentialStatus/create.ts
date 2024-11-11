@@ -8,7 +8,7 @@ import { signCredential, SignedVerifiableCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
 import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';
-import { writeFile } from '../../utils';
+import { readJsonFile, writeFile } from '../../utils';
 
 export const command = 'create';
 export const describe = 'Create a new credential status';
@@ -46,9 +46,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
   });
 
   try {
-    answers.keypairData = JSON.parse(
-      fs.readFileSync(answers.keyPairPath, { encoding: 'utf8', flag: 'r' }),
-    );
+    answers.keypairData = readJsonFile(answers.keyPairPath, 'key pair');
   } catch (err) {
     console.error(chalk.red(`Invalid file path provided: ${answers.keyPairPath}`));
     return;
