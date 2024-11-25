@@ -25,15 +25,7 @@ import { DidWebGeneratedKeyPair } from './types';
 export const generateKeyPair = async (
   keyPairOptions: GenerateKeyPairOptions,
 ): Promise<GeneratedKeyPair> => {
-  const {
-    type,
-    seedBase58,
-    privateKeyBase58,
-    publicKeyBase58,
-    mnemonics,
-    privateKeyHex,
-    ethereumAddress: blockchainAccountId,
-  } = keyPairOptions;
+  const { type, seedBase58, privateKeyBase58, publicKeyBase58 } = keyPairOptions;
 
   if (!type) {
     throw new Error('Invalid key pair type');

@@ -1,11 +1,4 @@
-import {
-  DidEtherGenerateKeyPairOptions as DidEtherGenerateKeyPairOptions,
-  DidEtherGeneratedKeyPair as DidEtherGeneratedKeyPair,
-} from './../did-ethr/keyPair/types';
-import {
-  DidWebGenerateKeyPairOptions as DidWebGenerateKeyPairOptions,
-  DidWebGeneratedKeyPair as DidWebGeneratedKeyPair,
-} from './../did-web/keyPair/types';
+import { DidWebGenerateKeyPairOptions, DidWebGeneratedKeyPair } from './../did-web/keyPair/types';
 
 /**
  * https://www.w3.org/TR/did-spec-registries/#verification-method-types
@@ -36,10 +29,6 @@ export type BaseKeyPair = {
   type: VerificationType;
 };
 
-export type GenerateKeyPairOptions = Required<BaseKeyPair> &
-  Partial<DidEtherGenerateKeyPairOptions> &
-  Partial<DidWebGenerateKeyPairOptions>;
+export type GenerateKeyPairOptions = Required<BaseKeyPair> & Partial<DidWebGenerateKeyPairOptions>;
 
-export type GeneratedKeyPair = Required<BaseKeyPair> &
-  Partial<DidEtherGeneratedKeyPair> &
-  Partial<DidWebGeneratedKeyPair>;
+export type GeneratedKeyPair = Required<BaseKeyPair> & Partial<DidWebGeneratedKeyPair>;
