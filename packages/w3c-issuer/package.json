@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "npx vitest --run",
-    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "lint": "npx tsc --noEmit && npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @trustvc/w3c-issuer:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
@@ -32,7 +32,6 @@
     "@mattrglobal/bls12381-key-pair": "^1.2.1",
     "bip39": "^3.1.0",
     "did-resolver": "^4.1.0",
-    "ethers": "^6.13.2",
     "multiformats": "^9.9.0",
     "web-did-resolver": "^2.0.27"
   },

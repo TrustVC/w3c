@@ -1,8 +1,6 @@
 import crypto from 'crypto';
-import { DidEtherGeneratedKeyPair } from '../../did-ethr';
 import { parseMultibase } from '../../lib';
 import { GeneratedKeyPair, GenerateKeyPairOptions, VerificationType } from '../../lib/types';
-import { generateEthrKeyPair } from './../../did-ethr';
 import { generateBls12381KeyPair } from './bls12381';
 import { DidWebGeneratedKeyPair } from './types';
 
@@ -27,15 +25,7 @@ import { DidWebGeneratedKeyPair } from './types';
 export const generateKeyPair = async (
   keyPairOptions: GenerateKeyPairOptions,
 ): Promise<GeneratedKeyPair> => {
-  const {
-    type,
-    seedBase58,
-    privateKeyBase58,
-    publicKeyBase58,
-    mnemonics,
-    privateKeyHex,
-    ethereumAddress: blockchainAccountId,
-  } = keyPairOptions;
+  const { type, seedBase58, privateKeyBase58, publicKeyBase58 } = keyPairOptions;
 
   if (!type) {
     throw new Error('Invalid key pair type');
@@ -58,9 +48,6 @@ export const generateKeyPair = async (
     case VerificationType.Bls12381G2Key2020:
       generatedKeyPair = await generateBls12381KeyPair(keyPairOptions);
       break;
-    case VerificationType.EcdsaSecp256k1RecoveryMethod2020:
-      generatedKeyPair = await generateEthrKeyPair(keyPairOptions);
-      break;
     default:
       throw new Error('Unsupported key pair type');
   }
@@ -73,16 +60,6 @@ export const generateKeyPair = async (
     }
     if (publicKeyBase58 && publicKeyBase58 !== generatedKeyPair.publicKeyBase58) {
       throw new Error('Public key does not match');
-    }
-  }
-
-  if (mnemonics) {
-    generatedKeyPair = generatedKeyPair as DidEtherGeneratedKeyPair;
-    if (blockchainAccountId && blockchainAccountId !== generatedKeyPair.ethereumAddress) {
-      throw new Error('Wallet public address does not match');
-    }
-    if (privateKeyHex && privateKeyHex !== generatedKeyPair.privateKeyHex) {
-      throw new Error('Wallet private key does not match');
     }
   }
 

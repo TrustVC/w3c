@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "npx vitest --run",
-    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "lint": "npx tsc --noEmit && npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @trustvc/w3c-context:'clean' && tsup",
     "clean": "rm -rf dist/"
   },

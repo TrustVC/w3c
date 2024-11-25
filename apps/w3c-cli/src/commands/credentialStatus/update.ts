@@ -11,6 +11,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';
 import { saveSignedCredentialStatus } from './create';
+import { readJsonFile } from '../../utils';
 
 export const command = 'update';
 export const describe = 'Update a credential status';
@@ -55,9 +56,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
 
   // Validate and read the key pair file
   try {
-    answers.keypairData = JSON.parse(
-      fs.readFileSync(answers.keyPairPath, { encoding: 'utf8', flag: 'r' }),
-    );
+    answers.keypairData = readJsonFile(answers.keyPairPath, 'key pair');
   } catch (err) {
     console.error(chalk.red(`Invalid file path provided: ${answers.keyPairPath}`));
     return;
