@@ -30,8 +30,6 @@ export type BitstringStatusListCredentialStatus = GeneralCredentialStatus & {
   statusPurpose: CredentialStatusPurpose;
   statusListIndex: string;
   statusListCredential: string;
-  // statusSize?: number;
-  // statusMessage?: Object;
 };
 
 export type RawCredentialStatusVC = {

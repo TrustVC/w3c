@@ -29,7 +29,7 @@ For more details on each packages, refer to the individual README doc.
     1. Sign
         1. Prepare and Sign the VC payload. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-vc#1-signing-a-credential)
     2. Verify
-        1. Verify the signed VC. [link](https://github.com/TradeTrust/w3c/tree/main/packages/w3c-vc#2-verifying-a-credential)
+        1. Verify the signed VC. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-vc#2-verifying-a-credential)
 
 3. **Sign and Verify VC with Credential Status**
     1. Generate Credential Status
@@ -37,7 +37,7 @@ For more details on each packages, refer to the individual README doc.
     2. Sign
         1. Prepare and Sign the VC payload. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-vc#1-signing-a-credential)
     3. Verify
-        1. Verify the signed VC. [link](https://github.com/TradeTrust/w3c/tree/main/packages/w3c-vc#2-verifying-a-credential)
+        1. Verify the signed VC. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-vc#2-verifying-a-credential)
         2. Verify the credentialStatus [link]()
 
 ## Running the code
