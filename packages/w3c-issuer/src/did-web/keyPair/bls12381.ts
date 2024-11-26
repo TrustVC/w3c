@@ -16,31 +16,6 @@ export const generateBls12381KeyPair = async ({
     throw new Error('Invalid seed');
   }
 
-  // const bbsKeyPair = await generateBls12381G2KeyPair(seed)
-
-  // Transmute
-  // const keys = await bls12381.Bls12381KeyPairs.generate({
-  //   secureRandom: () => {
-  //     return seed;
-  //   },
-  // });
-
-  // const g2KeyPair = (await keys.g2KeyPair.export({
-  //   type: 'Bls12381G2Key2020',
-  //   privateKey: true,
-  // })) as Bls12381G2Key2020;
-
-  // const bbsKeyPair: GeneratedKeyPair = {
-  //   type: VerificationType.Bls12381G2Key2020,
-  //   seed: seed,
-  //   seedBase58: base58btc.encode(seed).slice(1),
-  //   privateKey: keys.g2KeyPair.privateKey,
-  //   privateKeyBase58: g2KeyPair.privateKeyBase58,
-  //   publicKey: keys.g2KeyPair.publicKey,
-  //   publicKeyBase58: g2KeyPair.publicKeyBase58,
-  // };
-
-  // MattrGlobal
   const keys = await Bls12381G2KeyPair.generate({
     seed,
   });

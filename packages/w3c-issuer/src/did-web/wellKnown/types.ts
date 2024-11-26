@@ -32,14 +32,6 @@ export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
-// TODO: Split for BBS KeyPair and ECDSA KeyPair
-// export type KeyPair = {
-//   id: string;
-//   type: VerificationType;
-//   controller: string;
-//   publicKeyBase58?: string;
-//   blockchainAccountId?: string;
-// };
 export type KeyPair = BBSKeyPair | ECDSAKeyPair;
 export type BBSKeyPair = {
   id: string;
