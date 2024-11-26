@@ -29,8 +29,8 @@
     }
   },
   "dependencies": {
-    "@trustvc/w3c-context": "*",
-    "@trustvc/w3c-issuer": "*",
+    "@trustvc/w3c-context": "^1.0.0-alpha.6",
+    "@trustvc/w3c-issuer": "^1.0.0-alpha.4",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"
   },
