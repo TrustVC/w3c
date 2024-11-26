@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-context",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
