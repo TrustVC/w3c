@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-vc",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "npx vitest --run --test-timeout=15000",
-    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "lint": "npx tsc --noEmit && npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @trustvc/w3c-vc:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
@@ -18,38 +18,44 @@
     "trustvc",
     "w3c-vc"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "IMDA",
+  "license": "Apache-2.0",
   "engines": {
-    "node": "18.x"
+    "node": ">=18.x"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/index.js",
-      "default": "./dist/index.js"
+      "require": "./dist/index.js"
     }
   },
   "dependencies": {
-    "@trustvc/w3c-issuer": "^0.0.0",
-    "@trustvc/w3c-credential-status": "^0.0.0",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
+    "@trustvc/w3c-credential-status": "^1.0.0-alpha.7",
+    "@trustvc/w3c-issuer": "^1.0.0-alpha.4",
     "did-resolver": "^4.1.0",
+    "jsonld": "^6.0.0",
     "jsonld-signatures": "7.0.0",
-    "jsonld": "^8.3.2"
+    "uuid": "^10.0.0"
+  },
+  "overrides": {
+    "jsonld": "^6.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trustvc/w3c.git"
+    "url": "https://github.com/TrustVC/w3c.git"
   },
   "bugs": {
-    "url": "https://github.com/trustvc/w3c/issues"
+    "url": "https://github.com/TrustVC/w3c/issues"
   },
-  "homepage": "https://github.com/trustvc/w3c#readme",
+  "homepage": "https://github.com/TrustVC/w3c#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
 }

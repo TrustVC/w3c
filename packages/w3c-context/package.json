@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-context",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "npx vitest --run",
-    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "lint": "npx tsc --noEmit && npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @trustvc/w3c-context:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
@@ -19,10 +19,10 @@
     "w3c",
     "w3c-context"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "IMDA",
+  "license": "Apache-2.0",
   "engines": {
-    "node": "18.x"
+    "node": ">=18.x"
   },
   "exports": {
     ".": {
@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trustvc/w3c.git"
+    "url": "https://github.com/TrustVC/w3c.git"
   },
   "bugs": {
     "url": "https://github.com/trustvc/w3c/issues"

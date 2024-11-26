@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-credential-status",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -10,15 +10,15 @@
   ],
   "scripts": {
     "test": "npx vitest --run --test-timeout=15000",
-    "lint": "tsc && npx eslint . --color --format=table --max-warnings=0",
+    "lint": "npx tsc --noEmit && npx eslint . --color --format=table --max-warnings=0",
     "build": "nx run @trustvc/w3c-credential-status:'clean' && tsup",
     "clean": "rm -rf dist/"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "IMDA",
+  "license": "Apache-2.0",
   "engines": {
-    "node": "18.x"
+    "node": ">=18.x"
   },
   "exports": {
     ".": {
@@ -29,14 +29,14 @@
     }
   },
   "dependencies": {
-    "@trustvc/w3c-context": "^0.0.0",
-    "@trustvc/w3c-issuer": "^0.0.0",
+    "@trustvc/w3c-context": "^1.0.0-alpha.6",
+    "@trustvc/w3c-issuer": "^1.0.0-alpha.4",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trustvc/w3c.git"
+    "url": "https://github.com/TrustVC/w3c.git"
   },
   "bugs": {
     "url": "https://github.com/trustvc/w3c/issues"

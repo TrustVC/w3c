@@ -127,4 +127,4 @@ const chalk = require('chalk');
  * To run the script with force upgrade, execute the following command:
  */
 // node scripts/initial_release.js --forceUpgradeTo=1.0.0 --projects=project1
-// node scripts/initial_release.js --forceUpgradeTo=1.0.0 --projects=@nghaninn3/w3c-context,@nghaninn3/w3c-credential-status,@nghaninn3/w3c-issuer,@nghaninn3/w3c-vc,@nghaninn3/w3c-cli
+// node scripts/initial_release.js --forceUpgradeTo=1.0.0 --projects=@trustvc/w3c-context,@trustvc/w3c-credential-status,@trustvc/w3c-issuer,@trustvc/w3c-vc,@trustvc/w3c-cli

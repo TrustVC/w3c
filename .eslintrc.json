@@ -83,7 +83,8 @@
     {
       "files": ["*.config.{ts,js,json}"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "off"
+        "@typescript-eslint/no-unused-vars": "off",
+        "@nx/enforce-module-boundaries": "off"
       }
     }
   ]
