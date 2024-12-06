@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.0.0...@trustvc/w3c@1.0.1) (2024-12-06)
+
+
+### Bug Fixes
+
+* add peer deps ([#35](https://github.com/TrustVC/w3c/issues/35)) ([5fd7db5](https://github.com/TrustVC/w3c/commit/5fd7db5c40c6803a4f5d5ab28b2b15499e0a5ee7))
+
 # [1.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@0.0.0...@trustvc/w3c@1.0.0) (2024-11-26)
 
 
