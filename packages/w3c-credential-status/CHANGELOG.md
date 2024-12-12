@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.0.0...@trustvc/w3c-credential-status@1.1.0) (2024-12-12)
+
+
+### Features
+
+* update contexts ([#36](https://github.com/TrustVC/w3c/issues/36)) ([f55f223](https://github.com/TrustVC/w3c/commit/f55f22329caa8e4b61b5fb642defdc5523edce6a))
+
 # [1.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@0.0.0...@trustvc/w3c-credential-status@1.0.0) (2024-11-26)
 
 
