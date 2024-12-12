@@ -1,0 +1,77 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "BillOfLading": {
+      "@id": "https://example.com/terms#BillOfLading",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "billOfLadingName": {
+          "@id": "https://example.com/terms#billOfLadingName"
+        },
+        "scac": {
+          "@id": "https://example.com/terms#scac"
+        },
+        "blNumber": {
+          "@id": "https://example.com/terms#blNumber"
+        },
+        "vessel": {
+          "@id": "https://example.com/terms#vessel"
+        },
+        "voyageNo": {
+          "@id": "https://example.com/terms#voyageNo"
+        },
+        "portOfLoading": {
+          "@id": "https://example.com/terms#portOfLoading"
+        },
+        "portOfDischarge": {
+          "@id": "https://example.com/terms#portOfDischarge"
+        },
+        "carrierName": {
+          "@id": "https://example.com/terms#carrierName"
+        },
+        "placeOfReceipt": {
+          "@id": "https://example.com/terms#placeOfReceipt"
+        },
+        "placeOfDelivery": {
+          "@id": "https://example.com/terms#placeOfDelivery"
+        },
+        "packages": {
+          "@id": "https://example.com/terms/#packages",
+          "@container": "@set",
+          "@context": {
+            "@protected": true,
+            "packagesDescription": {
+              "@id": "https://example.com/terms#packagesDescription"
+            },
+            "packagesWeight": {
+              "@id": "https://example.com/terms#packagesWeight"
+            },
+            "packagesMeasurement": {
+              "@id": "https://example.com/terms#packagesMeasurement"
+            }
+          }
+        },
+        "shipperName": {
+          "@id": "https://example.com/terms#shipperName"
+        },
+        "shipperAddressStreet": {
+          "@id": "https://example.com/terms#shipperAddressStreet"
+        },
+        "shipperAddressCountry": {
+          "@id": "https://example.com/terms#shipperAddressCountry"
+        },
+        "consigneeName": {
+          "@id": "https://example.com/terms#consigneeName"
+        },
+        "notifyPartyName": {
+          "@id": "https://example.com/terms#notifyPartyName"
+        },
+        "links": {
+          "@id": "https://example.com/terms#links"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "Invoice": {
+      "@id": "https://example.com/terms#Invoice",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "invoiceId": {
+          "@id": "https://example.com/terms#invoiceId"
+        },
+        "invoiceName": {
+          "@id": "https://example.com/terms#invoiceName"
+        },
+        "date": {
+          "@id": "https://example.com/terms#date"
+        },
+        "customerId": {
+          "@id": "https://example.com/terms#customerId"
+        },
+        "terms": {
+          "@id": "https://example.com/terms#terms"
+        },
+        "subtotal": {
+          "@id": "https://example.com/terms#subtotal"
+        },
+        "tax": {
+          "@id": "https://example.com/terms#tax"
+        },
+        "taxTotal": {
+          "@id": "https://example.com/terms#taxTotal"
+        },
+        "total": {
+          "@id": "https://example.com/terms#total"
+        },
+        "billFromName": {
+          "@id": "https://example.com/terms#billFromName"
+        },
+        "billFromStreetAddress": {
+          "@id": "https://example.com/terms#billFromStreetAddress"
+        },
+        "billFromCity": {
+          "@id": "https://example.com/terms#billFromCity"
+        },
+        "billFromPostalCode": {
+          "@id": "https://example.com/terms#billFromPostalCode"
+        },
+        "billFromPhoneNumber": {
+          "@id": "https://example.com/terms#billFromPhoneNumber"
+        },
+        "billToName": {
+          "@id": "https://example.com/terms#billToName"
+        },
+        "billToEmail": {
+          "@id": "https://example.com/terms#billToEmail"
+        },
+        "billToCompanyName": {
+          "@id": "https://example.com/terms#billToCompanyName"
+        },
+        "billToCompanyStreetAddress": {
+          "@id": "https://example.com/terms#billToCompanyStreetAddress"
+        },
+        "billToCompanyCity": {
+          "@id": "https://example.com/terms#billToCompanyCity"
+        },
+        "billToCompanyPostalCode": {
+          "@id": "https://example.com/terms#billToCompanyPostalCode"
+        },
+        "billToCompanyPhoneNumber": {
+          "@id": "https://example.com/terms#billToCompanyPhoneNumber"
+        },   
+        "billableItems": {
+          "@id": "https://example.com/terms#billableItems",
+          "@container": "@set",
+          "@context": {
+            "@protected": true,
+            "billableItemsDescription": {
+              "@id": "https://example.com/terms#billableItemsDescription"
+            },
+            "billableItemsQuantity": {
+              "@id": "https://example.com/terms#billableItemsQuantity"
+            },
+            "billableItemsUnitPrice": {
+              "@id": "https://example.com/terms#billableItemsUnitPrice"
+            },
+            "billableItemsAmount": {
+              "@id": "https://example.com/terms#billableItemsAmount"
+            }
+          }
+        },
+        "links": {
+          "@id": "https://example.com/terms#links"
+        }
+      }
+    }
+  }
+}

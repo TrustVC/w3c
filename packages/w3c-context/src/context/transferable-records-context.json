@@ -7,14 +7,15 @@
       "@type": "@id",
       "@context": {
         "@protected": true,
-        "tokenId": "http://www.w3.org/2001/XMLSchema#string",
+        "tokenId": {
+          "@id": "https://example.com/terms#tokenId"
+        },
         "tokenNetwork": {
           "@id": "https://example.com/terms#tokenNetwork",
           "@context": {
             "@protected": true,
             "chain": {
-              "@id": "https://example.com/terms#chain",
-              "@type": "http://www.w3.org/2001/XMLSchema#string"
+              "@id": "https://example.com/terms#chain"
             },
             "chainId": {
               "@id": "https://example.com/terms#chainId",
@@ -23,8 +24,7 @@
           }
         },
         "tokenRegistry": {
-          "@id": "https://example.com/terms#tokenRegistry",
-          "@type": "@id"
+          "@id": "https://example.com/terms#tokenRegistry"
         }
       }
     }
