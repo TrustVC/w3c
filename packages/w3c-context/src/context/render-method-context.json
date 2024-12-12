@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "renderMethod": {
+      "@id": "https://example.org/terms#renderMethod",
+      "@container": "@set",
+      "@context": {
+        "@protected": true,
+        "id": {
+          "@id": "https://example.org/terms#id",
+          "@type": "xsd:anyURI"
+        },
+        "type": {
+          "@id": "https://example.org/terms#type"
+        },
+        "templateName": {
+          "@id": "https://example.org/terms#templateName"
+        }
+      }
+    }
+  }
+}
+  

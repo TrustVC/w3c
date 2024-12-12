@@ -5,7 +5,14 @@ import {
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import { contexts, trContexts } from '@trustvc/w3c-context';
+import {
+  contexts,
+  trContexts,
+  renderContexts,
+  attachmentsContexts,
+  bolContexts,
+  invoiceContexts,
+} from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
@@ -37,15 +44,17 @@ async function getDocumentLoader(): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
 
   // Set default cached files within our lib.
-  [contexts, trContexts].forEach((context) => {
-    Object.entries(context).forEach(([url, document]) => {
-      resultMap.set(url, {
-        contextUrl: null,
-        document: document,
-        documentUrl: url,
+  [contexts, trContexts, renderContexts, attachmentsContexts, bolContexts, invoiceContexts].forEach(
+    (context) => {
+      Object.entries(context).forEach(([url, document]) => {
+        resultMap.set(url, {
+          contextUrl: null,
+          document: document,
+          documentUrl: url,
+        });
       });
-    });
-  });
+    },
+  );
 
   const resolveDid = async (did: string) => {
     const resolver = new Resolver({

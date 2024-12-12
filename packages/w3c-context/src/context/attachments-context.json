@@ -1,0 +1,22 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "attachments": {
+      "@id": "https://example.org/terms#attachments",
+      "@container": "@set",
+      "@context": {
+        "@protected": true,
+        "data": {
+          "@id": "https://example.org/terms#data"
+        },
+          "filename": {
+            "@id": "https://example.org/terms#filename"
+        },
+          "mimeType": {
+            "@id": "https://example.org/terms#mimeType"
+        }
+      }
+    }
+  }
+}

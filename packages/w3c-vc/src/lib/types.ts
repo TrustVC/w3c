@@ -41,7 +41,7 @@ export type VerifiableCredential = SignedVerifiableCredential | RawVerifiableCre
 export type SignedVerifiableCredential = {
   '@context': string | string[];
   id: string;
-  type: string[];
+  type: string | string[];
   issuer: string | Record<string, any>;
   issuanceDate: string;
   validFrom?: string;
@@ -49,6 +49,7 @@ export type SignedVerifiableCredential = {
   expirationDate?: string;
   credentialStatus?: CredentialStatus;
   credentialSubject: CredentialSubjects;
+  renderMethod?: Record<string, any>;
   proof?: Proof;
 } & Record<string, any>;
 
