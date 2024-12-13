@@ -166,6 +166,11 @@ describe('Credential Signing and Verification', () => {
     let signedCredential = modifiedCredential;
     signedCredential = {
       ...signedCredential,
+      id: 'urn:bnid:_:0193b647-66b6-7ffc-ae79-ef9c590f3301',
+      credentialStatus: {
+        ...signedCredential.credentialStatus,
+        tokenId: '398124e7f1ec797a3dea6322e5ce4ff5ee242ab6293c2acf41a95178dfb27dae',
+      },
       issuanceDate: '2024-04-01T12:19:53Z',
       proof: {
         type: 'BbsBlsSignature2020',
@@ -206,6 +211,11 @@ describe('Credential Signing and Verification', () => {
     let signedCredential = modifiedCredential;
     signedCredential = {
       ...signedCredential,
+      id: 'urn:bnid:_:0193b647-66b6-7ffc-ae79-ef9c590f3301',
+      credentialStatus: {
+        ...signedCredential.credentialStatus,
+        tokenId: '398124e7f1ec797a3dea6322e5ce4ff5ee242ab6293c2acf41a95178dfb27dae',
+      },
       issuanceDate: '2024-04-01T12:19:52Z',
       proof: {
         type: 'BbsBlsSignature2020',

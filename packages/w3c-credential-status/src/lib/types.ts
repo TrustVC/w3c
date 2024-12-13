@@ -32,6 +32,16 @@ export type BitstringStatusListCredentialStatus = GeneralCredentialStatus & {
   statusListCredential: string;
 };
 
+export type TransferableRecordsCredentialStatus = GeneralCredentialStatus & {
+  type: 'TransferableRecords';
+  tokenId: string;
+  tokenNetwork: {
+    chain: string;
+    chainId: string | number;
+  };
+  tokenRegistry: string;
+};
+
 export type RawCredentialStatusVC = {
   '@context': string | string[];
   type: string[];

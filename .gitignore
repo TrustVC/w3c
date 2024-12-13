@@ -42,9 +42,11 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 
-keypair.json
-didKeyPairs.json
-wellknown.json
-vc.json
+keypair*.json
+didKeyPairs*.json
+wellknown*.json
+vc*.json
 signed_vc*.json
 credentialStatus*.json
+derived_vc*.json
+reveal*.json
