@@ -6,12 +6,12 @@ import {
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
 import {
-  contexts,
-  trContexts,
-  renderContexts,
   attachmentsContexts,
   bolContexts,
+  contexts,
   invoiceContexts,
+  renderContexts,
+  trContexts,
 } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { Resolver } from 'did-resolver';
@@ -33,7 +33,6 @@ import {
   SigningResult,
   VerificationResult,
 } from './types';
-import { v7 as uuidv7 } from 'uuid';
 
 /**
  * Creates and returns a custom document loader for JSON-LD contexts.
