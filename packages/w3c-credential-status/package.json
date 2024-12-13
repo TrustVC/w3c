@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-credential-status",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -29,8 +29,8 @@
     }
   },
   "dependencies": {
-    "@trustvc/w3c-context": "^1.1.0",
-    "@trustvc/w3c-issuer": "^1.1.0",
+    "@trustvc/w3c-context": "^1.2.0",
+    "@trustvc/w3c-issuer": "^1.2.0",
     "base64url-universal": "^2.0.0",
     "pako": "^2.1.0"
   },
