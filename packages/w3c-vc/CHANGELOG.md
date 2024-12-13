@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.1.0...@trustvc/w3c-vc@1.2.0) (2024-12-13)
+
+
+### Features
+
+* add transferable records ([#37](https://github.com/TrustVC/w3c/issues/37)) ([1ec9ec6](https://github.com/TrustVC/w3c/commit/1ec9ec634c9a4824a895ab03233904411a19883c))
+
 # [1.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.0.1...@trustvc/w3c-vc@1.1.0) (2024-12-12)
 
 
