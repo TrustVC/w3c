@@ -20,7 +20,7 @@ import jsonldSignatures from 'jsonld-signatures';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { getResolver as webGetResolver } from 'web-did-resolver';
-import { _checkCredential, _checkKeyPair } from './helper';
+import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
 import {
   ContextDocument,
   DerivedResult,
@@ -152,7 +152,7 @@ export const signCredential = async (
       const key = new Bls12381G2KeyPair(keyPair as KeyPairOptions);
 
       // This ensures each credential has a distinct, system-generated ID in the UUIDv7 format
-      credential.id = `urn:bnid:_:${uuidv7()}`;
+      credential = prefilCredentialId(credential);
 
       const signed = await jsonldSignatures.sign(credential, {
         suite: new BbsBlsSignature2020({ key }),

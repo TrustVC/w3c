@@ -1,20 +1,25 @@
 import { CredentialContextVersion } from '@trustvc/w3c-context';
 import {
-  BitstringStatusListCredentialStatus,
   assertCredentialStatusType,
   assertStatusList2021Entry,
+  assertTransferableRecords,
+  BitstringStatusListCredentialStatus,
+  TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
 import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
+import { v7 as uuidv7 } from 'uuid';
 import { assertCredentialStatus } from '../sign/credentialStatus';
 import {
   CredentialStatus,
   CredentialSubject,
   ProofType,
   proofTypeMapping,
+  RawVerifiableCredential,
   VerifiableCredential,
 } from '../types';
+import { createHash } from 'crypto';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
@@ -218,7 +223,7 @@ export function _checkCredential<T extends VerifiableCredential>(
 
   // Validate credentialStatus field if present
   jsonld.getValues(credential, 'credentialStatus').forEach((cs: CredentialStatus) => {
-    assertCredentialStatus(cs);
+    assertCredentialStatus(cs, mode);
   });
 
   // Validate that certain fields, if present, are objects with a type property
@@ -363,13 +368,38 @@ export function _validateUriId({ id, propertyName }: { id: string; propertyName:
  * @param credentialStatus - The credential status to be verified.
  * @throws {Error} - Throws an error if the credential status is invalid.
  */
-
-export const _checkCredentialStatus = (credentialStatus: CredentialStatus): void => {
+export const _checkCredentialStatus = (
+  credentialStatus: CredentialStatus,
+  mode: 'sign' | 'verify' = 'verify',
+): void => {
   const { type } = credentialStatus ?? {};
 
   if (type === 'StatusList2021Entry') {
     assertStatusList2021Entry(credentialStatus as BitstringStatusListCredentialStatus);
+  } else if (type === 'TransferableRecords') {
+    assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
   } else {
     assertCredentialStatusType(type);
   }
+};
+
+/**
+ * Prefills the credential ID with a UUIDv7.
+ * If the credentialStatus is present with type TransferableRecords, set the tokenId.
+ *
+ * @param {RawVerifiableCredential} credential
+ * @returns {RawVerifiableCredential}
+ */
+export const prefilCredentialId = (
+  credential: RawVerifiableCredential,
+): RawVerifiableCredential => {
+  credential.id = `urn:bnid:_:${uuidv7()}`;
+
+  if (credential?.credentialStatus?.type === 'TransferableRecords') {
+    credential.credentialStatus = {
+      ...credential.credentialStatus,
+      tokenId: createHash('sha256').update(credential.id).digest('hex'),
+    };
+  }
+  return credential;
 };

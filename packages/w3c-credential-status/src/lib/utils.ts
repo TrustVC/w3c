@@ -2,12 +2,14 @@ import {
   assertAllowedStatusPurpose,
   isNonNegativeInteger,
   isNumber,
+  isString,
 } from './BitstringStatusList/assertions';
 import { CredentialStatusPurpose } from './BitstringStatusList/types';
 import {
   BitstringStatusListCredentialStatus,
   GeneralCredentialStatus,
   SignedCredentialStatusVC,
+  TransferableRecordsCredentialStatus,
   VCBitstringCredentialSubject,
 } from './types';
 
@@ -98,6 +100,31 @@ export const assertStatusList2021Entry = (
     id: statusListCredential,
     propertyName: 'credentialStatus.statusListCredential',
   });
+};
+
+export const assertTransferableRecords = (
+  credentialStatus: TransferableRecordsCredentialStatus,
+  mode: 'sign' | 'verify' = 'verify',
+): void => {
+  const {
+    type,
+    tokenId,
+    tokenNetwork: { chain, chainId },
+    tokenRegistry,
+  } = credentialStatus;
+  assertCredentialStatusType(type);
+
+  if (tokenId && mode === 'sign') {
+    throw new Error(
+      `"tokenId" is a generated field and should not be included in the credential status.`,
+    );
+  } else if (mode === 'verify') {
+    isString(tokenId, 'credentialStatus.tokenId');
+  }
+
+  isString(tokenRegistry, 'credentialStatus.tokenRegistry');
+  isString(chain, 'credentialStatus.tokenNetwork.chain');
+  isNumber(Number(chainId), 'credentialStatus.tokenNetwork.chainId');
 };
 
 /**

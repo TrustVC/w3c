@@ -2,6 +2,7 @@ import {
   assertStatusListIndexWithinRange,
   assertStatusPurposeMatches,
   BitstringStatusListCredentialStatus,
+  CredentialStatusType,
   fetchCredentialStatusVC,
   StatusList,
   VCBitstringCredentialSubject,
@@ -18,9 +19,16 @@ import { SignedVerifiableCredential } from '../../types';
  */
 export const verifyCredentialStatus = async (
   credentialStatus: CredentialStatus,
+  type: CredentialStatusType = 'StatusList2021Entry',
 ): Promise<CredentialStatusResult> => {
   try {
-    _checkCredentialStatus(credentialStatus);
+    _checkCredentialStatus(credentialStatus, 'verify');
+
+    if (!['BitstringStatusListEntry', 'StatusList2021Entry'].includes(type)) {
+      return {
+        error: 'Invalid credential status type. Expected BitstringStatusListCredentialStatus',
+      };
+    }
 
     const { statusPurpose, statusListIndex, statusListCredential } =
       (credentialStatus as BitstringStatusListCredentialStatus) ?? {};
