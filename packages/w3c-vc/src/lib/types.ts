@@ -20,7 +20,7 @@ export interface VerificationResult {
 }
 
 export type CredentialStatus = {
-  id: string;
+  id?: string;
   type: string;
 } & Record<string, any>;
 export type CredentialStatuses = CredentialStatus | CredentialStatus[];
