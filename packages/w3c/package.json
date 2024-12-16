@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -35,7 +35,7 @@
     "@trustvc/w3c-context": "^1.2.0",
     "@trustvc/w3c-credential-status": "^1.2.0",
     "@trustvc/w3c-issuer": "^1.2.0",
-    "@trustvc/w3c-vc": "^1.2.1"
+    "@trustvc/w3c-vc": "^1.2.2"
   },
   "repository": {
     "type": "git",
