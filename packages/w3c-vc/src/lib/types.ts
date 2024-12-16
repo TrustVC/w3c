@@ -23,6 +23,7 @@ export type CredentialStatus = {
   id: string;
   type: string;
 } & Record<string, any>;
+export type CredentialStatuses = CredentialStatus | CredentialStatus[];
 
 export type CredentialSubject = Record<string, any>;
 export type CredentialSubjects = CredentialSubject | CredentialSubject[];
@@ -47,7 +48,7 @@ export type SignedVerifiableCredential = {
   validFrom?: string;
   validUntil?: string;
   expirationDate?: string;
-  credentialStatus?: CredentialStatus;
+  credentialStatus?: CredentialStatuses;
   credentialSubject: CredentialSubjects;
   renderMethod?: Record<string, any>;
   proof?: Proof;
