@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.1...@trustvc/w3c-vc@1.2.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* allow optional id for credentialStatus ([#39](https://github.com/TrustVC/w3c/issues/39)) ([d1d29b6](https://github.com/TrustVC/w3c/commit/d1d29b6d7b8fc5f1ed5fb5becc223bc6943b1bcf))
+
 ## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.0...@trustvc/w3c-vc@1.2.1) (2024-12-16)
 
 
