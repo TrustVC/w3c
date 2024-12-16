@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.0...@trustvc/w3c@1.2.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* credential status to be a set ([#38](https://github.com/TrustVC/w3c/issues/38)) ([4d5d369](https://github.com/TrustVC/w3c/commit/4d5d3696d45c82e77bdf6458cccdb132fbbe20d5))
+
 # [1.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.1.0...@trustvc/w3c@1.2.0) (2024-12-13)
 
 
