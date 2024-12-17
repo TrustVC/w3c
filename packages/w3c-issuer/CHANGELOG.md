@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.0...@trustvc/w3c-issuer@1.2.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* types ([#40](https://github.com/TrustVC/w3c/issues/40)) ([aaf4d40](https://github.com/TrustVC/w3c/commit/aaf4d40a7d2551f96adf7cb7e0b68bfeba12c795))
+
 # [1.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.1.0...@trustvc/w3c-issuer@1.2.0) (2024-12-13)
 
 
