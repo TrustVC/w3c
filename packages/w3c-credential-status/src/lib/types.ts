@@ -20,19 +20,17 @@ export type CredentialStatusType = BitstringStatusListCredentialStatusType;
 export type CredentialStatusPurpose = BitstringStatusListCredentialStatusPurpose;
 
 export type GeneralCredentialStatus = {
-  id: string;
+  id?: string;
   type: CredentialStatusType;
-};
+} & Record<string, any>;
 
-export type BitstringStatusListCredentialStatus = GeneralCredentialStatus & {
-  id: string;
-  type: CredentialStatusType;
+export type BitstringStatusListCredentialStatus = Required<GeneralCredentialStatus> & {
   statusPurpose: CredentialStatusPurpose;
   statusListIndex: string;
   statusListCredential: string;
 };
 
-export type TransferableRecordsCredentialStatus = GeneralCredentialStatus & {
+export type TransferableRecordsCredentialStatus = Omit<GeneralCredentialStatus, 'type'> & {
   type: 'TransferableRecords';
   tokenId: string;
   tokenNetwork: {
