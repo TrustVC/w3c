@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Define the source and destination directories
+SOURCE_DIR="./packages/w3c-context/src/context"
+DEST_DIR="./public/context"
+
+# Remove the existing 'public' directory and its contents
+rm -rf ./public
+
+# Ensure the destination directory exists
+mkdir -p "$DEST_DIR"
+
+# List of files to copy
+FILES=("attachments-context.json" "bill-of-lading.json" "invoice.json" "render-method-context.json" "transferable-records-context.json")
+
+# Copy each file
+for FILE in "${FILES[@]}"; do
+  cp "$SOURCE_DIR/$FILE" "$DEST_DIR/"
+done
+
+# Optional: output a message when done
+echo "Files have been copied to $DEST_DIR"

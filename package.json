@@ -13,6 +13,7 @@
     "test": "nx run-many --target=test",
     "lint": "nx run-many --target=lint",
     "build": "nx run-many --target=build",
+    "copy-files": "sh ./scripts/copy-files.sh",
     "clean": "nx clear-cache && nx run-many --target=clean",
     "dev": "nx run-many --target=dev",
     "precommit": "lint-staged",
