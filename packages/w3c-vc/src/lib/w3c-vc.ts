@@ -142,7 +142,7 @@ export const signCredential = async (
   keyPair: PrivateKeyPair,
   cryptoSuite = 'BbsBlsSignature2020',
   options?: {
-    documentLoader: DocumentLoader;
+    documentLoader?: DocumentLoader;
   },
 ): Promise<SigningResult> => {
   try {
@@ -194,7 +194,7 @@ export const signCredential = async (
 export const verifyCredential = async (
   credential: SignedVerifiableCredential,
   options?: {
-    documentLoader: DocumentLoader;
+    documentLoader?: DocumentLoader;
   },
 ): Promise<VerificationResult> => {
   try {
@@ -258,7 +258,7 @@ export const deriveCredential = async (
   credential: SignedVerifiableCredential,
   revealedAttributes: ContextDocument,
   options?: {
-    documentLoader: DocumentLoader;
+    documentLoader?: DocumentLoader;
   },
 ): Promise<DerivedResult> => {
   try {
