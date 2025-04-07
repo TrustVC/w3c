@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.3...@trustvc/w3c-vc@1.2.4) (2025-04-07)
+
+
+### Bug Fixes
+
+* add context cache for bbs v1 and export document loader ([#43](https://github.com/TrustVC/w3c/issues/43)) ([65d28ba](https://github.com/TrustVC/w3c/commit/65d28bab684344fe325a1c636fb99c77242d3e72))
+
 ## [1.2.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.2...@trustvc/w3c-vc@1.2.3) (2024-12-17)
 
 
