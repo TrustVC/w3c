@@ -1,11 +1,12 @@
-import didV1 from '../context/did-v1.json';
-import trContext from '../context/transferable-records-context.json';
-import renderContext from '../context/render-method-context.json';
 import attachmentsContext from '../context/attachments-context.json';
+import bbsV1 from '../context/bbs-v1.json';
 import bolContext from '../context/bill-of-lading.json';
-import invoiceContext from '../context/invoice.json';
 import credentialsV1 from '../context/credentials-v1.json';
 import credentialsV2 from '../context/credentials-v2.json';
+import didV1 from '../context/did-v1.json';
+import invoiceContext from '../context/invoice.json';
+import renderContext from '../context/render-method-context.json';
+import trContext from '../context/transferable-records-context.json';
 import { Document } from './types';
 
 export const DID_V1_URL = 'https://www.w3.org/ns/did/v1';
@@ -24,6 +25,7 @@ export const contexts: { [key: string]: Document } = {
   [DID_V1_URL]: didV1,
   [VC_V1_URL]: credentialsV1,
   [VC_V2_URL]: credentialsV2,
+  [BBS_V1_URL]: bbsV1,
 };
 
 export const trContexts: { [key: string]: Document } = {

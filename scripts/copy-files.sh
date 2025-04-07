@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### THIS SCRIPT IS NEEDED TO HOST THE CONTEXT FILES ON "https://trustvc.io/context/<file-name>" THROUGH NETLIFY
+
 # Define the source and destination directories
 SOURCE_DIR="./packages/w3c-context/src/context"
 DEST_DIR="./public/context"
