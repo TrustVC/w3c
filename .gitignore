@@ -50,3 +50,4 @@ signed_vc*.json
 credentialStatus*.json
 derived_vc*.json
 reveal*.json
+public/context/

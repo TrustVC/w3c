@@ -141,12 +141,15 @@ export const signCredential = async (
   credential: RawVerifiableCredential,
   keyPair: PrivateKeyPair,
   cryptoSuite = 'BbsBlsSignature2020',
+  options?: {
+    documentLoader: DocumentLoader;
+  },
 ): Promise<SigningResult> => {
   try {
     if (cryptoSuite === 'BbsBlsSignature2020') {
       _checkKeyPair(keyPair);
       _checkCredential(credential, undefined, 'sign');
-      const documentLoader = await getDocumentLoader();
+      const documentLoader = options?.documentLoader ?? (await getDocumentLoader());
 
       const key = new Bls12381G2KeyPair(keyPair as KeyPairOptions);
 
@@ -190,10 +193,13 @@ export const signCredential = async (
  */
 export const verifyCredential = async (
   credential: SignedVerifiableCredential,
+  options?: {
+    documentLoader: DocumentLoader;
+  },
 ): Promise<VerificationResult> => {
   try {
     _checkCredential(credential);
-    const documentLoader = await getDocumentLoader();
+    const documentLoader = options?.documentLoader ?? (await getDocumentLoader());
 
     let verificationResult;
     const proofType = jsonld.getValues(credential, 'proof')[0].type as ProofType;
@@ -251,10 +257,13 @@ export const verifyCredential = async (
 export const deriveCredential = async (
   credential: SignedVerifiableCredential,
   revealedAttributes: ContextDocument,
+  options?: {
+    documentLoader: DocumentLoader;
+  },
 ): Promise<DerivedResult> => {
   try {
     _checkCredential(credential);
-    const documentLoader = await getDocumentLoader();
+    const documentLoader = options?.documentLoader ?? (await getDocumentLoader());
 
     // Generate a derived proof with selective disclosure using the BbsBlsSignatureProof2020 suite
     const derivedProof = await deriveProof(credential, revealedAttributes, {
