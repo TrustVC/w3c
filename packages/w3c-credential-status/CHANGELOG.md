@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.1...@trustvc/w3c-credential-status@1.2.2) (2025-04-07)
+
+
+### Bug Fixes
+
+* add context cache for bbs v1 and export document loader ([#43](https://github.com/TrustVC/w3c/issues/43)) ([65d28ba](https://github.com/TrustVC/w3c/commit/65d28bab684344fe325a1c636fb99c77242d3e72))
+
 ## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.0...@trustvc/w3c-credential-status@1.2.1) (2024-12-17)
 
 
