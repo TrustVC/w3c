@@ -24,6 +24,7 @@ import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
 import {
   ContextDocument,
   DerivedResult,
+  Document,
   DocumentLoader,
   DocumentLoaderObject,
   ProofType,
@@ -38,11 +39,11 @@ import {
  * Creates and returns a custom document loader for JSON-LD contexts.
  * The loader resolves DID URLs and fetches the corresponding DID documents.
  *
- * @param {Record<string, any>} additionalContexts - Optional additional contexts to be loaded.
+ * @param {Record<string, Document>} additionalContexts - Optional additional contexts to be loaded.
  * @returns {Promise<DocumentLoader>} A function that loads JSON-LD contexts.
  */
 async function getDocumentLoader(
-  additionalContexts?: Record<string, any>,
+  additionalContexts?: Record<string, Document>,
 ): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
 
