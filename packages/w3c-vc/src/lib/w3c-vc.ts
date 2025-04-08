@@ -24,6 +24,7 @@ import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
 import {
   ContextDocument,
   DerivedResult,
+  Document,
   DocumentLoader,
   DocumentLoaderObject,
   ProofType,
@@ -37,23 +38,34 @@ import {
 /**
  * Creates and returns a custom document loader for JSON-LD contexts.
  * The loader resolves DID URLs and fetches the corresponding DID documents.
+ *
+ * @param {Record<string, Document>} additionalContexts - Optional additional contexts to be loaded.
  * @returns {Promise<DocumentLoader>} A function that loads JSON-LD contexts.
  */
-async function getDocumentLoader(): Promise<DocumentLoader> {
+async function getDocumentLoader(
+  additionalContexts?: Record<string, Document>,
+): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
 
   // Set default cached files within our lib.
-  [contexts, trContexts, renderContexts, attachmentsContexts, bolContexts, invoiceContexts].forEach(
-    (context) => {
-      Object.entries(context).forEach(([url, document]) => {
-        resultMap.set(url, {
-          contextUrl: null,
-          document: document,
-          documentUrl: url,
-        });
+  [
+    contexts,
+    trContexts,
+    renderContexts,
+    attachmentsContexts,
+    bolContexts,
+    invoiceContexts,
+    additionalContexts,
+  ].forEach((context) => {
+    if (!context) return;
+    Object.entries(context).forEach(([url, document]) => {
+      resultMap.set(url, {
+        contextUrl: null,
+        document: document,
+        documentUrl: url,
       });
-    },
-  );
+    });
+  });
 
   const resolveDid = async (did: string) => {
     const resolver = new Resolver({
