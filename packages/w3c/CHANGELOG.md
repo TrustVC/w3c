@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.5...@trustvc/w3c@1.2.6) (2025-04-08)
+
+
+### Bug Fixes
+
+* export getDocumentLoader ([#45](https://github.com/TrustVC/w3c/issues/45)) ([2d2866b](https://github.com/TrustVC/w3c/commit/2d2866b81514ce44a477a6f127c1a7329df58f61))
+
 ## [1.2.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.4...@trustvc/w3c@1.2.5) (2025-04-08)
 
 
