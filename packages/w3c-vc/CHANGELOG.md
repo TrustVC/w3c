@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.4...@trustvc/w3c-vc@1.2.5) (2025-04-08)
+
+
+### Bug Fixes
+
+* allow additional context for getDocumentLoader ([#44](https://github.com/TrustVC/w3c/issues/44)) ([5d13d3b](https://github.com/TrustVC/w3c/commit/5d13d3b75eda8a6e8e071515b101b1d69333807a))
+
 ## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.3...@trustvc/w3c-vc@1.2.4) (2025-04-07)
 
 
