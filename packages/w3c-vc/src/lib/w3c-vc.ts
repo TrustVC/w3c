@@ -42,7 +42,7 @@ import {
  * @param {Record<string, Document>} additionalContexts - Optional additional contexts to be loaded.
  * @returns {Promise<DocumentLoader>} A function that loads JSON-LD contexts.
  */
-async function getDocumentLoader(
+export async function getDocumentLoader(
   additionalContexts?: Record<string, Document>,
 ): Promise<DocumentLoader> {
   const resultMap = new Map<string, DocumentLoaderObject>();
