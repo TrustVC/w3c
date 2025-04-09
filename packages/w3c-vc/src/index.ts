@@ -9,6 +9,12 @@ import {
 import { getDocumentLoader } from '@trustvc/w3c-context';
 
 export * from './lib/types';
+export {
+  ContextDocument,
+  DocumentLoader,
+  Document,
+  DocumentLoaderObject,
+} from '@trustvc/w3c-context';
 export { CredentialStatusResult } from './lib/verify/credentialStatus/types';
 export {
   deriveCredential,
