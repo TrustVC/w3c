@@ -1,3 +1,10 @@
+## [1.2.7-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.7-alpha.1...@trustvc/w3c@1.2.7-alpha.2) (2025-04-09)
+
+
+### Bug Fixes
+
+* add export ([#47](https://github.com/TrustVC/w3c/issues/47)) ([dae74e7](https://github.com/TrustVC/w3c/commit/dae74e779e8f26dcd84f63e9baea905d2eca91fc))
+
 ## [1.2.7-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.6...@trustvc/w3c@1.2.7-alpha.1) (2025-04-09)
 
 
