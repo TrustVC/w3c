@@ -1,3 +1,10 @@
+## [1.2.7-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.7-alpha.2...@trustvc/w3c-cli@1.2.7-alpha.3) (2025-04-09)
+
+
+### Bug Fixes
+
+* add cache for jws 2020 v1 ([#48](https://github.com/TrustVC/w3c/issues/48)) ([4a9f52a](https://github.com/TrustVC/w3c/commit/4a9f52a823e5836454c65239916fa5807c9d0be1))
+
 ## [1.2.7-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.7-alpha.1...@trustvc/w3c-cli@1.2.7-alpha.2) (2025-04-09)
 
 
