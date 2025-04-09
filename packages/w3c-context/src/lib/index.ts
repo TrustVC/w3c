@@ -10,6 +10,7 @@ import credentialsV1 from '../context/credentials-v1.json';
 import credentialsV2 from '../context/credentials-v2.json';
 import didV1 from '../context/did-v1.json';
 import invoiceContext from '../context/invoice.json';
+import jwsV1 from '../context/jws-2020-v1.json';
 import renderContext from '../context/render-method-context.json';
 import trContext from '../context/transferable-records-context.json';
 import { Document } from './types';
@@ -24,6 +25,7 @@ export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
 export const INVOICE_CONTEXT_URL = 'https://trustvc.io/context/invoice.json';
 
 export const BBS_V1_URL = 'https://w3id.org/security/bbs/v1';
+export const JWS_V1_URL = 'https://w3id.org/security/suites/jws-2020/v1';
 export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/2021/v1';
 
 export const contexts: { [key: string]: Document } = {
@@ -31,6 +33,7 @@ export const contexts: { [key: string]: Document } = {
   [VC_V1_URL]: credentialsV1,
   [VC_V2_URL]: credentialsV2,
   [BBS_V1_URL]: bbsV1,
+  [JWS_V1_URL]: jwsV1,
 };
 
 export const trContexts: { [key: string]: Document } = {
