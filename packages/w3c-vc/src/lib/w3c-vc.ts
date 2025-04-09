@@ -5,28 +5,15 @@ import {
   Bls12381G2KeyPair,
   deriveProof,
 } from '@mattrglobal/jsonld-signatures-bbs';
-import {
-  attachmentsContexts,
-  bolContexts,
-  contexts,
-  invoiceContexts,
-  renderContexts,
-  trContexts,
-} from '@trustvc/w3c-context';
+import { ContextDocument, DocumentLoader, getDocumentLoader } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
-import { Resolver } from 'did-resolver';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
-import { getResolver as webGetResolver } from 'web-did-resolver';
 import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
 import {
-  ContextDocument,
   DerivedResult,
-  Document,
-  DocumentLoader,
-  DocumentLoaderObject,
   ProofType,
   proofTypeMapping,
   RawVerifiableCredential,
@@ -34,85 +21,6 @@ import {
   SigningResult,
   VerificationResult,
 } from './types';
-
-/**
- * Creates and returns a custom document loader for JSON-LD contexts.
- * The loader resolves DID URLs and fetches the corresponding DID documents.
- *
- * @param {Record<string, Document>} additionalContexts - Optional additional contexts to be loaded.
- * @returns {Promise<DocumentLoader>} A function that loads JSON-LD contexts.
- */
-export async function getDocumentLoader(
-  additionalContexts?: Record<string, Document>,
-): Promise<DocumentLoader> {
-  const resultMap = new Map<string, DocumentLoaderObject>();
-
-  // Set default cached files within our lib.
-  [
-    contexts,
-    trContexts,
-    renderContexts,
-    attachmentsContexts,
-    bolContexts,
-    invoiceContexts,
-    additionalContexts,
-  ].forEach((context) => {
-    if (!context) return;
-    Object.entries(context).forEach(([url, document]) => {
-      resultMap.set(url, {
-        contextUrl: null,
-        document: document,
-        documentUrl: url,
-      });
-    });
-  });
-
-  const resolveDid = async (did: string) => {
-    const resolver = new Resolver({
-      ...webGetResolver(),
-    });
-    const doc = await resolver.resolve(did);
-
-    const result: DocumentLoaderObject = {
-      contextUrl: null,
-      document: doc.didDocument,
-      documentUrl: did,
-    };
-
-    resultMap.set(did, result);
-
-    return result;
-  };
-
-  const customDocLoader = async (url: string) => {
-    let result;
-
-    // Serve cached results
-    if (resultMap.has(url)) {
-      result = resultMap.get(url);
-
-      return result;
-    }
-
-    if (url.includes('did:')) {
-      return resolveDid(url);
-    }
-
-    const results = await fetch(url, { redirect: 'follow' });
-
-    const resolveContext: DocumentLoaderObject = {
-      contextUrl: null,
-      document: await results.json(),
-      documentUrl: results.url,
-    };
-
-    resultMap.set(url, resolveContext);
-
-    return resolveContext;
-  };
-
-  return jsonldSignatures.extendContextLoader(customDocLoader);
-}
 
 /**
  * Checks if the input document is a raw credential.

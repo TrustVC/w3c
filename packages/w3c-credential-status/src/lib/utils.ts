@@ -1,3 +1,4 @@
+import { DocumentLoader, getDocumentLoader } from '@trustvc/w3c-context';
 import {
   assertAllowedStatusPurpose,
   isNonNegativeInteger,
@@ -132,19 +133,18 @@ export const assertTransferableRecords = (
  * @param {string} url - The URL of the statusListCredential.
  * @returns {Promise<T>} The verifiable credential of the credential status.
  */
-export const fetchCredentialStatusVC = async <T>(url: string): Promise<T> => {
+export const fetchCredentialStatusVC = async <T>(
+  url: string,
+  documentLoader?: DocumentLoader,
+): Promise<T> => {
   // Check statusListCredential is valid e.g. URL
   if (!url || !URL.canParse(url)) {
     throw new Error(`Invalid statusListCredential: "${url}"`);
   }
 
   try {
-    const response = await fetch(url, {
-      redirect: 'follow',
-      headers: { Accept: 'application/*' },
-    });
-    const result: T = await response.json();
-
+    documentLoader = documentLoader ?? (await getDocumentLoader());
+    const result = (await documentLoader(url))?.document as T;
     return result;
   } catch (err: unknown) {
     if (!(err instanceof Error)) {
