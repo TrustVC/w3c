@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.6...@trustvc/w3c-cli@1.2.7) (2025-04-09)
+
+
+### Bug Fixes
+
+* update fetchCredentialStatusVC to use documentLoader and add cache for jws 2020 v1 ([#49](https://github.com/TrustVC/w3c/issues/49)) ([2c50901](https://github.com/TrustVC/w3c/commit/2c50901035aac696f75ef386bd8beca367f02db7))
+
 ## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.5...@trustvc/w3c-cli@1.2.6) (2025-04-08)
 
 
