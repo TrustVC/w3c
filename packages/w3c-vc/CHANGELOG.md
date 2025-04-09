@@ -1,3 +1,10 @@
+## [1.2.7-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.6...@trustvc/w3c-vc@1.2.7-alpha.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* update fetchCredentialStatusVC to use documentLoader ([#46](https://github.com/TrustVC/w3c/issues/46)) ([7fe49f8](https://github.com/TrustVC/w3c/commit/7fe49f8e5a01cf36f4fdd87bccd72f87554a9072))
+
 ## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.5...@trustvc/w3c-vc@1.2.6) (2025-04-08)
 
 
