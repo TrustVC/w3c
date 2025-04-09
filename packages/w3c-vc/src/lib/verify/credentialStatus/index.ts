@@ -11,6 +11,7 @@ import { _checkCredentialStatus } from '../../helper';
 import { CredentialStatus, CredentialStatusResult } from './types';
 import { verifyCredential } from '../../w3c-vc';
 import { SignedVerifiableCredential } from '../../types';
+import { DocumentLoader } from '@trustvc/w3c-context';
 
 /**
  * Verifies the credential status and returns the status of the given index.
@@ -20,6 +21,9 @@ import { SignedVerifiableCredential } from '../../types';
 export const verifyCredentialStatus = async (
   credentialStatus: CredentialStatus,
   type: CredentialStatusType = 'StatusList2021Entry',
+  options?: {
+    documentLoader?: DocumentLoader;
+  },
 ): Promise<CredentialStatusResult> => {
   try {
     _checkCredentialStatus(credentialStatus, 'verify');
@@ -35,8 +39,10 @@ export const verifyCredentialStatus = async (
 
     const index = Number.parseInt(statusListIndex);
 
-    const vcStatusList: SignedVerifiableCredential =
-      await fetchCredentialStatusVC(statusListCredential);
+    const vcStatusList: SignedVerifiableCredential = await fetchCredentialStatusVC(
+      statusListCredential,
+      options?.documentLoader,
+    );
 
     const statusList = vcStatusList.credentialSubject as VCBitstringCredentialSubject;
     assertStatusPurposeMatches(statusList, statusPurpose);
@@ -46,7 +52,7 @@ export const verifyCredentialStatus = async (
     assertStatusListIndexWithinRange(bitstringStatusList, index);
 
     // Check if the statusListCredential is valid
-    const vcStatusListVerificationResult = await verifyCredential(vcStatusList);
+    const vcStatusListVerificationResult = await verifyCredential(vcStatusList, options);
     if (!vcStatusListVerificationResult?.verified) {
       console.error(
         `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,

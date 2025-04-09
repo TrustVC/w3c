@@ -1,5 +1,4 @@
 import { BbsBlsSignature2020, BbsBlsSignatureProof2020 } from '@mattrglobal/jsonld-signatures-bbs';
-import { DIDDocument } from 'did-resolver';
 
 // Define the type for the signing result
 export interface SigningResult {
@@ -55,22 +54,6 @@ export type SignedVerifiableCredential = {
 } & Record<string, any>;
 
 export type RawVerifiableCredential = Omit<SignedVerifiableCredential, 'proof'>;
-
-export type ContextDocument = {
-  '@context': Record<string, any>;
-} & Record<string, any>;
-
-// Define the type for the DID document
-export type Document = ContextDocument | DIDDocument;
-
-export type DocumentLoaderObject = {
-  contextUrl: string | null;
-  document: Document;
-  documentUrl: string;
-};
-
-// Define a type for the context loader function
-export type DocumentLoader = (url: string) => Promise<DocumentLoaderObject>;
 
 export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020';
 
