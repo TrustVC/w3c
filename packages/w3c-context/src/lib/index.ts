@@ -25,6 +25,7 @@ export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
 export const INVOICE_CONTEXT_URL = 'https://trustvc.io/context/invoice.json';
 
 export const BBS_V1_URL = 'https://w3id.org/security/bbs/v1';
+export const BLS12381_2020_V1_URL = 'https://w3id.org/security/suites/bls12381-2020/v1';
 export const JWS_V1_URL = 'https://w3id.org/security/suites/jws-2020/v1';
 export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/2021/v1';
 
@@ -33,6 +34,7 @@ export const contexts: { [key: string]: Document } = {
   [VC_V1_URL]: credentialsV1,
   [VC_V2_URL]: credentialsV2,
   [BBS_V1_URL]: bbsV1,
+  [BLS12381_2020_V1_URL]: bbsV1,
   [JWS_V1_URL]: jwsV1,
 };
 
