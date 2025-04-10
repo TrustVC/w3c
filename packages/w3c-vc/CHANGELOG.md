@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.7...@trustvc/w3c-vc@1.2.8) (2025-04-10)
+
+
+### Bug Fixes
+
+* add bls to context cache ([#50](https://github.com/TrustVC/w3c/issues/50)) ([a1988b0](https://github.com/TrustVC/w3c/commit/a1988b0ef2d82c95c3e285c93eedd61b050e4fd9))
+
 ## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.6...@trustvc/w3c-vc@1.2.7) (2025-04-09)
 
 
