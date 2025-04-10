@@ -64,7 +64,7 @@ export const promptQuestions = async () => {
       name: 'domainName',
       type: 'input',
       message:
-        'Please enter your domain for hosting the did-web public key (e.g., https://example.com/.wellknown/did.json):',
+        'Please enter your domain for hosting the did-web public key (e.g., https://example.com/.well-known/did.json):',
       required: true,
     },
     {
