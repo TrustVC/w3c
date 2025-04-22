@@ -1,8 +1,7 @@
-import { Resolver } from 'did-resolver';
+import { queryDidDocument } from '@trustvc/w3c-issuer';
 import { DocumentLoader, DocumentLoaderObject } from './types';
 // @ts-ignore: No types available for jsonld-signatures
 import jsonldSignatures from 'jsonld-signatures';
-import { getResolver as webGetResolver } from 'web-did-resolver';
 import attachmentsContext from '../context/attachments-context.json';
 import bbsV1 from '../context/bbs-v1.json';
 import bolContext from '../context/bill-of-lading.json';
@@ -97,14 +96,10 @@ export async function getDocumentLoader(
   });
 
   const resolveDid = async (did: string) => {
-    const resolver = new Resolver({
-      ...webGetResolver(),
-    });
-    const doc = await resolver.resolve(did);
-
+    const { wellKnownDid } = await queryDidDocument({ did });
     const result: DocumentLoaderObject = {
       contextUrl: null,
-      document: doc.didDocument,
+      document: wellKnownDid,
       documentUrl: did,
     };
 

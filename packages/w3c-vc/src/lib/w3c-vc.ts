@@ -41,7 +41,9 @@ export const isRawDocument = (document: RawVerifiableCredential | unknown): bool
  * @param {SignedVerifiableCredential | unknown} document - The signed credential to be checked.
  * @returns {boolean} - Returns true if the document is a signed credential, false otherwise.
  */
-export const isSignedDocument = (document: SignedVerifiableCredential | unknown): boolean => {
+export const isSignedDocument = (
+  document: SignedVerifiableCredential | unknown,
+): document is SignedVerifiableCredential => {
   try {
     _checkCredential(document, undefined, 'verify');
   } catch (err) {
