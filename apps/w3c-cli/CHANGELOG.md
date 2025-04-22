@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.8...@trustvc/w3c-cli@1.2.9) (2025-04-22)
+
+
+### Bug Fixes
+
+* clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
+
 ## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.7...@trustvc/w3c-cli@1.2.8) (2025-04-10)
 
 
