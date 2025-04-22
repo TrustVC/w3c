@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.4...@trustvc/w3c-credential-status@1.2.5) (2025-04-22)
+
+
+### Bug Fixes
+
+* clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
+
 ## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.3...@trustvc/w3c-credential-status@1.2.4) (2025-04-10)
 
 
