@@ -1,0 +1,79 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "PromissoryNote": {
+      "@id": "https://example.com/terms#PromissoryNote",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "logo": {
+          "@id": "https://example.com/terms#logo"
+        },
+        "pNoteId": {
+          "@id": "https://example.com/terms#pNoteId"
+        },
+        "commitmentDate": {
+          "@id": "https://example.com/terms#commitmentDate"
+        },
+        "drawerCompanyName": {
+          "@id": "https://example.com/terms#drawerCompanyName"
+        },
+        "drawerCompanyNo": {
+          "@id": "https://example.com/terms#drawerCompanyNo"
+        },
+        "drawerJurisdiction": {
+          "@id": "https://example.com/terms#drawerJurisdiction"
+        },
+        "drawerEmail": {
+          "@id": "https://example.com/terms#drawerEmail"
+        },
+        "drawerWalletAddress": {
+          "@id": "https://example.com/terms#drawerWalletAddress"
+        },
+        "drawerPlaceOfIssue": {
+          "@id": "https://example.com/terms#drawerPlaceOfIssue"
+        },
+        "draweeCompanyName": {
+          "@id": "https://example.com/terms#draweeCompanyName"
+        },
+        "draweeCompanyNo": {
+          "@id": "https://example.com/terms#draweeCompanyNo"
+        },
+        "draweeJurisdiction": {
+          "@id": "https://example.com/terms#draweeJurisdiction"
+        },
+        "draweeEmail": {
+          "@id": "https://example.com/terms#draweeEmail"
+        },
+        "draweeWalletAddress": {
+          "@id": "https://example.com/terms#draweeWalletAddress"
+        },
+        "dueDate": {
+          "@id": "https://example.com/terms#dueDate"
+        },
+        "currency": {
+          "@id": "https://example.com/terms#currency"
+        },
+        "amount": {
+          "@id": "https://example.com/terms#amount"
+        },
+        "clause": {
+          "@id": "https://example.com/terms#clause"
+        },
+        "signerName": {
+          "@id": "https://example.com/terms#signerName"
+        },
+        "signerPosition": {
+          "@id": "https://example.com/terms#signerPosition"
+        },
+        "signerEmail": {
+          "@id": "https://example.com/terms#signerEmail"
+        },
+        "signerTimeStamp": {
+          "@id": "https://example.com/terms#signerTimeStamp"
+        }
+      }
+    }
+  }
+}

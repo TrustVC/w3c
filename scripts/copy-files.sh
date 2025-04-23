@@ -13,7 +13,7 @@ rm -rf ./public
 mkdir -p "$DEST_DIR"
 
 # List of files to copy
-FILES=("attachments-context.json" "bill-of-lading.json" "invoice.json" "render-method-context.json" "transferable-records-context.json")
+FILES=("attachments-context.json" "bill-of-lading.json" "invoice.json" "promissory-note.json" "render-method-context.json" "transferable-records-context.json")
 
 # Copy each file
 for FILE in "${FILES[@]}"; do
