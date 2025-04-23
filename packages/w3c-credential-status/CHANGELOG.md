@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.5...@trustvc/w3c-credential-status@1.2.6) (2025-04-23)
+
+
+### Bug Fixes
+
+* add promissory note context for w3c ([#52](https://github.com/TrustVC/w3c/issues/52)) ([54b866a](https://github.com/TrustVC/w3c/commit/54b866a66ff1db2466628fb32a1bb4820d71b7d1))
+
 ## [1.2.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.4...@trustvc/w3c-credential-status@1.2.5) (2025-04-22)
 
 
