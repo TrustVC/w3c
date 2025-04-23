@@ -89,6 +89,7 @@ export async function getDocumentLoader(
     attachmentsContexts,
     bolContexts,
     invoiceContexts,
+    promissoryNoteContexts,
     additionalContexts,
   ].forEach((context) => {
     if (!context) return;
