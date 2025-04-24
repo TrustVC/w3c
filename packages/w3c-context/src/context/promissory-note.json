@@ -10,6 +10,9 @@
         "logo": {
           "@id": "https://example.com/terms#logo"
         },
+        "backgroundImage": {
+          "@id": "https://example.com/terms#backgroundImage"
+        },
         "pNoteId": {
           "@id": "https://example.com/terms#pNoteId"
         },
