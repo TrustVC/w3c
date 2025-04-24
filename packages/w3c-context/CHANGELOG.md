@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.2.6...@trustvc/w3c-context@1.2.7) (2025-04-24)
+
+
+### Bug Fixes
+
+* update promissory note context ([#53](https://github.com/TrustVC/w3c/issues/53)) ([e032f45](https://github.com/TrustVC/w3c/commit/e032f4582da0983d2ca5648d7c55fac6bc97c1f6))
+
 ## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.2.5...@trustvc/w3c-context@1.2.6) (2025-04-23)
 
 
