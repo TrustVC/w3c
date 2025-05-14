@@ -50,6 +50,7 @@ export type SignedVerifiableCredential = {
   credentialStatus?: CredentialStatuses;
   credentialSubject: CredentialSubjects;
   renderMethod?: Record<string, any>;
+  qrCode?: Record<string, any>;
   proof?: Proof;
 } & Record<string, any>;
 

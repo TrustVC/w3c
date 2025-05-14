@@ -1,3 +1,10 @@
+## [1.2.12](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.11...@trustvc/w3c@1.2.12) (2025-05-14)
+
+
+### Bug Fixes
+
+* add qrcode context ([#55](https://github.com/TrustVC/w3c/issues/55)) ([19cd0df](https://github.com/TrustVC/w3c/commit/19cd0dfd20e848f744e1a5d6255557bde101d998))
+
 ## [1.2.11](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.10...@trustvc/w3c@1.2.11) (2025-04-24)
 
 
