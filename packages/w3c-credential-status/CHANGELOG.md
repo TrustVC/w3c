@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.7...@trustvc/w3c-credential-status@1.2.8) (2025-05-14)
+
+
+### Bug Fixes
+
+* add qrcode context ([#55](https://github.com/TrustVC/w3c/issues/55)) ([19cd0df](https://github.com/TrustVC/w3c/commit/19cd0dfd20e848f744e1a5d6255557bde101d998))
+
 ## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.6...@trustvc/w3c-credential-status@1.2.7) (2025-04-24)
 
 
