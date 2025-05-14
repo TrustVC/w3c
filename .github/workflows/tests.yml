@@ -30,7 +30,7 @@ jobs:
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
 
-      - run: npx nx affected -t test
+      - run: npm run test:skip-cache
 
   test-build:
     name: Test Build
