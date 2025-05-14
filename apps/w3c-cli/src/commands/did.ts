@@ -1,22 +1,25 @@
 import { IssuedDID, IssuedDIDOption, issueDID } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
-import fs from 'fs';
 import inquirer from 'inquirer';
 import { KeyPairQuestionType, QuestionType } from '../types';
-import { writeFile } from '../utils';
+import { isDirectoryValid, readJsonFile, writeFile } from '../utils';
 
 export const command = 'did';
 export const describe = 'Generate a new DID token file from a key pair file and a domain name';
 
 export const handler = async () => {
-  const answers = await promptQuestions();
-  if (!answers) return;
+  try {
+    const answers = await promptQuestions();
+    if (!answers) return;
 
-  const { keypairData, outputPath } = answers;
-  const did = await getIssuedDid(keypairData);
-  if (!did) return;
+    const { keypairData, outputPath } = answers;
+    const did = await getIssuedDid(keypairData);
+    if (!did) return;
 
-  await saveIssuedDid(did, outputPath);
+    await saveIssuedDid(did, outputPath);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 export const getIssuedDid = async (keypairData: IssuedDIDOption): Promise<IssuedDID> => {
@@ -82,26 +85,15 @@ export const promptQuestions = async () => {
   )) as KeyPairQuestionType;
 
   // Validate and read the key pair file
-  let data: string;
-  try {
-    data = fs.readFileSync(keyPairPath, { encoding: 'utf8', flag: 'r' });
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${keyPairPath}`));
-    return;
-  }
-
-  const keypairData: IssuedDIDOption = JSON.parse(data);
+  const keypairData: IssuedDIDOption = readJsonFile(keyPairPath, 'key pair');
+  if (!keypairData) throw new Error('Unable to read key pair file');
 
   // Prompt for the domain name and output path
   const { domainName, outputPath }: QuestionType = (await inquirer.prompt(
     questions,
   )) as QuestionType;
-  try {
-    fs.readdirSync(outputPath, { encoding: 'utf-8' });
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${outputPath}`));
-    return;
-  }
+
+  if (!isDirectoryValid(outputPath)) throw new Error('Output path is not valid');
   keypairData.domain = domainName;
 
   return { keypairData, domainName, outputPath };

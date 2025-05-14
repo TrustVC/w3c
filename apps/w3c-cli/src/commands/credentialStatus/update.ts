@@ -8,24 +8,27 @@ import {
 } from '@trustvc/w3c-credential-status';
 import { signCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
-import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';
+import { isDirectoryValid, readJsonFile } from '../../utils';
 import { saveSignedCredentialStatus } from './create';
-import { readJsonFile } from '../../utils';
 
 export const command = 'update';
 export const describe = 'Update a credential status';
 
 export const handler = async () => {
-  const answers = await promptQuestions();
+  try {
+    const answers = await promptQuestions();
 
-  if (!answers) return;
+    if (!answers) return;
 
-  const signedCSVC = await createSignedCredentialStatus(answers);
+    const signedCSVC = await createSignedCredentialStatus(answers);
 
-  if (!signedCSVC) return;
+    if (!signedCSVC) return;
 
-  saveSignedCredentialStatus(signedCSVC, answers.outputPath);
+    saveSignedCredentialStatus(signedCSVC, answers.outputPath);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 export const promptQuestions = async (): Promise<CredentialStatusQuestionType> => {
@@ -44,8 +47,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
   try {
     credentialStatusVC = await fetchCredentialStatusVC(answers.hostingUrl);
   } catch (err: unknown) {
-    console.error(chalk.red(`Invalid URL provided: ${answers.hostingUrl}`));
-    return;
+    throw new Error(`Invalid URL provided: ${answers.hostingUrl}`);
   }
 
   answers.keyPairPath = await input({
@@ -55,12 +57,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
   });
 
   // Validate and read the key pair file
-  try {
-    answers.keypairData = readJsonFile(answers.keyPairPath, 'key pair');
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${answers.keyPairPath}`));
-    return;
-  }
+  answers.keypairData = readJsonFile(answers.keyPairPath, 'key pair');
 
   answers.outputPath = await input({
     message: 'Please specify a directory path to save the credential status file (optional):',
@@ -68,12 +65,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
     required: true,
   });
 
-  try {
-    fs.readdirSync(answers.outputPath, { encoding: 'utf-8' });
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${answers.outputPath}`));
-    return;
-  }
+  if (!isDirectoryValid(answers.outputPath)) throw new Error('Output path is not valid');
 
   answers.type = credentialStatusVC?.credentialSubject?.type;
 
@@ -158,9 +150,8 @@ export const createSignedCredentialStatus = async (answers: CredentialStatusQues
     throw new Error('Invalid credential status type.');
   } catch (err: unknown) {
     if (!(err instanceof Error)) {
-      console.error(chalk.red('An error occurred while signing the credential status.'));
-      return;
+      throw err;
     }
-    console.error(chalk.red(`Error signing credential status: ${err.message}`));
+    throw new Error(`Error signing credential status: ${err.message}`);
   }
 };

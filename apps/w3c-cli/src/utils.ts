@@ -6,7 +6,7 @@ export const writeFile = <T>(path: string, data: T) => {
     fs.writeFileSync(path, JSON.stringify(data));
     console.log(chalk.green(`File written successfully to ${path}`));
   } catch (err) {
-    console.error(chalk.red(`Unable to write file to ${path}`));
+    throw new Error(`Unable to write file to ${path}`);
   }
 };
 
@@ -16,8 +16,7 @@ export const readJsonFile = <T>(filePath: string, fileType: string): T | null =>
     const data = fs.readFileSync(filePath, { encoding: 'utf8' });
     return JSON.parse(data) as T;
   } catch (err) {
-    console.error(chalk.red(`Invalid ${fileType} file path: ${filePath}`));
-    return null;
+    throw new Error(`Invalid ${fileType} file path: ${filePath}`);
   }
 };
 
@@ -27,7 +26,7 @@ export const isDirectoryValid = (path: string): boolean => {
     fs.readdirSync(path, { encoding: 'utf-8' });
     return true;
   } catch (err) {
-    console.error(chalk.red(`Invalid output directory path: ${path}`));
+    console.warn(chalk.yellow(`Invalid directory path: ${path}`));
     return false;
   }
 };

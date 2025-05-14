@@ -28,6 +28,19 @@ export const assertCredentialStatusType = <T>(type: T): void => {
 };
 
 /**
+ * Asserts the type of the credential status statusList.
+ * @param type - The type of the credential status.
+ * @throws {Error} - Throws an error if the type is not supported.
+ */
+export const assertCredentialStatusStatusListType = <T>(type: T): void => {
+  const supportedTypes: T[] = ['StatusList2021Entry'] as T[];
+
+  if (!supportedTypes.includes(type)) {
+    throw new Error(`Unsupported type: ${type}`);
+  }
+};
+
+/**
  * Asserts the statusListIndex is a valid number.
  * @param statusListIndex - The index of the statusList in the statusListCredential.
  * @throws {Error} - Throws an error if the statusListIndex is not a valid number.
