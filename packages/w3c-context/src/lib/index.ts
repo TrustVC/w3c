@@ -11,6 +11,7 @@ import didV1 from '../context/did-v1.json';
 import invoiceContext from '../context/invoice.json';
 import jwsV1 from '../context/jws-2020-v1.json';
 import promissoryNoteContext from '../context/promissory-note.json';
+import qrCodeContext from '../context/qrcode-context.json';
 import renderContext from '../context/render-method-context.json';
 import trContext from '../context/transferable-records-context.json';
 import { Document } from './types';
@@ -24,6 +25,7 @@ export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-c
 export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
 export const INVOICE_CONTEXT_URL = 'https://trustvc.io/context/invoice.json';
 export const PROMISSORY_NOTE_CONTEXT_URL = 'https://trustvc.io/context/promissory-note.json';
+export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 
 export const BBS_V1_URL = 'https://w3id.org/security/bbs/v1';
 export const BLS12381_2020_V1_URL = 'https://w3id.org/security/suites/bls12381-2020/v1';
@@ -63,6 +65,10 @@ export const promissoryNoteContexts: { [key: string]: Document } = {
   [PROMISSORY_NOTE_CONTEXT_URL]: promissoryNoteContext,
 };
 
+export const qrCodeContexts: { [key: string]: Document } = {
+  [QRCODE_CONTEXT_URL]: qrCodeContext,
+};
+
 export const CredentialContextVersion = {
   v1: VC_V1_URL,
   v2: VC_V2_URL,
@@ -90,6 +96,7 @@ export async function getDocumentLoader(
     bolContexts,
     invoiceContexts,
     promissoryNoteContexts,
+    qrCodeContexts,
     additionalContexts,
   ].forEach((context) => {
     if (!context) return;
