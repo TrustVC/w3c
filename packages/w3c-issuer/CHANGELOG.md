@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.2...@trustvc/w3c-issuer@1.2.3) (2025-05-16)
+
+
+### Bug Fixes
+
+* cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
+
 ## [1.2.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.1...@trustvc/w3c-issuer@1.2.2) (2025-04-22)
 
 
