@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.8...@trustvc/w3c-credential-status@1.2.9) (2025-05-16)
+
+
+### Bug Fixes
+
+* cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
+
 ## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.7...@trustvc/w3c-credential-status@1.2.8) (2025-05-14)
 
 
