@@ -27,23 +27,6 @@
           "@id": "https://example.com/terms#tokenRegistry"
         }
       }
-    },
-    "EMBEDDED_RENDERER": {
-      "@id": "https://example.com/terms#EMBEDDED_RENDERER",
-      "@type": "@id",
-      "@context": {
-        "@protected": true,
-        "id": {
-          "@id": "https://example.com/terms#id",
-          "@type": "http://www.w3.org/2001/XMLSchema#string"
-        },
-        "type": {
-          "@id": "https://example.com/terms#type"
-        },
-        "templateName": {
-          "@id": "https://example.com/terms#templateName"
-        }
-      }
     }
   }
 }
