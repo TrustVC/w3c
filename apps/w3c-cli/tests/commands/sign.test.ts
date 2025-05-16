@@ -1,15 +1,14 @@
+import { VerifiableCredential } from '@trustvc/w3c-vc';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
-import { VerifiableCredential } from '@trustvc/w3c-vc';
-
 import {
   promptForInputs,
   saveSignedCredential,
   signCredentialWithKeyPair,
 } from '../../src/commands/sign';
+import { mockCredential as freezedMockCredential } from '../fixtures/mockCredential';
+import { mockKeyPair } from '../fixtures/mockDidWeb';
 
 vi.mock('inquirer');
 vi.mock('fs', async () => {
@@ -25,49 +24,6 @@ vi.mock('chalk', async () => {
   };
 });
 
-const mockKeyPair: PrivateKeyPair = {
-  id: 'did:web:trustvc.github.io:did:1#keys-1',
-  type: VerificationType.Bls12381G2Key2020,
-  controller: 'did:web:trustvc.github.io:did:1',
-  seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
-  privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
-  publicKeyBase58:
-    'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
-};
-
-const freezedMockCredential: VerifiableCredential = Object.freeze({
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
-    'https://w3id.org/security/bbs/v1',
-    'https://w3id.org/vc/status-list/2021/v1',
-  ],
-  credentialStatus: [
-    {
-      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-      statusListIndex: '1',
-      statusPurpose: 'revocation',
-      type: 'StatusList2021Entry',
-    },
-    {
-      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-      statusListIndex: '1',
-      statusPurpose: 'suspension',
-      type: 'StatusList2021Entry',
-    },
-  ],
-  credentialSubject: {
-    name: 'TrustVC',
-    birthDate: '2024-04-01T12:19:52Z',
-    type: ['PermanentResident', 'Person'],
-  },
-  expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: ['VerifiableCredential'],
-  issuanceDate: '2024-04-01T12:19:52Z',
-});
 let mockCredential: VerifiableCredential;
 
 describe('sign', () => {

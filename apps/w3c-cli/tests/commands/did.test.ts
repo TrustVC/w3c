@@ -2,16 +2,7 @@ import { IssuedDIDOption, VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
 import fs from 'fs';
 import inquirer from 'inquirer';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  MockedFunction,
-  SpyInstance,
-  vi,
-} from 'vitest';
+import { beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
 import { getIssuedDid, promptQuestions, saveIssuedDid } from '../../src/commands/did';
 import { IssueDidInput } from '../../src/types';
 
@@ -155,32 +146,23 @@ describe('did', () => {
 
   describe('getIssuedDid', () => {
     let issueDIDMock: MockedFunction<any>;
-    let consoleErrorSpy: SpyInstance;
 
     beforeEach(async () => {
       vi.clearAllMocks();
       vi.resetAllMocks();
+
       const issuerModule = await import('@trustvc/w3c-issuer');
       issueDIDMock = issuerModule.issueDID as MockedFunction<any>;
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined); // Spy and silence
-    });
-
-    afterEach(() => {
-      consoleErrorSpy.mockRestore();
     });
 
     it('should throw error if getIssuedDid receives invalid domain name', async () => {
-      const consoleLogSpy = vi.spyOn(console, 'error');
-
       const mockKeypairData: IssuedDIDOption = {
         type: VerificationType.Bls12381G1Key2020,
         domain: 'bad-domain-name',
       };
       issueDIDMock.mockRejectedValue(new Error('Invalid domain'));
-      await getIssuedDid(mockKeypairData);
-      expect(consoleLogSpy).toHaveBeenNthCalledWith(
-        1,
-        chalk.red(`Error generating DID token: Invalid domain`),
+      await expect(getIssuedDid(mockKeypairData)).rejects.toThrowError(
+        'Error generating DID token: Invalid domain',
       );
     });
 
@@ -207,12 +189,9 @@ describe('did', () => {
       const errorMessage = 'KeyPair already exists';
       issueDIDMock.mockRejectedValue(new Error(errorMessage));
 
-      const result = await getIssuedDid(mockKeypairData);
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        chalk.red('Error generating DID token: KeyPair already exists in Did Document'),
+      await expect(getIssuedDid(mockKeypairData)).rejects.toThrowError(
+        'Error generating DID token: KeyPair already exists in Did Document',
       );
-      expect(result).toBeUndefined();
     });
 
     it('should log generic "Error generating DID token" for other errors and return undefined', async () => {
@@ -220,13 +199,11 @@ describe('did', () => {
         type: VerificationType.Bls12381G1Key2020,
         domain: 'example.com',
       };
-      const errorMessage = 'Some other internal error';
-      issueDIDMock.mockRejectedValue(new Error(errorMessage));
+      issueDIDMock.mockRejectedValue(new Error('Some other internal error'));
 
-      const result = await getIssuedDid(mockKeypairData);
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(chalk.red('Error generating DID token'));
-      expect(result).toBeUndefined();
+      await expect(getIssuedDid(mockKeypairData)).rejects.toThrowError(
+        'Error generating DID token',
+      );
     });
   });
 

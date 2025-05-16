@@ -30,13 +30,11 @@ export const getIssuedDid = async (keypairData: IssuedDIDOption): Promise<Issued
   } catch (err) {
     if (err instanceof Error) {
       if (err.message == 'Missing domain' || err.message == 'Invalid domain') {
-        console.error(chalk.red('Error generating DID token: ' + err.message));
+        throw new Error('Error generating DID token: ' + err.message);
       } else if (err.message === 'KeyPair already exists') {
-        console.error(
-          chalk.red('Error generating DID token: KeyPair already exists in Did Document'),
-        );
+        throw new Error('Error generating DID token: KeyPair already exists in Did Document');
       } else {
-        console.error(chalk.red('Error generating DID token'));
+        throw new Error('Error generating DID token');
       }
     }
   }
