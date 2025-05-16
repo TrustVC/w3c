@@ -1,9 +1,8 @@
 import { ContextDocument, SignedVerifiableCredential, deriveCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
-import fs from 'fs';
 import inquirer from 'inquirer';
 import { CredentialQuestionType, QuestionType, RevealQuestionType } from '../types';
-import { isDirectoryValid, readJsonFile } from '../utils';
+import { isDirectoryValid, readJsonFile, writeFile } from '../utils';
 
 export const command = 'derive';
 export const describe =
@@ -38,20 +37,24 @@ const outputPathPrompt: any = {
 };
 
 export const handler = async () => {
-  const answers = await promptForInputs();
-  if (!answers) return;
+  try {
+    const answers = await promptForInputs();
+    if (!answers) return;
 
-  const { revealData, credentialData, outputPath } = answers;
+    const { revealData, credentialData, outputPath } = answers;
 
-  // Derive the credential
-  const derived = await derivedCredential(
-    credentialData as SignedVerifiableCredential,
-    revealData as ContextDocument,
-  );
-  if (!derived) return;
+    // Derive the credential
+    const derived = await derivedCredential(
+      credentialData as SignedVerifiableCredential,
+      revealData as ContextDocument,
+    );
+    if (!derived) return;
 
-  // Save the derived credential
-  await saveDerivedCredential(derived, outputPath);
+    // Save the derived credential
+    await saveDerivedCredential(derived, outputPath);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 // Derived the credential with the provided parameters
@@ -76,10 +79,10 @@ export const saveDerivedCredential = async (
 ) => {
   const filePath = `${outputPath}/derived_vc.json`;
   try {
-    fs.writeFileSync(filePath, JSON.stringify(derivedCredential));
+    writeFile(filePath, JSON.stringify(derivedCredential));
     console.log(chalk.green(`Derived credential saved successfully to ${filePath}`));
   } catch (err) {
-    console.error(chalk.red(`Unable to save derived credential to ${filePath}`));
+    throw new Error(`Unable to save derived credential to ${filePath}`);
   }
 };
 
@@ -90,18 +93,18 @@ export const promptForInputs = async () => {
   )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
-  if (!credentialData) return null;
+  if (!credentialData) throw new Error('Unable to read credential file');
 
   const { revealPath }: RevealQuestionType = (await inquirer.prompt(
     revealPrompt,
   )) as RevealQuestionType;
 
   const revealData = readJsonFile(revealPath, 'reveal');
-  if (!revealData) return null;
+  if (!revealData) throw new Error('Unable to read reveal file');
 
   const { outputPath }: QuestionType = (await inquirer.prompt(outputPathPrompt)) as QuestionType;
 
-  if (!isDirectoryValid(outputPath)) return null;
+  if (!isDirectoryValid(outputPath)) throw new Error('Output path is not valid');
 
   return { revealData, credentialData, outputPath };
 };

@@ -7,10 +7,11 @@ import {
   TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
 import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
+import { createHash } from 'crypto';
 // @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { v7 as uuidv7 } from 'uuid';
-import { assertCredentialStatus } from '../sign/credentialStatus';
+import { assertCredentialStatuses } from '../sign/credentialStatus';
 import {
   CredentialStatus,
   CredentialSubject,
@@ -19,7 +20,6 @@ import {
   RawVerifiableCredential,
   VerifiableCredential,
 } from '../types';
-import { createHash } from 'crypto';
 
 /**
  * Validates a key pair object to ensure it contains the required properties.
@@ -222,9 +222,7 @@ export function _checkCredential<T extends VerifiableCredential>(
   }
 
   // Validate credentialStatus field if present
-  jsonld.getValues(credential, 'credentialStatus').forEach((cs: CredentialStatus) => {
-    assertCredentialStatus(cs, mode);
-  });
+  assertCredentialStatuses(credential, mode);
 
   // Validate that certain fields, if present, are objects with a type property
   for (const prop of mustHaveType) {

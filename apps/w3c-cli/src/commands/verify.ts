@@ -1,4 +1,10 @@
 import {
+  GeneralCredentialStatus,
+  isCredentialStatusStatusList,
+} from '@trustvc/w3c-credential-status';
+import {
+  CredentialStatus,
+  CredentialStatusResult,
   SignedVerifiableCredential,
   verifyCredential,
   verifyCredentialStatus,
@@ -22,13 +28,17 @@ const credentialPrompt: any = {
 };
 
 export const handler = async () => {
-  const answers = await promptForCredential();
-  if (!answers) return;
+  try {
+    const answers = await promptForCredential();
+    if (!answers) return;
 
-  const { credentialData } = answers;
+    const { credentialData } = answers;
 
-  // Verify the credential
-  await verifyCredentialData(credentialData as SignedVerifiableCredential);
+    // Verify the credential
+    await verifyCredentialData(credentialData as SignedVerifiableCredential);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 // Verify the verifiable credential using the `verifyCredential` method
@@ -37,9 +47,16 @@ export const verifyCredentialData = async (
 ): Promise<void> => {
   const result = await verifyCredential(credentialData);
 
-  let credentialStatusResult;
-  if (credentialData?.credentialStatus) {
-    credentialStatusResult = await verifyCredentialStatus(credentialData.credentialStatus);
+  let credentialStatusResult: CredentialStatusResult[] | undefined;
+  const credentialStatuses = [].concat(credentialData?.credentialStatus) || [];
+
+  if (
+    credentialStatuses &&
+    credentialStatuses.every((cs: GeneralCredentialStatus) => isCredentialStatusStatusList(cs))
+  ) {
+    credentialStatusResult = await Promise.all(
+      credentialStatuses.map((cs: CredentialStatus) => verifyCredentialStatus(cs)),
+    );
   }
 
   if (result.verified) {
@@ -52,14 +69,19 @@ export const verifyCredentialData = async (
   }
 
   if (credentialStatusResult) {
-    if ('status' in credentialStatusResult) {
+    if (credentialStatusResult?.every((r) => 'status' in r)) {
       console.log(
         chalk.green(
-          `Credential status verification result: "${credentialStatusResult.purpose}:${credentialStatusResult.status}"`,
+          `Credential status verification result: "${credentialStatusResult.map((csr) => `${csr.purpose}:${csr.status}`)}"`,
         ),
       );
-    } else if (credentialStatusResult.error) {
-      console.error(chalk.red(`Error: ${credentialStatusResult.error}`));
+    } else if (credentialStatusResult?.some((r) => r?.error)) {
+      throw new Error(
+        `${credentialStatusResult
+          ?.filter((r) => r.error)
+          ?.map((r) => r.error)
+          ?.join(', ')}`,
+      );
     }
   }
 };
@@ -71,7 +93,7 @@ export const promptForCredential = async () => {
   )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
-  if (!credentialData) return null;
+  if (!credentialData) throw new Error('Unable to read credential file');
 
   return { credentialData };
 };

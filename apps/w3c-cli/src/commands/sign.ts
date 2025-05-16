@@ -1,10 +1,9 @@
+import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import { signCredential, VerifiableCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
-import fs from 'fs';
 import inquirer from 'inquirer';
 import { CredentialQuestionType, KeyPairQuestionType, QuestionType } from '../types';
-import { PrivateKeyPair } from '@trustvc/w3c-issuer';
-import { isDirectoryValid, readJsonFile } from '../utils';
+import { isDirectoryValid, readJsonFile, writeFile } from '../utils';
 
 export const command = 'sign';
 export const describe =
@@ -39,20 +38,24 @@ const outputPathPrompt: any = {
 };
 
 export const handler = async () => {
-  const answers = await promptForInputs();
-  if (!answers) return;
+  try {
+    const answers = await promptForInputs();
+    if (!answers) return;
 
-  const { keypairData, credentialData, outputPath } = answers;
+    const { keypairData, credentialData, outputPath } = answers;
 
-  // Sign the credential
-  const signedCredential = await signCredentialWithKeyPair(
-    credentialData,
-    keypairData as PrivateKeyPair,
-  );
-  if (!signedCredential) return;
+    // Sign the credential
+    const signedCredential = await signCredentialWithKeyPair(
+      credentialData,
+      keypairData as PrivateKeyPair,
+    );
+    if (!signedCredential) return;
 
-  // Save the signed credential
-  await saveSignedCredential(signedCredential, outputPath);
+    // Save the signed credential
+    await saveSignedCredential(signedCredential, outputPath);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 // Sign the credential with the provided key pair
@@ -65,8 +68,7 @@ export const signCredentialWithKeyPair = async (
   if (result?.signed) {
     return result.signed;
   } else {
-    console.error(chalk.red(`Error: ${result.error}`));
-    return null;
+    throw new Error(result?.error);
   }
 };
 
@@ -77,10 +79,10 @@ export const saveSignedCredential = async (
 ) => {
   const filePath = `${outputPath}/signed_vc.json`;
   try {
-    fs.writeFileSync(filePath, JSON.stringify(signedCredential));
+    writeFile(filePath, signedCredential);
     console.log(chalk.green(`Signed credential saved successfully to ${filePath}`));
   } catch (err) {
-    console.error(chalk.red(`Unable to save signed credential to ${filePath}`));
+    throw new Error(`Unable to save signed credential to ${filePath}`);
   }
 };
 
@@ -91,18 +93,18 @@ export const promptForInputs = async () => {
   )) as KeyPairQuestionType;
 
   const keypairData = readJsonFile(keyPairPath, 'key pair');
-  if (!keypairData) return null;
+  if (!keypairData) throw new Error('Unable to read key pair file');
 
   const { credentialPath }: CredentialQuestionType = (await inquirer.prompt(
     credentialPrompt,
   )) as CredentialQuestionType;
 
   const credentialData = readJsonFile(credentialPath, 'credential');
-  if (!credentialData) return null;
+  if (!credentialData) throw new Error('Unable to read credential file');
 
   const { outputPath }: QuestionType = (await inquirer.prompt(outputPathPrompt)) as QuestionType;
 
-  if (!isDirectoryValid(outputPath)) return null;
+  if (!isDirectoryValid(outputPath)) throw new Error('Output path is not valid');
 
   return { keypairData, credentialData, outputPath };
 };
