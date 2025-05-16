@@ -126,6 +126,8 @@ describe('sign', () => {
     beforeEach(() => {
       vi.clearAllMocks();
       vi.resetAllMocks();
+      vi.restoreAllMocks();
+
       mockCredential = { ...freezedMockCredential };
     });
 
