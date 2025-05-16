@@ -23,7 +23,7 @@ done
 echo "[[headers]]
   for = \"/*\"
   [headers.values]
-    access-control-allow-origin = \"*\"" > $DEST_DIR/netlify.toml
+    Access-Control-Allow-Origin = \"*\"" > $DEST_DIR/netlify.toml
 
 # Optional: output a message when done
 echo "Files have been copied to $DEST_DIR"
