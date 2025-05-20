@@ -1,3 +1,10 @@
+## [1.2.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.2.9...@trustvc/w3c-context@1.2.10) (2025-05-20)
+
+
+### Bug Fixes
+
+* add template context ([#58](https://github.com/TrustVC/w3c/issues/58)) ([8a467b7](https://github.com/TrustVC/w3c/commit/8a467b738bebe935f00af525684e84bfd01fe6e9))
+
 ## [1.2.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.2.8...@trustvc/w3c-context@1.2.9) (2025-05-16)
 
 
