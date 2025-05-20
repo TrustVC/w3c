@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-vc",
-  "version": "1.2.13",
+  "version": "1.2.14",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
-    "@trustvc/w3c-credential-status": "^1.2.9",
+    "@trustvc/w3c-credential-status": "^1.2.10",
     "@trustvc/w3c-issuer": "^1.2.3",
     "did-resolver": "^4.1.0",
     "jsonld": "^6.0.0",
