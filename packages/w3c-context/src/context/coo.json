@@ -1,0 +1,195 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "Coo": {
+      "@id": "https://example.com/terms#Coo",
+      "@context": {
+        "@protected": true,
+        "cooId": {
+          "@id": "https://example.com/terms#cooId"
+        },
+        "issueDateTime": {
+          "@id": "https://example.com/terms#issueDateTime"
+        },
+        "signature": {
+          "@id": "https://example.com/terms#signature"
+        },
+        "supplyChainConsignmentId": {
+          "@id": "https://example.com/terms#supplyChainConsignmentId"
+        },
+        "supplyChainConsignmentInformation": {
+          "@id": "https://example.com/terms#supplyChainConsignmentInformation"
+        },
+        "exportCountryCode": {
+          "@id": "https://example.com/terms#exportCountryCode"
+        },
+        "exporterId": {
+          "@id": "https://example.com/terms#exporterId"
+        },
+        "exporterName": {
+          "@id": "https://example.com/terms#exporterName"
+        },
+        "exporterLine1": {
+          "@id": "https://example.com/terms#exporterLine1"
+        },
+        "exporterLine2": {
+          "@id": "https://example.com/terms#exporterLine2"
+        },
+        "exporterCityName": {
+          "@id": "https://example.com/terms#exporterCityName"
+        },
+        "exporterPostcode": {
+          "@id": "https://example.com/terms#exporterPostcode"
+        },
+        "exporterCountrySubDivisionName": {
+          "@id": "https://example.com/terms#exporterCountrySubDivisionName"
+        },
+        "exporterCountryCode": {
+          "@id": "https://example.com/terms#exporterCountryCode"
+        },
+        "importCountryCode": {
+          "@id": "https://example.com/terms#importCountryCode"
+        },
+        "importerId": {
+          "@id": "https://example.com/terms#importerId"
+        },
+        "importerName": {
+          "@id": "https://example.com/terms#importerName"
+        },
+        "importerLine1": {
+          "@id": "https://example.com/terms#importerLine1"
+        },
+        "importerLine2": {
+          "@id": "https://example.com/terms#importerLine2"
+        },
+        "importerCityName": {
+          "@id": "https://example.com/terms#importerCityName"
+        },
+        "importerPostcode": {
+          "@id": "https://example.com/terms#importerPostcode"
+        },
+        "importerCountrySubDivisionName": {
+          "@id": "https://example.com/terms#importerCountrySubDivisionName"
+        },
+        "importerCountryCode": {
+          "@id": "https://example.com/terms#importerCountryCode"
+        },
+        "includedConsignmentItems": {
+          "@id": "https://example.com/terms#includedConsignmentItems",
+          "@container": "@set",
+          "@context": {
+            "includedConsignmentItemsId": {
+              "@id": "https://example.com/terms#includedConsignmentItemsId"
+            },
+            "includedConsignmentItemsInformation": {
+              "@id": "https://example.com/terms#includedConsignmentItemsInformation"
+            },
+            "originCriteriaText": {
+              "@id": "https://example.com/terms#originCriteriaText"
+            },
+            "manufacturerId": {
+              "@id": "https://example.com/terms#manufacturerId"
+            },
+            "manufacturerName": {
+              "@id": "https://example.com/terms#manufacturerName"
+            },
+            "manufacturerLine1": {
+              "@id": "https://example.com/terms#manufacturerLine1"
+            },
+            "manufacturerLine2": {
+              "@id": "https://example.com/terms#manufacturerLine2"
+            },
+            "manufacturerCityName": {
+              "@id": "https://example.com/terms#manufacturerCityName"
+            },
+            "manufacturerPostcode": {
+              "@id": "https://example.com/terms#manufacturerPostcode"
+            },
+            "manufacturerCountrySubDivisionName": {
+              "@id": "https://example.com/terms#manufacturerCountrySubDivisionName"
+            },
+            "manufacturerCountryCode": {
+              "@id": "https://example.com/terms#manufacturerCountryCode"
+            },
+            "tradeLineItems": {
+              "@id": "https://example.com/terms#tradeLineItems",
+              "@container": "@set",
+              "@context": {
+                "sequenceNumber": {
+                  "@id": "https://example.com/terms#sequenceNumber"
+                },
+                "invoiceReferenceId": {
+                  "@id": "https://example.com/terms#invoiceReferenceId"
+                },
+                "formattedIssueDateTime": {
+                  "@id": "https://example.com/terms#formattedIssueDateTime"
+                },
+                "attachedBinaryFileUri": {
+                  "@id": "https://example.com/terms#attachedBinaryFileUri"
+                },
+                "tradeProductId": {
+                  "@id": "https://example.com/terms#tradeProductId"
+                },
+                "tradeProductDescription": {
+                  "@id": "https://example.com/terms#tradeProductDescription"
+                },
+                "harmonisedTariffclassCode": {
+                  "@id": "https://example.com/terms#harmonisedTariffclassCode"
+                },
+                "harmonisedTariffclassName": {
+                  "@id": "https://example.com/terms#harmonisedTariffclassName"
+                },
+                "originCountryCode": {
+                  "@id": "https://example.com/terms#originCountryCode"
+                },
+                "transportPackages": {
+                  "@id": "https://example.com/terms#transportPackages",
+                  "@container": "@set",
+                  "@context": {
+                    "transportPackagesId": {
+                      "@id": "https://example.com/terms#transportPackagesId"
+                    },
+                    "transportPackagesGrossVolume": {
+                      "@id": "https://example.com/terms#transportPackagesGrossVolume"
+                    },
+                    "transportPackagesGrossWeight": {
+                      "@id": "https://example.com/terms#transportPackagesGrossWeight"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "loadingBaseportLocationId": {
+          "@id": "https://example.com/terms#loadingBaseportLocationId"
+        },
+        "loadingBaseportLocationName": {
+          "@id": "https://example.com/terms#loadingBaseportLocationName"
+        },
+        "mainCarriageTransportMovementId": {
+          "@id": "https://example.com/terms#mainCarriageTransportMovementId"
+        },
+        "mainCarriageTransportMovementInformation": {
+          "@id": "https://example.com/terms#mainCarriageTransportMovementInformation"
+        },
+        "usedTransportMeansName": {
+          "@id": "https://example.com/terms#usedTransportMeansName"
+        },
+        "usedTransportMeansId": {
+          "@id": "https://example.com/terms#usedTransportMeansId"
+        },
+        "departureDateTime": {
+          "@id": "https://example.com/terms#departureDateTime"
+        },
+        "unloadingBaseportLocationId": {
+          "@id": "https://example.com/terms#unloadingBaseportLocationId"
+        },
+        "unloadingBaseportLocationName": {
+          "@id": "https://example.com/terms#unloadingBaseportLocationName"
+        }
+      }
+    }
+  }
+}
