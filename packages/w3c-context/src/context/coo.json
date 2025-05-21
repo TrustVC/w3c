@@ -4,6 +4,7 @@
     "@protected": true,
     "Coo": {
       "@id": "https://example.com/terms#Coo",
+      "@type": "@id",
       "@context": {
         "@protected": true,
         "cooId": {
