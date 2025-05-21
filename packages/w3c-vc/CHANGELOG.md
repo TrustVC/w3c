@@ -1,3 +1,10 @@
+## [1.2.15](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.14...@trustvc/w3c-vc@1.2.15) (2025-05-21)
+
+
+### Bug Fixes
+
+* coo context ([#59](https://github.com/TrustVC/w3c/issues/59)) ([b802c6f](https://github.com/TrustVC/w3c/commit/b802c6f8605387024d5a50d81e4edfa3da709ba7))
+
 ## [1.2.14](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.13...@trustvc/w3c-vc@1.2.14) (2025-05-20)
 
 
