@@ -2,3 +2,9 @@
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+  from = "https://trustvc.io/context/*"
+  to = "https://www.trustvc.io/context/:splat"
+  status = 200
+  force = true
