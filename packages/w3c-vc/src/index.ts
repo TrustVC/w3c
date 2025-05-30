@@ -9,7 +9,8 @@ import {
 import { getDocumentLoader } from '@trustvc/w3c-context';
 
 export * from './lib/types';
-export {
+export type * from './lib/types';
+export type {
   ContextDocument,
   DocumentLoader,
   Document,
