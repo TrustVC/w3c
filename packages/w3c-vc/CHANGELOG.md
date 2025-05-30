@@ -1,3 +1,10 @@
+## [1.2.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.15...@trustvc/w3c-vc@1.2.16) (2025-05-30)
+
+
+### Bug Fixes
+
+* type errors ([#62](https://github.com/TrustVC/w3c/issues/62)) ([e4cf81f](https://github.com/TrustVC/w3c/commit/e4cf81f4cab187be464f92503bf0f0c39aef61d7))
+
 ## [1.2.15](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.14...@trustvc/w3c-vc@1.2.15) (2025-05-21)
 
 
