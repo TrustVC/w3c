@@ -79,7 +79,7 @@ export const saveDerivedCredential = async (
 ) => {
   const filePath = `${outputPath}/derived_vc.json`;
   try {
-    writeFile(filePath, JSON.stringify(derivedCredential));
+    writeFile(filePath, derivedCredential);
     console.log(chalk.green(`Derived credential saved successfully to ${filePath}`));
   } catch (err) {
     throw new Error(`Unable to save derived credential to ${filePath}`);
