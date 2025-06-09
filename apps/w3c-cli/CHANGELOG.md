@@ -1,3 +1,10 @@
+## [1.2.17](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.16...@trustvc/w3c-cli@1.2.17) (2025-06-09)
+
+
+### Bug Fixes
+
+* cli derive stringify error ([#63](https://github.com/TrustVC/w3c/issues/63)) ([79b9f4f](https://github.com/TrustVC/w3c/commit/79b9f4fbafcc498b289c6313d72fb4d78e425203))
+
 ## [1.2.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-cli@1.2.15...@trustvc/w3c-cli@1.2.16) (2025-05-30)
 
 
