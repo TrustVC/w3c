@@ -1,3 +1,10 @@
+## [1.2.17](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.16...@trustvc/w3c@1.2.17) (2025-06-13)
+
+
+### Bug Fixes
+
+* expired and redacted doc checks ([#64](https://github.com/TrustVC/w3c/issues/64)) ([4d0a65a](https://github.com/TrustVC/w3c/commit/4d0a65ad467e07bc0f837368f6ff93f84abfb0a8))
+
 ## [1.2.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.15...@trustvc/w3c@1.2.16) (2025-05-30)
 
 
