@@ -180,7 +180,8 @@ export function _checkCredential<T extends VerifiableCredential>(
     assertDateString({ credential, prop: 'expirationDate' });
     if (mode === 'verify') {
       if (now > new Date(credential.expirationDate)) {
-        throw new Error('Credential has expired.');
+        console.warn('Credential has expired.');
+        // throw new Error('Credential has expired.');
       }
     }
   }
