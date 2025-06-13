@@ -181,7 +181,6 @@ export function _checkCredential<T extends VerifiableCredential>(
     if (mode === 'verify') {
       if (now > new Date(credential.expirationDate)) {
         console.warn('Credential has expired.');
-        // throw new Error('Credential has expired.');
       }
     }
   }
