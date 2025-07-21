@@ -6,21 +6,24 @@ import {
 } from '@trustvc/w3c-credential-status';
 import { signCredential, SignedVerifiableCredential } from '@trustvc/w3c-vc';
 import chalk from 'chalk';
-import fs from 'fs';
 import { CredentialStatusQuestionType } from '../../types';
-import { readJsonFile, writeFile } from '../../utils';
+import { isDirectoryValid, readJsonFile, writeFile } from '../../utils';
 
 export const command = 'create';
 export const describe = 'Create a new credential status';
 
 export const handler = async () => {
-  const answers = await promptQuestions();
+  try {
+    const answers = await promptQuestions();
 
-  const signedCSVC = await createSignedCredentialStatus(answers);
+    const signedCSVC = await createSignedCredentialStatus(answers);
 
-  if (!signedCSVC) return;
+    if (!signedCSVC) return;
 
-  saveSignedCredentialStatus(signedCSVC, answers.outputPath);
+    saveSignedCredentialStatus(signedCSVC, answers.outputPath);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 export const promptQuestions = async (): Promise<CredentialStatusQuestionType> => {
@@ -63,12 +66,7 @@ export const promptQuestions = async (): Promise<CredentialStatusQuestionType> =
     required: true,
   });
 
-  try {
-    fs.readdirSync(answers.outputPath, { encoding: 'utf-8' });
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${answers.outputPath}`));
-    return;
-  }
+  if (!isDirectoryValid(answers.outputPath)) throw new Error('Output path is not valid');
 
   answers.length = await number({
     message: 'Please enter the length of the status list (default 16KB - 131,072):',

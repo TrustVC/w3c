@@ -1,0 +1,107 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "BillOfLadingCarrier": {
+      "@id": "https://example.com/terms#BillOfLadingCarrier",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "blNumber": {
+          "@id": "https://example.com/terms#blNumber"
+        },
+        "scac": {
+          "@id": "https://example.com/terms#scac"
+        },
+        "carrierName": {
+          "@id": "https://example.com/terms#carrierName"
+        },
+        "logo": {
+          "@id": "https://example.com/terms#logo"
+        },
+        "shipperName": {
+          "@id": "https://example.com/terms#shipperName"
+        },
+        "shipperAddressStreet": {
+          "@id": "https://example.com/terms#shipperAddressStreet"
+        },
+        "shipperAddressCountry": {
+          "@id": "https://example.com/terms#shipperAddressCountry"
+        },
+        "onwardInlandRouting": {
+          "@id": "https://example.com/terms#onwardInlandRouting"
+        },
+        "toOrderOfText": {
+          "@id": "https://example.com/terms#toOrderOfText"
+        },
+        "consigneeName": {
+          "@id": "https://example.com/terms#consigneeName"
+        },
+        "notifyPartyName": {
+          "@id": "https://example.com/terms#notifyPartyName"
+        },
+        "vessel": {
+          "@id": "https://example.com/terms#vessel"
+        },
+        "voyageNo": {
+          "@id": "https://example.com/terms#voyageNo"
+        },
+        "portOfLoading": {
+          "@id": "https://example.com/terms#portOfLoading"
+        },
+        "portOfDischarge": {
+          "@id": "https://example.com/terms#portOfDischarge"
+        },
+        "placeOfReceipt": {
+          "@id": "https://example.com/terms#placeOfReceipt"
+        },
+        "placeOfDelivery": {
+          "@id": "https://example.com/terms#placeOfDelivery"
+        },
+        "packages": {
+          "@id": "https://example.com/terms#packages",
+          "@container": "@set",
+          "@context": {
+            "@protected": true,
+            "packagesDescription": {
+              "@id": "https://example.com/terms#packagesDescription"
+            },
+            "packagesWeight": {
+              "@id": "https://example.com/terms#packagesWeight"
+            },
+            "packagesMeasurement": {
+              "@id": "https://example.com/terms#packagesMeasurement"
+            }
+          }
+        },
+        "carrierReceipt": {
+          "@id": "https://example.com/terms#carrierReceipt"
+        },
+        "placeOfIssueBL": {
+          "@id": "https://example.com/terms#placeOfIssueBL"
+        },
+        "numberOfOriginalBL": {
+          "@id": "https://example.com/terms#numberOfOriginalBL"
+        },
+        "dateOfIssueBL": {
+          "@id": "https://example.com/terms#dateOfIssueBL"
+        },
+        "shippedOnBoardDate": {
+          "@id": "https://example.com/terms#shippedOnBoardDate"
+        },
+        "signForTermsAndCondition": {
+          "@id": "https://example.com/terms#signForTermsAndCondition"
+        },
+        "signedForCarrierText": {
+          "@id": "https://example.com/terms#signedForCarrierText"
+        },
+        "carrierSignature": {
+          "@id": "https://example.com/terms#carrierSignature"
+        },
+        "termsOfCarriage": {
+          "@id": "https://example.com/terms#termsOfCarriage"
+        }
+      }
+    }
+  }
+}

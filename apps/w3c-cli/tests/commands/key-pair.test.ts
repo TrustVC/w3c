@@ -73,15 +73,12 @@ describe('key-pair', () => {
         .mockResolvedValueOnce(input.keyPath);
       (prompts.select as any).mockResolvedValueOnce(input.encAlgo);
       const readDirMock = vi.spyOn(fs, 'readdirSync');
-      const consoleErrorSpy = vi.spyOn(console, 'error');
       readDirMock.mockImplementation(() => {
         throw new Error();
       });
 
-      await promptQuestions();
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        chalk.red(`Invalid file path provided: ${input.keyPath}`),
+      await expect(promptQuestions()).rejects.toThrowError(
+        `Invalid file path provided: ${input.keyPath}`,
       );
     });
   });
@@ -156,13 +153,8 @@ describe('key-pair', () => {
         keyPath: '.',
       };
 
-      const consoleLogSpy = vi.spyOn(console, 'error');
-
-      await generateAndSaveKeyPair(input);
-
-      expect(consoleLogSpy).toHaveBeenNthCalledWith(
-        1,
-        chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'),
+      await expect(generateAndSaveKeyPair(input)).rejects.toThrowError(
+        'Invalid seed provided. Please provide a valid seed in base58 format.',
       );
     });
 
@@ -172,14 +164,10 @@ describe('key-pair', () => {
         seedBase58: '',
         keyPath: '.',
       };
-
-      const consoleLogSpy = vi.spyOn(console, 'error');
       vi.spyOn(w3cIssuer, 'generateKeyPair').mockImplementation(() => {
         throw new Error();
       });
-      await generateAndSaveKeyPair(input);
-
-      expect(consoleLogSpy).toHaveBeenNthCalledWith(1, chalk.red('Error generating keypair'));
+      await expect(generateAndSaveKeyPair(input)).rejects.toThrowError('Error generating keypair');
     });
 
     it('should fail generateAndSaveKeyPair when unable to save file', async () => {
@@ -188,22 +176,13 @@ describe('key-pair', () => {
         seedBase58: '',
         keyPath: '///invalid-key-path///', // This value doesn't really matter since we mock writeFil to always thro error below
       };
-      // Automatically keys in "user input" that inquirer will receive
-      (prompts.input as any)
-        .mockResolvedValueOnce(input.seedBase58)
-        .mockResolvedValueOnce(input.keyPath);
-      (prompts.select as any).mockResolvedValueOnce(input.encAlgo);
-      const consoleLogSpy = vi.spyOn(console, 'error');
       const writeFileMock = vi.spyOn(fs, 'writeFileSync');
       writeFileMock.mockImplementation(() => {
         throw new Error();
       });
 
-      await generateAndSaveKeyPair(input);
-
-      expect(consoleLogSpy).toHaveBeenNthCalledWith(
-        1,
-        chalk.red(`Unable to write file to ${input.keyPath}/keypair.json`),
+      await expect(generateAndSaveKeyPair(input)).rejects.toThrowError(
+        `Unable to write file to ${input.keyPath}/keypair.json`,
       );
     });
   });

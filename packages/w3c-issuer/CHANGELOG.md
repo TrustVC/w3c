@@ -1,3 +1,24 @@
+## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.3...@trustvc/w3c-issuer@1.2.4) (2025-06-13)
+
+
+### Bug Fixes
+
+* expired and redacted doc checks ([#64](https://github.com/TrustVC/w3c/issues/64)) ([4d0a65a](https://github.com/TrustVC/w3c/commit/4d0a65ad467e07bc0f837368f6ff93f84abfb0a8))
+
+## [1.2.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.2...@trustvc/w3c-issuer@1.2.3) (2025-05-16)
+
+
+### Bug Fixes
+
+* cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
+
+## [1.2.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.1...@trustvc/w3c-issuer@1.2.2) (2025-04-22)
+
+
+### Bug Fixes
+
+* clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
+
 ## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.0...@trustvc/w3c-issuer@1.2.1) (2024-12-17)
 
 

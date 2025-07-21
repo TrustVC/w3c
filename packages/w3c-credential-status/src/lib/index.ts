@@ -9,8 +9,15 @@ import {
   VCBitstringCredentialSubjectType,
   VCCredentialStatusType,
 } from './BitstringStatusList/types';
-import { CreateVCCredentialStatusOptions, RawCredentialStatusVC } from './types';
-import { getValidFromDateFromCredentialStatusVC } from './utils';
+import {
+  CreateVCCredentialStatusOptions,
+  GeneralCredentialStatus,
+  RawCredentialStatusVC,
+} from './types';
+import {
+  assertCredentialStatusStatusListType,
+  getValidFromDateFromCredentialStatusVC,
+} from './utils';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
   VCCredentialStatusType,
@@ -78,5 +85,19 @@ export const createCredentialStatusPayload = async (
       throw new Error('An error occurred while signing the credential status VC.');
     }
     throw err;
+  }
+};
+
+/**
+ * Checks if the input credential status is a StatusList2021Credential.
+ * @param {GeneralCredentialStatus} credentialStatus - The credential status to be checked.
+ * @returns {boolean} - Returns true if the credential status is a StatusList2021Credential, false otherwise.
+ */
+export const isCredentialStatusStatusList = (credentialStatus: GeneralCredentialStatus) => {
+  try {
+    assertCredentialStatusStatusListType(credentialStatus?.type);
+    return true;
+  } catch (err) {
+    return false;
   }
 };
