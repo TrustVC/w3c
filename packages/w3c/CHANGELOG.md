@@ -1,23 +1,79 @@
-## [1.2.7-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.7-alpha.2...@trustvc/w3c@1.2.7-alpha.3) (2025-04-09)
+## [1.2.17](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.16...@trustvc/w3c@1.2.17) (2025-06-13)
 
 
 ### Bug Fixes
 
-* add cache for jws 2020 v1 ([#48](https://github.com/TrustVC/w3c/issues/48)) ([4a9f52a](https://github.com/TrustVC/w3c/commit/4a9f52a823e5836454c65239916fa5807c9d0be1))
+* expired and redacted doc checks ([#64](https://github.com/TrustVC/w3c/issues/64)) ([4d0a65a](https://github.com/TrustVC/w3c/commit/4d0a65ad467e07bc0f837368f6ff93f84abfb0a8))
 
-## [1.2.7-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.7-alpha.1...@trustvc/w3c@1.2.7-alpha.2) (2025-04-09)
-
-
-### Bug Fixes
-
-* add export ([#47](https://github.com/TrustVC/w3c/issues/47)) ([dae74e7](https://github.com/TrustVC/w3c/commit/dae74e779e8f26dcd84f63e9baea905d2eca91fc))
-
-## [1.2.7-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.6...@trustvc/w3c@1.2.7-alpha.1) (2025-04-09)
+## [1.2.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.15...@trustvc/w3c@1.2.16) (2025-05-30)
 
 
 ### Bug Fixes
 
-* update fetchCredentialStatusVC to use documentLoader ([#46](https://github.com/TrustVC/w3c/issues/46)) ([7fe49f8](https://github.com/TrustVC/w3c/commit/7fe49f8e5a01cf36f4fdd87bccd72f87554a9072))
+* type errors ([#62](https://github.com/TrustVC/w3c/issues/62)) ([e4cf81f](https://github.com/TrustVC/w3c/commit/e4cf81f4cab187be464f92503bf0f0c39aef61d7))
+
+## [1.2.15](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.14...@trustvc/w3c@1.2.15) (2025-05-21)
+
+
+### Bug Fixes
+
+* coo context ([#59](https://github.com/TrustVC/w3c/issues/59)) ([b802c6f](https://github.com/TrustVC/w3c/commit/b802c6f8605387024d5a50d81e4edfa3da709ba7))
+
+## [1.2.14](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.13...@trustvc/w3c@1.2.14) (2025-05-20)
+
+
+### Bug Fixes
+
+* add template context ([#58](https://github.com/TrustVC/w3c/issues/58)) ([8a467b7](https://github.com/TrustVC/w3c/commit/8a467b738bebe935f00af525684e84bfd01fe6e9))
+
+## [1.2.13](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.12...@trustvc/w3c@1.2.13) (2025-05-16)
+
+
+### Bug Fixes
+
+* cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
+
+## [1.2.12](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.11...@trustvc/w3c@1.2.12) (2025-05-14)
+
+
+### Bug Fixes
+
+* add qrcode context ([#55](https://github.com/TrustVC/w3c/issues/55)) ([19cd0df](https://github.com/TrustVC/w3c/commit/19cd0dfd20e848f744e1a5d6255557bde101d998))
+
+## [1.2.11](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.10...@trustvc/w3c@1.2.11) (2025-04-24)
+
+
+### Bug Fixes
+
+* update promissory note context ([#53](https://github.com/TrustVC/w3c/issues/53)) ([e032f45](https://github.com/TrustVC/w3c/commit/e032f4582da0983d2ca5648d7c55fac6bc97c1f6))
+
+## [1.2.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.9...@trustvc/w3c@1.2.10) (2025-04-23)
+
+
+### Bug Fixes
+
+* add promissory note context for w3c ([#52](https://github.com/TrustVC/w3c/issues/52)) ([54b866a](https://github.com/TrustVC/w3c/commit/54b866a66ff1db2466628fb32a1bb4820d71b7d1))
+
+## [1.2.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.8...@trustvc/w3c@1.2.9) (2025-04-22)
+
+
+### Bug Fixes
+
+* clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
+
+## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.7...@trustvc/w3c@1.2.8) (2025-04-10)
+
+
+### Bug Fixes
+
+* add bls to context cache ([#50](https://github.com/TrustVC/w3c/issues/50)) ([a1988b0](https://github.com/TrustVC/w3c/commit/a1988b0ef2d82c95c3e285c93eedd61b050e4fd9))
+
+## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.6...@trustvc/w3c@1.2.7) (2025-04-09)
+
+
+### Bug Fixes
+
+* update fetchCredentialStatusVC to use documentLoader and add cache for jws 2020 v1 ([#49](https://github.com/TrustVC/w3c/issues/49)) ([2c50901](https://github.com/TrustVC/w3c/commit/2c50901035aac696f75ef386bd8beca367f02db7))
 
 ## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.5...@trustvc/w3c@1.2.6) (2025-04-08)
 

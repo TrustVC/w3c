@@ -2,17 +2,21 @@ import { input, select } from '@inquirer/prompts';
 import type { GeneratedKeyPair, GenerateKeyPairOptions } from '@trustvc/w3c-issuer';
 import { generateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 import chalk from 'chalk';
-import fs from 'fs';
 import { GenerateInput } from '../types';
+import { isDirectoryValid, writeFile } from '../utils';
 
 export const command = 'key-pair';
 export const describe = 'Generate a new key pair file';
 
 export const handler = async () => {
-  const answers = await promptQuestions();
-  if (!answers) return;
+  try {
+    const answers = await promptQuestions();
+    if (!answers) return;
 
-  await generateAndSaveKeyPair(answers);
+    await generateAndSaveKeyPair(answers);
+  } catch (err: unknown) {
+    console.error(chalk.red(`Error: ${err instanceof Error ? err.message : err}`));
+  }
 };
 
 export const promptQuestions = async (): Promise<GenerateInput> => {
@@ -40,12 +44,10 @@ export const promptQuestions = async (): Promise<GenerateInput> => {
     required: true,
   });
 
-  try {
-    fs.readdirSync(answers.keyPath, { encoding: 'utf-8' });
-  } catch (err) {
-    console.error(chalk.red(`Invalid file path provided: ${answers.keyPath}`));
-    return;
+  if (!isDirectoryValid(answers.keyPath)) {
+    throw new Error(`Invalid file path provided: ${answers.keyPath}`);
   }
+
   return answers;
 };
 
@@ -67,31 +69,23 @@ export const generateAndSaveKeyPair = async ({ encAlgo, seedBase58, keyPath }: G
   } catch (err) {
     if (err instanceof Error) {
       if (err.message == 'Non-base58btc character') {
-        console.error(
-          chalk.red('Invalid seed provided. Please provide a valid seed in base58 format.'),
-        );
-        return;
+        throw new Error('Invalid seed provided. Please provide a valid seed in base58 format.');
       }
     }
-    console.error(chalk.red('Error generating keypair'));
-    return;
+    throw new Error('Error generating keypair');
   }
 
-  try {
-    const keyPair: GeneratedKeyPair = {
-      type: keypairData.type,
-    };
-    if (keypairData.type === VerificationType.Bls12381G2Key2020) {
-      keyPair.seedBase58 = keypairData.seedBase58;
-      keyPair.privateKeyBase58 = keypairData.privateKeyBase58;
-      keyPair.publicKeyBase58 = keypairData.publicKeyBase58;
-    }
-
-    fs.writeFileSync(keyFilePath, JSON.stringify(keyPair));
-    console.log(chalk.green(`File written successfully to ${keyFilePath}`));
-
-    return keypairData;
-  } catch (err) {
-    console.error(chalk.red(`Unable to write file to ${keyFilePath}`));
+  const keyPair: GeneratedKeyPair = {
+    type: keypairData.type,
+  };
+  if (keypairData.type === VerificationType.Bls12381G2Key2020) {
+    keyPair.seedBase58 = keypairData.seedBase58;
+    keyPair.privateKeyBase58 = keypairData.privateKeyBase58;
+    keyPair.publicKeyBase58 = keypairData.publicKeyBase58;
   }
+
+  writeFile(keyFilePath, keyPair);
+  console.log(chalk.green(`File written successfully to ${keyFilePath}`));
+
+  return keypairData;
 };

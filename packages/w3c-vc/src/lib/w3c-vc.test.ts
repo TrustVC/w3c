@@ -10,8 +10,13 @@ const modifiedCredential: any = {
     'https://trustvc.io/context/transferable-records-context.json',
     'https://trustvc.io/context/render-method-context.json',
     'https://trustvc.io/context/attachments-context.json',
+    'https://trustvc.io/context/qrcode-context.json',
     'https://trustvc.io/context/bill-of-lading.json',
   ],
+  qrCode: {
+    type: 'TrustVCQRCode',
+    uri: 'https://localhost:3000/qrcode',
+  },
   credentialStatus: {
     type: 'TransferableRecords',
     tokenNetwork: {
@@ -67,6 +72,7 @@ const revealDocument: any = {
     'https://trustvc.io/context/transferable-records-context.json',
     'https://trustvc.io/context/render-method-context.json',
     'https://trustvc.io/context/attachments-context.json',
+    'https://trustvc.io/context/qrcode-context.json',
     'https://trustvc.io/context/bill-of-lading.json',
   ],
   credentialSubject: {

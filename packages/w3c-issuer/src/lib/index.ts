@@ -51,16 +51,24 @@ export const parseMultibase = async (multibase: string): Promise<Uint8Array> => 
  * @returns {string} - Domain name (e.g., example.com/part/index)
  */
 export const getDomain = (domain: Readonly<string>): string | undefined => {
-  // convert domain https://example.com/part/index?id=123 to example.com
-  const domainRegex = new RegExp(/.+\..+/);
-  const pathNameRegex = new RegExp(/\/.+/);
-  if (!domain || !domainRegex.test(domain)) {
-    return;
+  if (!domain || domain.trim() === '') {
+    return undefined;
   }
 
-  const parsedUrl = domain.startsWith('http') ? domain : 'http://' + domain;
+  try {
+    // Ensure we have a protocol for the URL constructor
+    const parsedUrl = domain.startsWith('http') ? domain : 'http://' + domain;
+    const url = new URL(parsedUrl);
 
-  const url = new URL(parsedUrl);
-  const validPathName = pathNameRegex.test(url.pathname);
-  return url.hostname + (validPathName ? url.pathname : '');
+    // Basic validation: ensure the hostname has at least one dot (for TLD)
+    if (!url.hostname.includes('.')) {
+      return undefined;
+    }
+
+    // Return hostname with pathname if it exists and isn't just '/'
+    return url.hostname + (url.pathname !== '/' ? url.pathname : '');
+  } catch (error) {
+    // If URL parsing fails, the domain is invalid
+    return undefined;
+  }
 };

@@ -1,0 +1,89 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "WarehouseReceipt": {
+      "@id": "https://example.com/terms#WarehouseReceipt",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "logo": {
+          "@id": "https://example.com/terms#logo"
+        },
+        "spl": {
+          "@id": "https://example.com/terms#spl"
+        },
+        "warehouseReceipt": {
+          "@id": "https://example.com/terms#warehouseReceipt"
+        },
+        "issuanceDate": {
+          "@id": "https://example.com/terms#issuanceDate"
+        },
+        "ourRef": {
+          "@id": "https://example.com/terms#ourRef"
+        },
+        "rentStartDate": {
+          "@id": "https://example.com/terms#rentStartDate"
+        },
+        "yourRef": {
+          "@id": "https://example.com/terms#yourRef"
+        },
+        "commodity": {
+          "@id": "https://example.com/terms#commodity"
+        },
+        "documentType": {
+          "@id": "https://example.com/terms#documentType"
+        },
+        "order": {
+          "@id": "https://example.com/terms#order"
+        },
+        "account": {
+          "@id": "https://example.com/terms#account"
+        },
+        "goods": {
+          "@id": "https://example.com/terms#goods",
+          "@container": "@set",
+          "@context": {
+            "@protected": true,
+            "brand": {
+              "@id": "https://example.com/terms#brand"
+            },
+            "piles": {
+              "@id": "https://example.com/terms#piles"
+            },
+            "bundles": {
+              "@id": "https://example.com/terms#bundles"
+            },
+            "pieces": {
+              "@id": "https://example.com/terms#pieces"
+            },
+            "netWeight": {
+              "@id": "https://example.com/terms#netWeight"
+            },
+            "grossWeight": {
+              "@id": "https://example.com/terms#grossWeight"
+            }
+          }
+        },
+        "totalNetWeight": {
+          "@id": "https://example.com/terms#totalNetWeight"
+        },
+        "warehouseAddress": {
+          "@id": "https://example.com/terms#warehouseAddress"
+        },
+        "markings": {
+          "@id": "https://example.com/terms#markings"
+        },
+        "storageAndServicesTerms": {
+          "@id": "https://example.com/terms#storageAndServicesTerms"
+        },
+        "signature": {
+          "@id": "https://example.com/terms#signature"
+        },
+        "termsAndConditions": {
+          "@id": "https://example.com/terms#termsAndConditions"
+        }
+      }
+    }
+  }
+}
