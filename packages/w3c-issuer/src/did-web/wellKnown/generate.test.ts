@@ -217,6 +217,208 @@ describe('generate', () => {
         ).toThrowError('KeyPair already exists');
       });
     });
+
+    describe('generateWellKnownDid - BBS-2023', () => {
+      const keyPair = {
+        id: 'did:web:localhost.com#keys-3',
+        type: VerificationType.Multikey,
+        controller: 'did:web:localhost.com',
+        seedBase58: 'CxBwAH4ftdc9XkLhw7DkFAESxh3NEdetMyJXKrPiAKAX',
+        secretKeyMultibase: 'z42twTcNeSYcnqg1FLuSFs2bsGH3ZqbRHFmvS9XMsYhjxvHN',
+        publicKeyMultibase:
+          'zUC724qx4TSVn1zuJAjbaPAzwMhNvjHXvJrg36gEtNjQoKSVqZpG7QfVgsUsV2WrNvTB2p41iF2ZtVruDtwjMtZnyHCFGQov',
+      };
+      const verificationMethod = _.omit(keyPair, ['seedBase58', 'secretKeyMultibase']);
+
+      it('should generateWellKnownDid with BBS-2023 keyPair', async () => {
+        const result = generateWellKnownDid({
+          newKeyPair: keyPair,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result?.id).toBe(keyPair.controller);
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('verificationMethod');
+        expect(result).toHaveProperty('@context');
+        expect(result).toHaveProperty('assertionMethod');
+        expect(result).toHaveProperty('authentication');
+        expect(result).toHaveProperty('capabilityInvocation');
+        expect(result).toHaveProperty('capabilityDelegation');
+        expect(result?.verificationMethod?.[0]).toMatchObject(verificationMethod);
+        expect(result?.verificationMethod?.[0].type).toBe('Multikey');
+        expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+        expect(result?.['@context']).toContain(VerificationContext[VerificationType.Multikey]);
+      });
+
+      it('should generateWellKnownDid with BBS-2023 keyPair and wellKnown', async () => {
+        const result = generateWellKnownDid({
+          wellKnown: wellKnown,
+          newKeyPair: keyPair,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result?.id).toBe(keyPair.controller);
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('verificationMethod');
+        expect(result).toHaveProperty('@context');
+        expect(result).toHaveProperty('assertionMethod');
+        expect(result).toHaveProperty('authentication');
+        expect(result).toHaveProperty('capabilityInvocation');
+        expect(result).toHaveProperty('capabilityDelegation');
+        expect(result?.verificationMethod).toHaveLength(3);
+        expect(result?.verificationMethod?.[result?.verificationMethod?.length - 1]).toMatchObject(
+          verificationMethod,
+        );
+        expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+        expect(result?.['@context']).toContain(VerificationContext[VerificationType.Multikey]);
+      });
+
+      it('should fail to generateWellKnownDid with same publicKeyMultibase as wellKnown - BBS-2023', async () => {
+        const existingMultikeyWellKnown = {
+          ...wellKnown,
+          verificationMethod: [
+            ...(wellKnown.verificationMethod || []),
+            {
+              type: 'Multikey',
+              id: 'did:web:localhost.com#keys-existing',
+              controller: 'did:web:localhost.com',
+              publicKeyMultibase: keyPair.publicKeyMultibase,
+            },
+          ],
+        };
+
+        const duplicatedKeyPair = {
+          ...keyPair,
+          id: 'did:web:localhost.com#keys-4',
+        };
+
+        expect(() =>
+          generateWellKnownDid({
+            wellKnown: existingMultikeyWellKnown,
+            newKeyPair: duplicatedKeyPair,
+          }),
+        ).toThrowError('KeyPair already exists');
+      });
+    });
+
+    describe('generateWellKnownDid - ECDSA-SD-2023', () => {
+      const keyPair = {
+        id: 'did:web:localhost.com#keys-3',
+        type: VerificationType.Multikey,
+        controller: 'did:web:localhost.com',
+        secretKeyMultibase: 'z42twTcNeSYcnqg1FLuSFs2bsGH3ZqbRHFmvS9XMsYhjxvHN',
+        publicKeyMultibase: 'zDnaekGZTbQBerwcehBSXLqAg6s55hVEBms1zFy89VHXtJSa9',
+      };
+      const verificationMethod = _.omit(keyPair, ['secretKeyMultibase']);
+
+      it('should generateWellKnownDid with ECDSA-SD-2023 keyPair', async () => {
+        const result = generateWellKnownDid({
+          newKeyPair: keyPair,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result?.id).toBe(keyPair.controller);
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('verificationMethod');
+        expect(result).toHaveProperty('@context');
+        expect(result).toHaveProperty('assertionMethod');
+        expect(result).toHaveProperty('authentication');
+        expect(result).toHaveProperty('capabilityInvocation');
+        expect(result).toHaveProperty('capabilityDelegation');
+        expect(result?.verificationMethod?.[0]).toMatchObject(verificationMethod);
+        expect(result?.verificationMethod?.[0].type).toBe('Multikey');
+        expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+        expect(result?.['@context']).toContain(VerificationContext[VerificationType.Multikey]);
+      });
+
+      it('should generateWellKnownDid with ECDSA-SD-2023 keyPair and wellKnown', async () => {
+        const result = generateWellKnownDid({
+          wellKnown: wellKnown,
+          newKeyPair: keyPair,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result?.id).toBe(keyPair.controller);
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('verificationMethod');
+        expect(result).toHaveProperty('@context');
+        expect(result).toHaveProperty('assertionMethod');
+        expect(result).toHaveProperty('authentication');
+        expect(result).toHaveProperty('capabilityInvocation');
+        expect(result).toHaveProperty('capabilityDelegation');
+        expect(result?.verificationMethod).toHaveLength(3);
+        expect(result?.verificationMethod?.[result?.verificationMethod?.length - 1]).toMatchObject(
+          verificationMethod,
+        );
+        expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+        expect(result?.['@context']).toContain(VerificationContext[VerificationType.Multikey]);
+      });
+
+      it('should fail to generateWellKnownDid with same publicKeyMultibase as wellKnown - ECDSA-SD-2023', async () => {
+        const existingMultikeyWellKnown = {
+          ...wellKnown,
+          verificationMethod: [
+            ...(wellKnown.verificationMethod || []),
+            {
+              type: 'Multikey',
+              id: 'did:web:localhost.com#keys-existing',
+              controller: 'did:web:localhost.com',
+              publicKeyMultibase: keyPair.publicKeyMultibase,
+            },
+          ],
+        };
+
+        const duplicatedKeyPair = {
+          ...keyPair,
+          id: 'did:web:localhost.com#keys-4',
+        };
+
+        expect(() =>
+          generateWellKnownDid({
+            wellKnown: existingMultikeyWellKnown,
+            newKeyPair: duplicatedKeyPair,
+          }),
+        ).toThrowError('KeyPair already exists');
+      });
+    });
+
+    describe('generateWellKnownDid - Mixed Cryptosuites', () => {
+      it('should handle mixed legacy and modern cryptosuites', async () => {
+        const bbsKeyPair = {
+          id: 'did:web:localhost.com#keys-3',
+          type: VerificationType.Multikey,
+          controller: 'did:web:localhost.com',
+          seedBase58: 'CxBwAH4ftdc9XkLhw7DkFAESxh3NEdetMyJXKrPiAKAX',
+          secretKeyMultibase: 'z42twTcNeSYcnqg1FLuSFs2bsGH3ZqbRHFmvS9XMsYhjxvHN',
+          publicKeyMultibase:
+            'zUC724qx4TSVn1zuJAjbaPAzwMhNvjHXvJrg36gEtNjQoKSVqZpG7QfVgsUsV2WrNvTB2p41iF2ZtVruDtwjMtZnyHCFGQov',
+        };
+
+        const result = generateWellKnownDid({
+          wellKnown: wellKnown,
+          newKeyPair: bbsKeyPair,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result?.verificationMethod).toHaveLength(3);
+
+        // Check that all verification method types are present
+        const types = result?.verificationMethod?.map((vm) => vm.type);
+        expect(types).toContain('Bls12381G2Key2020');
+        expect(types).toContain('EcdsaSecp256k1RecoveryMethod2020');
+        expect(types).toContain('Multikey');
+
+        // Check that contexts include both legacy and modern contexts
+        expect(result?.['@context']).toContain('https://www.w3.org/ns/did/v1');
+        expect(result?.['@context']).toContain(
+          VerificationContext[VerificationType.Bls12381G2Key2020],
+        );
+        expect(result?.['@context']).toContain(
+          VerificationContext[VerificationType.EcdsaSecp256k1RecoveryMethod2020],
+        );
+        expect(result?.['@context']).toContain(VerificationContext[VerificationType.Multikey]);
+      });
+    });
   });
 
   describe('nextKeyId', () => {
