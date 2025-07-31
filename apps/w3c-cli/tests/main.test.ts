@@ -291,6 +291,39 @@ describe('w3c-cli', () => {
         true,
       );
 
+      // Mock the issueDID function to return expected structure
+      issueDIDSpy.mockResolvedValue({
+        wellKnownDid: {
+          '@context': [
+            'https://www.w3.org/ns/did/v1',
+            'https://w3id.org/security/suites/bls12381-2020/v1',
+          ],
+          assertionMethod: ['did:web:example.com#keys-1'],
+          authentication: ['did:web:example.com#keys-1'],
+          capabilityDelegation: ['did:web:example.com#keys-1'],
+          capabilityInvocation: ['did:web:example.com#keys-1'],
+          id: 'did:web:example.com',
+          verificationMethod: [
+            {
+              controller: 'did:web:example.com',
+              id: 'did:web:example.com#keys-1',
+              publicKeyBase58:
+                'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
+              type: w3cIssuer.VerificationType.Bls12381G2Key2020,
+            },
+          ],
+        },
+        didKeyPairs: {
+          controller: 'did:web:example.com',
+          id: 'did:web:example.com#keys-1',
+          privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
+          publicKeyBase58:
+            'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
+          seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
+          type: w3cIssuer.VerificationType.Bls12381G2Key2020,
+        },
+      });
+
       await didHandler();
 
       expect(issueDIDSpy).toHaveBeenCalledWith(
@@ -312,7 +345,7 @@ describe('w3c-cli', () => {
             id: 'did:web:example.com#keys-1',
             publicKeyBase58:
               'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
-            type: 'Bls12381G2Key2020',
+            type: w3cIssuer.VerificationType.Bls12381G2Key2020,
           },
         ],
       });
@@ -323,7 +356,7 @@ describe('w3c-cli', () => {
         publicKeyBase58:
           'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
         seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
-        type: 'Bls12381G2Key2020',
+        type: w3cIssuer.VerificationType.Bls12381G2Key2020,
       });
     });
 

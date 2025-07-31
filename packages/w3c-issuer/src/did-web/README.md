@@ -21,22 +21,27 @@ This guide explains how to self-host a Decentralized Identifier (DID) using the 
 ## Step-by-Step Setup
 ### 1. Generate DID Document
 - **Use [`TrustVC W3C Issuer`](../../README.md) to generate your DID Document**: Our tool simplifies the process of creating a compliant DID Document. 
-- **Review your DID Document**: Ensure the generated file contains the required properties, such as `id`, `verificationMethod`, and `authentication`. Here's an example using the `BbsBlsSignature2020` verification method:
+- **Review your DID Document**: Ensure the generated file contains the required properties, such as `id`, `verificationMethod`, and `authentication`. Here's an example using the modern `Multikey` verification method with ECDSA-SD-2023:
 ```json
 {
-  "@context": "https://www.w3.org/ns/did/v1",
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1"
+  ],
   "id": "did:web:yourdomain.com",
   "verificationMethod": [{
     "id": "did:web:yourdomain.com#key-1",
-    "type": "BbsBlsSignature2020",
+    "type": "Multikey",
     "controller": "did:web:yourdomain.com",
-    "publicKeyBase58": "2qz8jVcPgs6xzL5mZHTZGkXQaDe5BsVofLpqqBfAw1Nc"
+    "publicKeyMultibase": "zDnaekGZTbQBerwcehBSXLqAg6s55hVEBms1zFy89VHXtJSa9"
   }],
   "authentication": [
     "did:web:yourdomain.com#key-1"
+  ],
+  "assertionMethod": [
+    "did:web:yourdomain.com#key-1"
   ]
 }
-
 ```
 - **Save the document** as `did.json`.
 ### 2. Host DID Document
