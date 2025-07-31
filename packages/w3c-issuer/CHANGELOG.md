@@ -1,3 +1,10 @@
+# [1.3.0-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.1...@trustvc/w3c-issuer@1.3.0-alpha.1) (2025-07-31)
+
+
+### Features
+
+* add bbs-2023 and ecdsa-sd-2023 key generation and did support ([#67](https://github.com/TrustVC/w3c/issues/67)) ([1ad1690](https://github.com/TrustVC/w3c/commit/1ad1690d39a003434283df429ebb7c176d4da71a))
+
 ## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.2.3...@trustvc/w3c-issuer@1.2.4) (2025-06-13)
 
 

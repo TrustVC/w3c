@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-issuer",
-  "version": "1.2.4",
+  "version": "1.3.0-alpha.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
