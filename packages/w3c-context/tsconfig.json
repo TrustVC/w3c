@@ -4,5 +4,5 @@
     "module": "commonjs"
   },
   "files": [],
-  "include": []
+  "include": ["src/**/*.ts", "../declaration.d.ts"]
 }

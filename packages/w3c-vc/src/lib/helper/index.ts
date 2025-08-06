@@ -6,9 +6,14 @@ import {
   BitstringStatusListCredentialStatus,
   TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
-import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
+import {
+  Bbs2023PrivateKeyPair,
+  BBSPrivateKeyPair,
+  EcdsaSd2023PrivateKeyPair,
+  PrivateKeyPair,
+  VerificationType,
+} from '@trustvc/w3c-issuer';
 import { createHash } from 'crypto';
-// @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { v7 as uuidv7 } from 'uuid';
 import { assertCredentialStatuses } from '../sign/credentialStatus';
@@ -35,12 +40,22 @@ export function _checkKeyPair(keyPair: PrivateKeyPair) {
   if (!keyPair.id) {
     throw new Error('"id" property in keyPair is required.');
   }
+
   if (keyPair.type === VerificationType.Bls12381G2Key2020) {
     if (!(keyPair as BBSPrivateKeyPair).privateKeyBase58) {
       throw new Error('"privateKeyBase58" property in keyPair is required.');
     }
     if (!(keyPair as BBSPrivateKeyPair).publicKeyBase58) {
       throw new Error('"publicKeyBase58" property in keyPair is required.');
+    }
+  } else if (keyPair.type === VerificationType.Multikey) {
+    // For Multikey types (BBS-2023 and ECDSA-SD-2023), check for multibase keys
+    const multikeyPair = keyPair as Bbs2023PrivateKeyPair | EcdsaSd2023PrivateKeyPair;
+    if (!multikeyPair.secretKeyMultibase) {
+      throw new Error('"secretKeyMultibase" property in keyPair is required.');
+    }
+    if (!multikeyPair.publicKeyMultibase) {
+      throw new Error('"publicKeyMultibase" property in keyPair is required.');
     }
   }
 }
@@ -384,15 +399,24 @@ export const _checkCredentialStatus = (
 
 /**
  * Prefills the credential ID with a UUIDv7.
+ * Uses blank node format for BBS+ compatibility and proper URI format for ECDSA-SD-2023.
  * If the credentialStatus is present with type TransferableRecords, set the tokenId.
  *
  * @param {RawVerifiableCredential} credential
+ * @param {string} cryptoSuite - The cryptosuite being used for signing
  * @returns {RawVerifiableCredential}
  */
 export const prefilCredentialId = (
   credential: RawVerifiableCredential,
+  cryptoSuite?: string,
 ): RawVerifiableCredential => {
-  credential.id = `urn:bnid:_:${uuidv7()}`;
+  // Use proper URI format for ECDSA-SD-2023
+  // Use blank node format for BBS+ (maintains backward compatibility)
+  if (cryptoSuite === 'ecdsa-sd-2023') {
+    credential.id = `urn:uuid:${uuidv7()}`;
+  } else {
+    credential.id = `urn:bnid:_:${uuidv7()}`;
+  }
 
   if (credential?.credentialStatus?.type === 'TransferableRecords') {
     credential.credentialStatus = {
