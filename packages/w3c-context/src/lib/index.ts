@@ -130,27 +130,14 @@ export async function getDocumentLoader(
         throw new Error(`Verification method ${did} could not be found.`);
       }
 
-      let result: DocumentLoaderObject;
-
-      if (verificationMethod.type === 'Multikey') {
-        result = {
-          contextUrl: null,
-          document: {
-            '@context': MULTIKEY_V1_URL,
-            ...verificationMethod,
-          },
-          documentUrl: did,
-        };
-      } else {
-        result = {
-          contextUrl: null,
-          document: {
-            '@context': wellKnownDid['@context'],
-            ...verificationMethod,
-          },
-          documentUrl: did,
-        };
-      }
+      const result: DocumentLoaderObject = {
+        contextUrl: null,
+        document: {
+          '@context': wellKnownDid['@context'],
+          ...verificationMethod,
+        },
+        documentUrl: did,
+      };
 
       resultMap.set(did, result);
       return result;
