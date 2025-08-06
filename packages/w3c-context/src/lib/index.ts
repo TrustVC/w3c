@@ -1,6 +1,6 @@
 import { queryDidDocument } from '@trustvc/w3c-issuer';
 import { DocumentLoader, DocumentLoaderObject } from './types';
-import jsonldSignatures from 'jsonld-signatures-v7';
+import jsonldSignaturesV7 from 'jsonld-signatures-v7';
 import attachmentsContext from '../context/attachments-context.json';
 import bbsV1 from '../context/bbs-v1.json';
 import bolContext from '../context/bill-of-lading.json';
@@ -194,5 +194,5 @@ export async function getDocumentLoader(
     return resolveContext;
   };
 
-  return jsonldSignatures.extendContextLoader(customDocLoader);
+  return jsonldSignaturesV7.extendContextLoader(customDocLoader);
 }
