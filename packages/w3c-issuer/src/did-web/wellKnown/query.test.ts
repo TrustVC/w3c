@@ -28,18 +28,23 @@ describe('query', () => {
           "@context": [
             "https://www.w3.org/ns/did/v1",
             "https://w3id.org/security/suites/bls12381-2020/v1",
+            "https://w3id.org/security/multikey/v1",
           ],
           "assertionMethod": [
             "did:web:trustvc.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#multikey-1",
           ],
           "authentication": [
             "did:web:trustvc.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#multikey-1",
           ],
           "capabilityDelegation": [
             "did:web:trustvc.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#multikey-1",
           ],
           "capabilityInvocation": [
             "did:web:trustvc.github.io:did:1#keys-1",
+            "did:web:trustvc.github.io:did:1#multikey-1",
           ],
           "id": "did:web:trustvc.github.io:did:1",
           "verificationMethod": [
@@ -48,6 +53,12 @@ describe('query', () => {
               "id": "did:web:trustvc.github.io:did:1#keys-1",
               "publicKeyBase58": "oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ",
               "type": "Bls12381G2Key2020",
+            },
+            {
+              "controller": "did:web:trustvc.github.io:did:1",
+              "id": "did:web:trustvc.github.io:did:1#multikey-1",
+              "publicKeyMultibase": "zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc",
+              "type": "Multikey",
             },
           ],
         }
