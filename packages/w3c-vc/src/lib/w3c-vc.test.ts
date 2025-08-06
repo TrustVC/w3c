@@ -309,7 +309,9 @@ describe('Credential Signing and Verification', () => {
 
     const verificationResult = await verifyCredential(signedCredential);
     expect(verificationResult.verified).toBe(false);
-    expect(verificationResult.error).equals('Verification method could not be found.');
+    expect(verificationResult.error).equals(
+      'Verification method did:web:trustvc.github.io:did:1#keys-2 could not be found.',
+    );
   });
 });
 

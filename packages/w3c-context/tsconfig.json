@@ -3,6 +3,5 @@
   "compilerOptions": {
     "module": "commonjs"
   },
-  "files": [],
   "include": ["src/**/*.ts", "../declaration.d.ts"]
 }

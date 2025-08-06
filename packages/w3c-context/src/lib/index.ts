@@ -127,7 +127,7 @@ export async function getDocumentLoader(
       const verificationMethod = wellKnownDid.verificationMethod?.find((vm) => vm.id === did);
 
       if (!verificationMethod) {
-        throw new Error(`Verification method could not be found.`);
+        throw new Error(`Verification method ${did} could not be found.`);
       }
 
       let result: DocumentLoaderObject;
@@ -136,7 +136,7 @@ export async function getDocumentLoader(
         result = {
           contextUrl: null,
           document: {
-            '@context': 'https://w3id.org/security/multikey/v1',
+            '@context': MULTIKEY_V1_URL,
             ...verificationMethod,
           },
           documentUrl: did,
