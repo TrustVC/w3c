@@ -1,4 +1,5 @@
 import { BbsBlsSignature2020, BbsBlsSignatureProof2020 } from '@mattrglobal/jsonld-signatures-bbs';
+import { DataIntegrityProof } from '@digitalbazaar/data-integrity';
 
 // Define the type for the signing result
 export interface SigningResult {
@@ -56,12 +57,13 @@ export type SignedVerifiableCredential = {
 
 export type RawVerifiableCredential = Omit<SignedVerifiableCredential, 'proof'>;
 
-export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020';
+export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020' | 'DataIntegrityProof';
 
 export const proofTypeMapping: Record<
   ProofType,
-  typeof BbsBlsSignature2020 | typeof BbsBlsSignatureProof2020
+  typeof BbsBlsSignature2020 | typeof BbsBlsSignatureProof2020 | typeof DataIntegrityProof
 > = {
   BbsBlsSignature2020: BbsBlsSignature2020,
   BbsBlsSignatureProof2020: BbsBlsSignatureProof2020,
+  DataIntegrityProof: DataIntegrityProof,
 };

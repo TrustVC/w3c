@@ -1,6 +1,6 @@
 # TrustVC W3C VC
 
-This repository provides utilities for signing and verifying Verifiable Credentials (VCs) using the BBS+ signature scheme. These functions can be used to ensure the authenticity and integrity of VCs within a W3C-compliant ecosystem.
+This repository provides utilities for signing and verifying Verifiable Credentials (VCs) using multiple signature schemes including BBS+ and ECDSA-SD-2023. These functions can be used to ensure the authenticity and integrity of VCs within a W3C-compliant ecosystem.
 
 ## Installation
 To install the package, use:
@@ -11,13 +11,17 @@ npm install @trustvc/w3c-vc
 
 ## Feature
 - Sign and Verify for BBS+ signature for W3C VC
+- Sign and Verify for ECDSA-SD-2023 signature for W3C VC with selective disclosure
 - Derive a new VC with selective disclosure using BBS+ signature
+- Derive a new VC with selective disclosure using ECDSA-SD-2023 signature
 - Checks if payload matches W3C VC schema
 
 ## Usage
 ### 1. Signing a Credential
 
-The signCredential function allows you to sign a Verifiable Credential using the BBS+ signature scheme.
+The signCredential function allows you to sign a Verifiable Credential using either BBS+ or ECDSA-SD-2023 signature schemes.
+
+#### BBS+ Signing (Default)
 
 ```ts
 import { signCredential } from '@trustvc/w3c-vc';
@@ -79,46 +83,52 @@ if (signedCredential.signed) {
 }
 ```
 
-<details>
-  <summary>signCredential Result</summary>
+#### ECDSA-SD-2023 Signing
 
-  ```js
-  Signed Credential: {
-    '@context': [
-      'https://www.w3.org/2018/credentials/v1',
-      'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
-      'https://w3id.org/security/bbs/v1',
-      'https://w3id.org/vc/status-list/2021/v1'
-    ],
-    credentialStatus: {
-      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-      statusListIndex: '1',
-      statusPurpose: 'revocation',
-      type: 'StatusList2021Entry'
-    },
-    issuanceDate: '2024-04-01T12:19:52Z',
-    credentialSubject: {
-      id: 'did:example:b34ca6cd37bbf23',
-      type: [ 'Person' ],
-      name: 'TrustVC'
-    },
-    expirationDate: '2029-12-03T12:19:52Z',
-    issuer: 'did:web:trustvc.github.io:did:1',
-    type: [ 'VerifiableCredential' ],
-    proof: {
-      type: 'BbsBlsSignature2020',
-      created: '2024-10-02T09:04:07Z',
-      proofPurpose: 'assertionMethod',
-      proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
-      verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
-    }
-  }
-  ```
-</details>
+```ts
+import { signCredential } from '@trustvc/w3c-vc';
+
+const ecdsaKeyPair = {
+  "id": "did:web:trustvc.github.io:did:1#multikey-1",
+  "type": "Multikey",
+  "controller": "did:web:trustvc.github.io:did:1",
+  "secretKeyMultibase": "<secretKeyMultibase>",
+  "publicKeyMultibase": "zDnaekGZTbQBerwcehBSXLqAg6s55hVEBms1zFy89VHXtJSa9"
+};
+
+const credential = {
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/data-integrity/v2"
+  ],
+  "issuanceDate": "2024-04-01T12:19:52Z",
+  "credentialSubject": {
+    "id": "did:example:b34ca6cd37bbf23",
+    "type": ["Person"],
+    "name": "TrustVC",
+    "billOfLadingName": "Acme Corp"
+  },
+  "expirationDate": "2029-12-03T12:19:52Z",
+  "issuer": "did:web:trustvc.github.io:did:1",
+  "type": ["VerifiableCredential"]
+};
+
+// Sign with mandatory pointers (always included in derived credentials)
+const signedCredential = await signCredential(credential, ecdsaKeyPair, 'ecdsa-sd-2023', {
+  mandatoryPointers: ['/credentialSubject/id', '/credentialSubject/type']
+});
+
+if (signedCredential.signed) {
+  console.log('Signed Credential:', signedCredential.signed);
+} else {
+  console.error('Error:', signedCredential.error);
+}
+```
 
 ### 2. Verifying a Credential
-The verifyCredential function allows you to verify a signed Verifiable Credential using the BBS+ signature scheme.
+The verifyCredential function allows you to verify a signed Verifiable Credential using BBS+ or ECDSA-SD-2023 signature schemes.
+
+#### BBS+ Verification
 
 ```ts
 import { verifyCredential } from '@trustvc/w3c-vc';
@@ -174,17 +184,52 @@ if (verificationResult.verified) {
 }
 ```
 
-<details>
-  <summary>verifyCredential Result</summary>
+#### ECDSA-SD-2023 Verification
 
-  ```js
-  Credential verified successfully.
-  ```
-</details>
+> **Note**: For ECDSA-SD-2023 credentials with selective disclosure, you typically need to derive the credential first using `deriveCredential()` before verification. The example below shows verification of a base credential.
+
+```ts
+import { verifyCredential } from '@trustvc/w3c-vc';
+
+const ecdsaCredential = {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3id.org/security/data-integrity/v2'
+  ],
+  issuanceDate: '2024-04-01T12:19:52Z',
+  credentialSubject: {
+    id: 'did:example:b34ca6cd37bbf23',
+    type: ['Person'],
+    name: 'TrustVC',
+    billOfLadingName: 'Acme Corp'
+  },
+  expirationDate: '2029-12-03T12:19:52Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  type: ['VerifiableCredential'],
+  proof: {
+    type: 'DataIntegrityProof',
+    cryptosuite: 'ecdsa-sd-2023',
+    created: '2024-10-02T09:04:07Z',
+    proofPurpose: 'assertionMethod',
+    proofValue: 'z...',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#multikey-1'
+  }
+};
+
+const verificationResult = await verifyCredential(ecdsaCredential);
+
+if (verificationResult.verified) {
+  console.log('ECDSA-SD-2023 Credential verified successfully.');
+} else {
+  console.error('Verification failed:', verificationResult.error);
+}
+```
 
 ### 3. Deriving a Credential
 
-The deriveCredential function allows you to derive a new credential with selective disclosure using the BBS+ signature proof.
+The deriveCredential function allows you to derive a new credential with selective disclosure using either BBS+ or ECDSA-SD-2023 signature schemes.
+
+#### BBS+ Selective Disclosure
 
 ```ts
 import { deriveCredential } from '@trustvc/w3c-vc';
@@ -255,44 +300,58 @@ if (derivedResult.derived) {
 }
 ```
 
-<details>
-  <summary>deriveCredential Result</summary>
+#### ECDSA-SD-2023 Selective Disclosure
 
-  ```js
-  Derived Credential: {
-    '@context': [
-      'https://www.w3.org/2018/credentials/v1',
-      'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
-      'https://w3id.org/security/bbs/v1',
-      'https://w3id.org/vc/status-list/2021/v1'
-    ],
-    credentialStatus: {
-      id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-      statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-      statusListIndex: '1',
-      statusPurpose: 'revocation',
-      type: 'StatusList2021Entry'
-    },
-    issuanceDate: '2024-04-01T12:19:52Z',
-    credentialSubject: {
-      id: 'did:example:b34ca6cd37bbf23',
-      type: [ 'Person' ]
-    },
-    expirationDate: '2029-12-03T12:19:52Z',
-    issuer: 'did:web:trustvc.github.io:did:1',
-    id: 'urn:bnid:_:c14n0',
-    type: [ 'VerifiableCredential' ],
-    proof: {
-      type: 'BbsBlsSignatureProof2020',
-      created: '2024-10-02T09:04:07Z',
-      nonce: 'YsFIiujnENBLMsuuXhyctszyGC72SLqiOvlT8OcvSOD6eDcehcGJgbTx5k+tfK00K5M=',
-      proofPurpose: 'assertionMethod',
-      proofValue: 'ABAA/++QJhxxPdA340RTSEwPfgmB1Z3kUnhOCE4ReITG6nSNhHvZxdP24jsvBUzyecIArsS2FZdgscCNVP2K2LvEXJteLh/pDjOVsTMOyuVuDaOPYclXxOJR4D3UQtL0DFhu4wC0NaZ+NXV8j1xG/zyJ+lzn4jrKaPhHyuySKFjCZnlQNVx01Cm3pKzgL94GdKsXsEsAAAB0p7aO6wVq4hcyOKmEK4UALxZHTIMet/QMoVlHI017QSQi8hHu+hnGEmmmpuyluTgrAAAAAnIbawi/noqB4Fb+Q3C8ck73LxWVeqBrisWfadhCfep0FVRp/l2McLCsr9mfcDwhFpDoPfh8jza82Mk0s15Q9J+LwH39CGtwjatgL22bM4Ulnwe+GsyYoOgcN6vbtkmYdw7TNJ+H76mRq1K82vDJ6sQAAAADDUVU/P0Exnz7Dvs5V0rSHEur/ySddDgjU7cZZVRjTARzCr7xpcs/yd9W6FGzvxDSIqwTjBgnah9I6v4QDOAdvVyjoZ+Joppjt1rIER9AYXxIN++wCqQtWqaC/X7jPtPb',
-      verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
-    }
+```ts
+import { deriveCredential } from '@trustvc/w3c-vc';
+
+/**
+ * Parameters:
+ * - credential (SignedVerifiableCredential): The verifiable credential to be selectively disclosed.
+ * - revealedAttributes (string[]): Array of JSON pointers specifying which fields to reveal.
+ * 
+ * Returns:
+ * - A Promise that resolves to:
+ *   - derived (DerivedProof): The selectively disclosed credential with the derived proof.
+ *   - error (string): The error message in case of failure.
+ */
+
+const ecdsaCredential = {
+  '@context': [
+    'https://www.w3.org/2018/credentials/v1',
+    'https://w3id.org/security/data-integrity/v2'
+  ],
+  issuanceDate: '2024-04-01T12:19:52Z',
+  credentialSubject: {
+    id: 'did:example:b34ca6cd37bbf23',
+    type: ['Person'],
+    name: 'TrustVC',
+    billOfLadingName: 'Acme Corp'
+  },
+  expirationDate: '2029-12-03T12:19:52Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  type: ['VerifiableCredential'],
+  proof: {
+    type: 'DataIntegrityProof',
+    cryptosuite: 'ecdsa-sd-2023',
+    created: '2024-10-02T09:04:07Z',
+    proofPurpose: 'assertionMethod',
+    proofValue: 'z...',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#multikey-1'
   }
-  ```
-</details>
+};
+
+// Reveal only the billOfLadingName field (mandatory pointers are always included)
+const selectivePointers = ['/credentialSubject/billOfLadingName'];
+
+const derivedResult = await deriveCredential(ecdsaCredential, selectivePointers);
+
+if (derivedResult.derived) {
+  console.log('Derived ECDSA-SD-2023 Credential:', derivedResult.derived);
+} else {
+  console.error('Error:', derivedResult.error);
+}
+```
 
 ### 4. Validate if payload meets the schema
 
@@ -316,4 +375,3 @@ console.log('isRawDocument', result1);
 
 const result2 = isSignedDocument(document);
 console.log('isSignedDocument', result2);
-```

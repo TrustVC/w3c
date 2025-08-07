@@ -10,7 +10,8 @@
     },
     "include": [
       "src/**/*.ts",
-      "src/**/*.json"
+      "src/**/*.json",
+      "../declaration.d.ts"
     ],
     "exclude": ["node_modules", ".coverage", "src/**/*.spec.ts", "src/**/*.test.ts"]
   }

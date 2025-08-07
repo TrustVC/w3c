@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "did-resolver": "^4.1.0",
-    "jsonld-signatures": "^7.0.0"
+    "jsonld-signatures-v7": "npm:jsonld-signatures@7.0.0"
   },
   "repository": {
     "type": "git",

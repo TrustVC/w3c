@@ -1,7 +1,6 @@
 import { queryDidDocument } from '@trustvc/w3c-issuer';
 import { DocumentLoader, DocumentLoaderObject } from './types';
-// @ts-ignore: No types available for jsonld-signatures
-import jsonldSignatures from 'jsonld-signatures';
+import jsonldSignaturesV7 from 'jsonld-signatures-v7';
 import attachmentsContext from '../context/attachments-context.json';
 import bbsV1 from '../context/bbs-v1.json';
 import bolContext from '../context/bill-of-lading.json';
@@ -121,15 +120,38 @@ export async function getDocumentLoader(
 
   const resolveDid = async (did: string) => {
     const { wellKnownDid } = await queryDidDocument({ did });
-    const result: DocumentLoaderObject = {
-      contextUrl: null,
-      document: wellKnownDid,
-      documentUrl: did,
-    };
 
-    resultMap.set(did, result);
+    // Check if the DID includes a fragment (verification method ID)
+    if (did.includes('#')) {
+      // This is a verification method ID, find the specific verification method
+      const verificationMethod = wellKnownDid.verificationMethod?.find((vm) => vm.id === did);
 
-    return result;
+      if (!verificationMethod) {
+        throw new Error(`Verification method ${did} could not be found.`);
+      }
+
+      const result: DocumentLoaderObject = {
+        contextUrl: null,
+        document: {
+          '@context': wellKnownDid['@context'],
+          ...verificationMethod,
+        },
+        documentUrl: did,
+      };
+
+      resultMap.set(did, result);
+      return result;
+    } else {
+      // This is a DID document request, return the full document
+      const result: DocumentLoaderObject = {
+        contextUrl: null,
+        document: wellKnownDid,
+        documentUrl: did,
+      };
+
+      resultMap.set(did, result);
+      return result;
+    }
   };
 
   const customDocLoader = async (url: string) => {
@@ -159,5 +181,5 @@ export async function getDocumentLoader(
     return resolveContext;
   };
 
-  return jsonldSignatures.extendContextLoader(customDocLoader);
+  return jsonldSignaturesV7.extendContextLoader(customDocLoader);
 }
