@@ -1,3 +1,10 @@
+# [1.3.0-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.1...@trustvc/w3c-context@1.3.0-alpha.2) (2025-08-07)
+
+
+### Features
+
+* add ecdsa-sd-2023 support ([#68](https://github.com/TrustVC/w3c/issues/68)) ([20d5e69](https://github.com/TrustVC/w3c/commit/20d5e69328f60c34dd210c12734604b59f457030))
+
 # [1.3.0-alpha.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.2.3-alpha.2...@trustvc/w3c-context@1.3.0-alpha.1) (2025-07-31)
 
 
