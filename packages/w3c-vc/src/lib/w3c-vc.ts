@@ -69,6 +69,25 @@ export const isSignedDocument = (
 };
 
 /**
+ * Checks if a proof value represents a base (non-derived) ECDSA-SD-2023 credential
+ * @param {string} proofValue - The proof value string to check
+ * @returns {boolean} - true if this is a base proof, false otherwise
+ */
+const isEcdsaSdBaseProof = (proofValue: string): boolean => {
+  try {
+    if (!proofValue || !proofValue.startsWith('u')) {
+      return false;
+    }
+    // Decode to check the structure
+    const decoded = Buffer.from(proofValue.slice(1), 'base64url');
+    // Check if it has the base proof header (0xd9, 0x5d, 0x00)
+    return decoded.length >= 3 && decoded[0] === 0xd9 && decoded[1] === 0x5d && decoded[2] === 0x00;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
  * @param {object} keyPair - The key pair options for signing.
@@ -203,27 +222,12 @@ export const verifyCredential = async (
 
         if (cryptosuite === 'ecdsa-sd-2023') {
           // Check if this is a base credential (non-derived) by examining the proofValue structure
-          try {
-            const proofValueStr = proof.proofValue as string;
-            if (proofValueStr && proofValueStr.startsWith('u')) {
-              // Decode to check the structure
-              const decoded = Buffer.from(proofValueStr.slice(1), 'base64url');
-              // Check if it has the base proof header (0xd9, 0x5d, 0x00)
-              if (
-                decoded.length >= 3 &&
-                decoded[0] === 0xd9 &&
-                decoded[1] === 0x5d &&
-                decoded[2] === 0x00
-              ) {
-                // This is a base proof - ECDSA-SD-2023 base credentials require derivation before verification
-                return {
-                  verified: false,
-                  error: `${cryptosuite} base credentials must be derived before verification. Use deriveCredential() first.`,
-                };
-              }
-            }
-          } catch (parseError) {
-            // If we can't parse the proofValue, proceed with normal verification
+          if (isEcdsaSdBaseProof(proof.proofValue as string)) {
+            // This is a base proof - ECDSA-SD-2023 base credentials require derivation before verification
+            return {
+              verified: false,
+              error: `${cryptosuite} base credentials must be derived before verification. Use deriveCredential() first.`,
+            };
           }
 
           verificationResult = await jsonldSignatures.verify(credential, {
@@ -314,27 +318,7 @@ export const deriveCredential = async (
 
       if (cryptosuite === 'ecdsa-sd-2023') {
         // Check if this is already a derived credential by examining the proofValue structure
-        try {
-          // Try to parse as base proof - if this fails, it's likely a derived credential
-          const proofValueStr = proof.proofValue as string;
-          if (proofValueStr && proofValueStr.startsWith('u')) {
-            // Decode to check the structure
-            const decoded = Buffer.from(proofValueStr.slice(1), 'base64url');
-            // Check if it has the base proof header (0xd9, 0x5d, 0x00)
-            if (
-              decoded.length >= 3 &&
-              decoded[0] === 0xd9 &&
-              decoded[1] === 0x5d &&
-              decoded[2] === 0x00
-            ) {
-              // This appears to be a base proof, proceed with derivation
-            } else {
-              return {
-                error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
-              };
-            }
-          }
-        } catch (parseError) {
+        if (!isEcdsaSdBaseProof(proof.proofValue as string)) {
           return {
             error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
           };

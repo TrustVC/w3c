@@ -117,6 +117,17 @@ function assertDateString({
 }
 
 /**
+ * Retrieves the first value from the `@context` property of a Verifiable Credential.
+ *
+ * @param {object} credential - The Verifiable Credential object from which to extract the context.
+ * @returns {string} The first context value as a string.
+ */
+function getFirstContext(credential: VerifiableCredential): string {
+  const v = jsonld.getValues(credential, '@context');
+  return (Array.isArray(v) && v.length ? v[0] : credential['@context']) as string;
+}
+
+/**
  * Checks if the first element of the '@context' field in the credential is the expected value.
  * Returns true if the context is valid, otherwise false.
  *
@@ -124,13 +135,13 @@ function assertDateString({
  * @throws {Error} If the context is invalid.
  */
 function assertCredentialContext(credential: VerifiableCredential): void {
-  const firstContext = credential['@context'][0];
+  const firstContext = getFirstContext(credential);
   if (
     firstContext !== CredentialContextVersion.v1 &&
     firstContext !== CredentialContextVersion.v2
   ) {
     throw new Error(
-      `The first element of '@context' must be either '${CredentialContextVersion.v1}' (v1.1) or '${CredentialContextVersion.v2}' (v2.0)'`,
+      `The first element of '@context' must be either '${CredentialContextVersion.v1}' (v1.1) or '${CredentialContextVersion.v2}' (v2.0).`,
     );
   }
 }
@@ -186,7 +197,7 @@ export function _checkCredential<T extends VerifiableCredential>(
   }
 
   // Validate date fields - support both v1.1 and v2.0 formats
-  const firstContext = credential['@context'][0];
+  const firstContext = getFirstContext(credential);
   const isV2 = firstContext === CredentialContextVersion.v2;
 
   if (isV2) {
