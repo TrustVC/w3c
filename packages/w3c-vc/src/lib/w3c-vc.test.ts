@@ -602,7 +602,7 @@ describe.each(ecdsaTestScenarios)(
       const signedCredential = await signCredential(
         testCredential,
         ecdsaKeyPair,
-        'unsupported-suite',
+        'unsupported-suite' as any,
       );
       expect(signedCredential.signed).toBeUndefined();
       expect(signedCredential.error).toBeDefined();

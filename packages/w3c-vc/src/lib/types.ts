@@ -57,6 +57,8 @@ export type SignedVerifiableCredential = {
 
 export type RawVerifiableCredential = Omit<SignedVerifiableCredential, 'proof'>;
 
+export type CryptoSuiteName = 'BbsBlsSignature2020' | 'bbs-2023' | 'ecdsa-sd-2023';
+
 export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020' | 'DataIntegrityProof';
 
 export const proofTypeMapping: Record<

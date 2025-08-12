@@ -122,7 +122,7 @@ function assertDateString({
  * @param {object} credential - The Verifiable Credential object from which to extract the context.
  * @returns {string} The first context value as a string.
  */
-function getFirstContext(credential: VerifiableCredential): string {
+export function getFirstContext(credential: VerifiableCredential): string {
   const v = jsonld.getValues(credential, '@context');
   return (Array.isArray(v) && v.length ? v[0] : credential['@context']) as string;
 }

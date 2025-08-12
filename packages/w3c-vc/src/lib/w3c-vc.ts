@@ -18,8 +18,9 @@ import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import jsonldSignatures from 'jsonld-signatures';
 import jsonldSignaturesV7 from 'jsonld-signatures-v7';
 import * as jsonld from 'jsonld';
-import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
+import { _checkCredential, _checkKeyPair, getFirstContext, prefilCredentialId } from './helper';
 import {
+  CryptoSuiteName,
   DerivedResult,
   ProofType,
   proofTypeMapping,
@@ -53,6 +54,22 @@ export const isRawDocument = (document: RawVerifiableCredential | unknown): bool
 };
 
 /**
+ * Checks if the input document is a valid raw credential with context version 1.1.
+ * @param {RawVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid raw credential and uses v1.1 context, otherwise false.
+ */
+export const isRawDocumentV1_1 = (document: RawVerifiableCredential | unknown): boolean =>
+  isRawDocument(document) && getFirstContext(document) === CredentialContextVersion.v1;
+
+/**
+ * Checks if the input document is a valid raw credential with context version 2.0.
+ * @param {RawVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid raw credential and uses v2.0 context, otherwise false.
+ */
+export const isRawDocumentV2_0 = (document: RawVerifiableCredential | unknown): boolean =>
+  isRawDocument(document) && getFirstContext(document) === CredentialContextVersion.v2;
+
+/**
  * Checks if the input document is a signed credential.
  * @param {SignedVerifiableCredential | unknown} document - The signed credential to be checked.
  * @returns {boolean} - Returns true if the document is a signed credential, false otherwise.
@@ -67,6 +84,26 @@ export const isSignedDocument = (
   }
   return typeof document === 'object' && 'proof' in document;
 };
+
+/**
+ * Checks if the input document is a valid signed credential with context version 1.1.
+ * @param {SignedVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid signed credential and uses v1.1 context, otherwise false.
+ */
+export const isSignedDocumentV1_1 = (
+  document: SignedVerifiableCredential | unknown,
+): document is SignedVerifiableCredential =>
+  isSignedDocument(document) && getFirstContext(document) === CredentialContextVersion.v1;
+
+/**
+ * Checks if the input document is a valid signed credential with context version 2.0.
+ * @param {SignedVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid signed credential and uses v2.0 context, otherwise false.
+ */
+export const isSignedDocumentV2_0 = (
+  document: SignedVerifiableCredential | unknown,
+): document is SignedVerifiableCredential =>
+  isSignedDocument(document) && getFirstContext(document) === CredentialContextVersion.v2;
 
 /**
  * Checks if a proof value represents a base (non-derived) ECDSA-SD-2023 credential
@@ -98,7 +135,7 @@ const isEcdsaSdBaseProof = (proofValue: string): boolean => {
 export const signCredential = async (
   credential: RawVerifiableCredential,
   keyPair: PrivateKeyPair,
-  cryptoSuite = 'BbsBlsSignature2020',
+  cryptoSuite: CryptoSuiteName = 'BbsBlsSignature2020',
   options?: {
     documentLoader?: DocumentLoader;
     mandatoryPointers?: string[];
