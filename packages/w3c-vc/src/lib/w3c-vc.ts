@@ -8,7 +8,12 @@ import {
 import * as EcdsaMultikey from '@digitalbazaar/ecdsa-multikey';
 import * as ecdsaSd2023Cryptosuite from '@digitalbazaar/ecdsa-sd-2023-cryptosuite';
 import { DataIntegrityProof } from '@digitalbazaar/data-integrity';
-import { ContextDocument, DocumentLoader, getDocumentLoader } from '@trustvc/w3c-context';
+import {
+  ContextDocument,
+  CredentialContextVersion,
+  DocumentLoader,
+  getDocumentLoader,
+} from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import jsonldSignatures from 'jsonld-signatures';
 import jsonldSignaturesV7 from 'jsonld-signatures-v7';
@@ -106,8 +111,30 @@ export const signCredential = async (
       // Import the key pair object into a usable signer instance
       const ecdsaKeyPair = await EcdsaMultikey.from({ ...keyPair });
 
-      // Default mandatory pointers for selective disclosure
-      const mandatoryPointers = options?.mandatoryPointers || [];
+      // Determine required mandatory pointers based on credential format
+      const firstContext = credential['@context'][0];
+      const isV2 = firstContext === CredentialContextVersion.v2;
+
+      // Core mandatory pointers for fields required for credential validity
+      const coreMandatoryPointers = ['/issuer'];
+
+      // Add date field pointer based on credential version
+      if (isV2) {
+        // For v2.0, validFrom is optional but if present should be mandatory for consistency
+        if (credential.validFrom) {
+          coreMandatoryPointers.push('/validFrom');
+        }
+      } else {
+        // For v1.1, issuanceDate is required
+        coreMandatoryPointers.push('/issuanceDate');
+      }
+
+      // Combine core mandatory pointers with user-provided ones, ensuring core fields are always included
+      const userMandatoryPointers = options?.mandatoryPointers || [];
+      const mandatoryPointers = [
+        ...coreMandatoryPointers,
+        ...userMandatoryPointers.filter((pointer) => !coreMandatoryPointers.includes(pointer)),
+      ];
 
       // Create the DataIntegrityProof suite using the ECDSA-SD cryptosuite
       const suite = new DataIntegrityProof({
@@ -175,6 +202,30 @@ export const verifyCredential = async (
         const cryptosuite = proof.cryptosuite;
 
         if (cryptosuite === 'ecdsa-sd-2023') {
+          // Check if this is a base credential (non-derived) by examining the proofValue structure
+          try {
+            const proofValueStr = proof.proofValue as string;
+            if (proofValueStr && proofValueStr.startsWith('u')) {
+              // Decode to check the structure
+              const decoded = Buffer.from(proofValueStr.slice(1), 'base64url');
+              // Check if it has the base proof header (0xd9, 0x5d, 0x00)
+              if (
+                decoded.length >= 3 &&
+                decoded[0] === 0xd9 &&
+                decoded[1] === 0x5d &&
+                decoded[2] === 0x00
+              ) {
+                // This is a base proof - ECDSA-SD-2023 base credentials require derivation before verification
+                return {
+                  verified: false,
+                  error: `${cryptosuite} base credentials must be derived before verification. Use deriveCredential() first.`,
+                };
+              }
+            }
+          } catch (parseError) {
+            // If we can't parse the proofValue, proceed with normal verification
+          }
+
           verificationResult = await jsonldSignatures.verify(credential, {
             suite: new DataIntegrityProof({
               cryptosuite: createVerifyCryptosuite(),
@@ -262,6 +313,33 @@ export const deriveCredential = async (
       const cryptosuite = proof.cryptosuite;
 
       if (cryptosuite === 'ecdsa-sd-2023') {
+        // Check if this is already a derived credential by examining the proofValue structure
+        try {
+          // Try to parse as base proof - if this fails, it's likely a derived credential
+          const proofValueStr = proof.proofValue as string;
+          if (proofValueStr && proofValueStr.startsWith('u')) {
+            // Decode to check the structure
+            const decoded = Buffer.from(proofValueStr.slice(1), 'base64url');
+            // Check if it has the base proof header (0xd9, 0x5d, 0x00)
+            if (
+              decoded.length >= 3 &&
+              decoded[0] === 0xd9 &&
+              decoded[1] === 0x5d &&
+              decoded[2] === 0x00
+            ) {
+              // This appears to be a base proof, proceed with derivation
+            } else {
+              return {
+                error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
+              };
+            }
+          }
+        } catch (parseError) {
+          return {
+            error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
+          };
+        }
+
         // For ECDSA-SD-2023, use selective pointers (can be empty array for mandatory-only disclosure)
         if (!Array.isArray(revealedAttributes)) {
           return {
@@ -271,10 +349,23 @@ export const deriveCredential = async (
 
         const selectivePointers = revealedAttributes;
 
+        // Ensure credentialSubject is included if no credentialSubject properties are selected
+        // This maintains credential validity while allowing selective disclosure within credentialSubject
+        const hasCredentialSubjectPointers = selectivePointers.some((pointer) =>
+          pointer.startsWith('/credentialSubject'),
+        );
+
+        let finalSelectivePointers = selectivePointers;
+        if (!hasCredentialSubjectPointers) {
+          // If no credentialSubject properties are selected, include the entire credentialSubject
+          // This ensures the derived credential remains valid per W3C VC specification
+          finalSelectivePointers = [...selectivePointers, '/credentialSubject'];
+        }
+
         // Create the DataIntegrityProof suite for disclosure
         const suite = new DataIntegrityProof({
           cryptosuite: createDiscloseCryptosuite({
-            selectivePointers,
+            selectivePointers: finalSelectivePointers,
           }),
         });
 
