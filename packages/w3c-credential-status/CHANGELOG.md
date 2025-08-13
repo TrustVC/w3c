@@ -1,3 +1,10 @@
+# [1.3.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.2...@trustvc/w3c-credential-status@1.3.0-alpha.3) (2025-08-13)
+
+
+### Features
+
+* add support for w3c vc data model v2 ([#69](https://github.com/TrustVC/w3c/issues/69)) ([e4219ee](https://github.com/TrustVC/w3c/commit/e4219eefbc79fbc7ae7a495f1b989be9b4205e3c))
+
 # [1.3.0-alpha.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.1...@trustvc/w3c-credential-status@1.3.0-alpha.2) (2025-08-07)
 
 
