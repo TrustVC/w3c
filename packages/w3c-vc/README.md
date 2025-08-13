@@ -98,17 +98,17 @@ const ecdsaKeyPair = {
 
 const credential = {
   "@context": [
-    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/ns/credentials/v2",
     "https://w3id.org/security/data-integrity/v2"
   ],
-  "issuanceDate": "2024-04-01T12:19:52Z",
+  "validFrom": "2024-04-01T12:19:52Z",
   "credentialSubject": {
     "id": "did:example:b34ca6cd37bbf23",
     "type": ["Person"],
     "name": "TrustVC",
     "billOfLadingName": "Acme Corp"
   },
-  "expirationDate": "2029-12-03T12:19:52Z",
+  "validUntil": "2029-12-03T12:19:52Z",
   "issuer": "did:web:trustvc.github.io:did:1",
   "type": ["VerifiableCredential"]
 };
@@ -193,17 +193,17 @@ import { verifyCredential } from '@trustvc/w3c-vc';
 
 const ecdsaCredential = {
   '@context': [
-    'https://www.w3.org/2018/credentials/v1',
+    'https://www.w3.org/ns/credentials/v2',
     'https://w3id.org/security/data-integrity/v2'
   ],
-  issuanceDate: '2024-04-01T12:19:52Z',
+  validFrom: '2024-04-01T12:19:52Z',
   credentialSubject: {
     id: 'did:example:b34ca6cd37bbf23',
     type: ['Person'],
     name: 'TrustVC',
     billOfLadingName: 'Acme Corp'
   },
-  expirationDate: '2029-12-03T12:19:52Z',
+  validUntil: '2029-12-03T12:19:52Z',
   issuer: 'did:web:trustvc.github.io:did:1',
   type: ['VerifiableCredential'],
   proof: {
@@ -318,17 +318,17 @@ import { deriveCredential } from '@trustvc/w3c-vc';
 
 const ecdsaCredential = {
   '@context': [
-    'https://www.w3.org/2018/credentials/v1',
+    'https://www.w3.org/ns/credentials/v2',
     'https://w3id.org/security/data-integrity/v2'
   ],
-  issuanceDate: '2024-04-01T12:19:52Z',
+  validFrom: '2024-04-01T12:19:52Z',
   credentialSubject: {
     id: 'did:example:b34ca6cd37bbf23',
     type: ['Person'],
     name: 'TrustVC',
     billOfLadingName: 'Acme Corp'
   },
-  expirationDate: '2029-12-03T12:19:52Z',
+  validUntil: '2029-12-03T12:19:52Z',
   issuer: 'did:web:trustvc.github.io:did:1',
   type: ['VerifiableCredential'],
   proof: {

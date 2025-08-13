@@ -8,13 +8,19 @@ import {
 import * as EcdsaMultikey from '@digitalbazaar/ecdsa-multikey';
 import * as ecdsaSd2023Cryptosuite from '@digitalbazaar/ecdsa-sd-2023-cryptosuite';
 import { DataIntegrityProof } from '@digitalbazaar/data-integrity';
-import { ContextDocument, DocumentLoader, getDocumentLoader } from '@trustvc/w3c-context';
+import {
+  ContextDocument,
+  CredentialContextVersion,
+  DocumentLoader,
+  getDocumentLoader,
+} from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
 import jsonldSignatures from 'jsonld-signatures';
 import jsonldSignaturesV7 from 'jsonld-signatures-v7';
 import * as jsonld from 'jsonld';
-import { _checkCredential, _checkKeyPair, prefilCredentialId } from './helper';
+import { _checkCredential, _checkKeyPair, getFirstContext, prefilCredentialId } from './helper';
 import {
+  CryptoSuiteName,
   DerivedResult,
   ProofType,
   proofTypeMapping,
@@ -48,6 +54,22 @@ export const isRawDocument = (document: RawVerifiableCredential | unknown): bool
 };
 
 /**
+ * Checks if the input document is a valid raw credential with context version 1.1.
+ * @param {RawVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid raw credential and uses v1.1 context, otherwise false.
+ */
+export const isRawDocumentV1_1 = (document: RawVerifiableCredential | unknown): boolean =>
+  isRawDocument(document) && getFirstContext(document) === CredentialContextVersion.v1;
+
+/**
+ * Checks if the input document is a valid raw credential with context version 2.0.
+ * @param {RawVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid raw credential and uses v2.0 context, otherwise false.
+ */
+export const isRawDocumentV2_0 = (document: RawVerifiableCredential | unknown): boolean =>
+  isRawDocument(document) && getFirstContext(document) === CredentialContextVersion.v2;
+
+/**
  * Checks if the input document is a signed credential.
  * @param {SignedVerifiableCredential | unknown} document - The signed credential to be checked.
  * @returns {boolean} - Returns true if the document is a signed credential, false otherwise.
@@ -64,6 +86,45 @@ export const isSignedDocument = (
 };
 
 /**
+ * Checks if the input document is a valid signed credential with context version 1.1.
+ * @param {SignedVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid signed credential and uses v1.1 context, otherwise false.
+ */
+export const isSignedDocumentV1_1 = (
+  document: SignedVerifiableCredential | unknown,
+): document is SignedVerifiableCredential =>
+  isSignedDocument(document) && getFirstContext(document) === CredentialContextVersion.v1;
+
+/**
+ * Checks if the input document is a valid signed credential with context version 2.0.
+ * @param {SignedVerifiableCredential | unknown} document - The document to check.
+ * @returns {boolean} - True if the document is a valid signed credential and uses v2.0 context, otherwise false.
+ */
+export const isSignedDocumentV2_0 = (
+  document: SignedVerifiableCredential | unknown,
+): document is SignedVerifiableCredential =>
+  isSignedDocument(document) && getFirstContext(document) === CredentialContextVersion.v2;
+
+/**
+ * Checks if a proof value represents a base (non-derived) ECDSA-SD-2023 credential
+ * @param {string} proofValue - The proof value string to check
+ * @returns {boolean} - true if this is a base proof, false otherwise
+ */
+const isEcdsaSdBaseProof = (proofValue: string): boolean => {
+  try {
+    if (!proofValue || !proofValue.startsWith('u')) {
+      return false;
+    }
+    // Decode to check the structure
+    const decoded = Buffer.from(proofValue.slice(1), 'base64url');
+    // Check if it has the base proof header (0xd9, 0x5d, 0x00)
+    return decoded.length >= 3 && decoded[0] === 0xd9 && decoded[1] === 0x5d && decoded[2] === 0x00;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
  * @param {object} keyPair - The key pair options for signing.
@@ -74,7 +135,7 @@ export const isSignedDocument = (
 export const signCredential = async (
   credential: RawVerifiableCredential,
   keyPair: PrivateKeyPair,
-  cryptoSuite = 'BbsBlsSignature2020',
+  cryptoSuite: CryptoSuiteName = 'BbsBlsSignature2020',
   options?: {
     documentLoader?: DocumentLoader;
     mandatoryPointers?: string[];
@@ -106,8 +167,30 @@ export const signCredential = async (
       // Import the key pair object into a usable signer instance
       const ecdsaKeyPair = await EcdsaMultikey.from({ ...keyPair });
 
-      // Default mandatory pointers for selective disclosure
-      const mandatoryPointers = options?.mandatoryPointers || [];
+      // Determine required mandatory pointers based on credential format
+      const firstContext = credential['@context'][0];
+      const isV2 = firstContext === CredentialContextVersion.v2;
+
+      // Core mandatory pointers for fields required for credential validity
+      const coreMandatoryPointers = ['/issuer'];
+
+      // Add date field pointer based on credential version
+      if (isV2) {
+        // For v2.0, validFrom is optional but if present should be mandatory for consistency
+        if (credential.validFrom) {
+          coreMandatoryPointers.push('/validFrom');
+        }
+      } else {
+        // For v1.1, issuanceDate is required
+        coreMandatoryPointers.push('/issuanceDate');
+      }
+
+      // Combine core mandatory pointers with user-provided ones, ensuring core fields are always included
+      const userMandatoryPointers = options?.mandatoryPointers || [];
+      const mandatoryPointers = [
+        ...coreMandatoryPointers,
+        ...userMandatoryPointers.filter((pointer) => !coreMandatoryPointers.includes(pointer)),
+      ];
 
       // Create the DataIntegrityProof suite using the ECDSA-SD cryptosuite
       const suite = new DataIntegrityProof({
@@ -175,6 +258,15 @@ export const verifyCredential = async (
         const cryptosuite = proof.cryptosuite;
 
         if (cryptosuite === 'ecdsa-sd-2023') {
+          // Check if this is a base credential (non-derived) by examining the proofValue structure
+          if (isEcdsaSdBaseProof(proof.proofValue as string)) {
+            // This is a base proof - ECDSA-SD-2023 base credentials require derivation before verification
+            return {
+              verified: false,
+              error: `${cryptosuite} base credentials must be derived before verification. Use deriveCredential() first.`,
+            };
+          }
+
           verificationResult = await jsonldSignatures.verify(credential, {
             suite: new DataIntegrityProof({
               cryptosuite: createVerifyCryptosuite(),
@@ -262,6 +354,13 @@ export const deriveCredential = async (
       const cryptosuite = proof.cryptosuite;
 
       if (cryptosuite === 'ecdsa-sd-2023') {
+        // Check if this is already a derived credential by examining the proofValue structure
+        if (!isEcdsaSdBaseProof(proof.proofValue as string)) {
+          return {
+            error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
+          };
+        }
+
         // For ECDSA-SD-2023, use selective pointers (can be empty array for mandatory-only disclosure)
         if (!Array.isArray(revealedAttributes)) {
           return {
@@ -271,10 +370,23 @@ export const deriveCredential = async (
 
         const selectivePointers = revealedAttributes;
 
+        // Ensure credentialSubject is included if no credentialSubject properties are selected
+        // This maintains credential validity while allowing selective disclosure within credentialSubject
+        const hasCredentialSubjectPointers = selectivePointers.some((pointer) =>
+          pointer.startsWith('/credentialSubject'),
+        );
+
+        let finalSelectivePointers = selectivePointers;
+        if (!hasCredentialSubjectPointers) {
+          // If no credentialSubject properties are selected, include the entire credentialSubject
+          // This ensures the derived credential remains valid per W3C VC specification
+          finalSelectivePointers = [...selectivePointers, '/credentialSubject'];
+        }
+
         // Create the DataIntegrityProof suite for disclosure
         const suite = new DataIntegrityProof({
           cryptosuite: createDiscloseCryptosuite({
-            selectivePointers,
+            selectivePointers: finalSelectivePointers,
           }),
         });
 

@@ -117,6 +117,17 @@ function assertDateString({
 }
 
 /**
+ * Retrieves the first value from the `@context` property of a Verifiable Credential.
+ *
+ * @param {object} credential - The Verifiable Credential object from which to extract the context.
+ * @returns {string} The first context value as a string.
+ */
+export function getFirstContext(credential: VerifiableCredential): string {
+  const v = jsonld.getValues(credential, '@context');
+  return (Array.isArray(v) && v.length ? v[0] : credential['@context']) as string;
+}
+
+/**
  * Checks if the first element of the '@context' field in the credential is the expected value.
  * Returns true if the context is valid, otherwise false.
  *
@@ -124,8 +135,14 @@ function assertDateString({
  * @throws {Error} If the context is invalid.
  */
 function assertCredentialContext(credential: VerifiableCredential): void {
-  if (credential['@context'][0] !== CredentialContextVersion.v1) {
-    throw new Error(`The first element of '@context' must be '${CredentialContextVersion.v1}'`);
+  const firstContext = getFirstContext(credential);
+  if (
+    firstContext !== CredentialContextVersion.v1 &&
+    firstContext !== CredentialContextVersion.v2
+  ) {
+    throw new Error(
+      `The first element of '@context' must be either '${CredentialContextVersion.v1}' (v1.1) or '${CredentialContextVersion.v2}' (v2.0).`,
+    );
   }
 }
 
@@ -179,39 +196,80 @@ export function _checkCredential<T extends VerifiableCredential>(
     _validateUriId({ id: issuer, propertyName: 'issuer' });
   }
 
-  // Validate issuanceDate field
-  if (!credential.issuanceDate) {
-    throw new Error('"issuanceDate" property is required.');
-  }
-  assertDateString({ credential, prop: 'issuanceDate' });
+  // Validate date fields - support both v1.1 and v2.0 formats
+  const firstContext = getFirstContext(credential);
+  const isV2 = firstContext === CredentialContextVersion.v2;
 
-  // Ensure issuanceDate has only one value
-  if (jsonld.getValues(credential, 'issuanceDate').length > 1) {
-    throw new Error('"issuanceDate" property can only have one value.');
-  }
+  if (isV2) {
+    // v2.0 format: validFrom is optional, validUntil is optional
+    if ('validFrom' in credential) {
+      assertDateString({ credential, prop: 'validFrom' });
+      if (jsonld.getValues(credential, 'validFrom').length > 1) {
+        throw new Error('"validFrom" property can only have one value.');
+      }
+    }
 
-  // Optionally validate expirationDate field if it exists
-  if ('expirationDate' in credential) {
-    assertDateString({ credential, prop: 'expirationDate' });
+    if ('validUntil' in credential) {
+      assertDateString({ credential, prop: 'validUntil' });
+      if (jsonld.getValues(credential, 'validUntil').length > 1) {
+        throw new Error('"validUntil" property can only have one value.');
+      }
+
+      if (mode === 'verify') {
+        if (now > new Date(credential.validUntil)) {
+          console.warn('Credential has expired.');
+          // throw new Error('Credential has expired.');
+        }
+      }
+    }
+
+    // Check if the current date is before the validFrom date during verification
+    if (mode === 'verify' && credential.validFrom) {
+      const validFromDate = new Date(credential.validFrom);
+      if (now < validFromDate) {
+        throw new Error(
+          `The current date time (${now.toISOString()}) is before the ` +
+            `"validFrom" (${credential.validFrom}).`,
+        );
+      }
+    }
+  } else {
+    // v1.1 format: issuanceDate is required
+    if (!credential.issuanceDate) {
+      throw new Error('"issuanceDate" property is required.');
+    }
+    assertDateString({ credential, prop: 'issuanceDate' });
+
+    // Ensure issuanceDate has only one value
+    if (jsonld.getValues(credential, 'issuanceDate').length > 1) {
+      throw new Error('"issuanceDate" property can only have one value.');
+    }
+
+    // Optionally validate expirationDate field if it exists
+    if ('expirationDate' in credential) {
+      assertDateString({ credential, prop: 'expirationDate' });
+      if (mode === 'verify') {
+        if (now > new Date(credential.expirationDate)) {
+          console.warn('Credential has expired.');
+          // throw new Error('Credential has expired.');
+        }
+      }
+    }
+
+    // Check if the current date is before the issuance date during verification
     if (mode === 'verify') {
-      if (now > new Date(credential.expirationDate)) {
-        console.warn('Credential has expired.');
-        // throw new Error('Credential has expired.');
+      const issuanceDate = new Date(credential.issuanceDate);
+      if (now < issuanceDate) {
+        throw new Error(
+          `The current date time (${now.toISOString()}) is before the ` +
+            `"issuanceDate" (${credential.issuanceDate}).`,
+        );
       }
     }
   }
 
-  // Check if the current date is before the issuance date during verification
+  // Validate proof field for presence and type during verification
   if (mode === 'verify') {
-    const issuanceDate = new Date(credential.issuanceDate);
-    if (now < issuanceDate) {
-      throw new Error(
-        `The current date time (${now.toISOString()}) is before the ` +
-          `"issuanceDate" (${credential.issuanceDate}).`,
-      );
-    }
-
-    // Validate proof field for presence and type during verification
     if (!credential.proof) {
       throw new Error('"proof" property is required.');
     }
