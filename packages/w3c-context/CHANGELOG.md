@@ -1,3 +1,10 @@
+# [1.3.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.3...@trustvc/w3c-context@1.3.0-alpha.4) (2025-08-18)
+
+
+### Bug Fixes
+
+* rendermethod v2 ([#72](https://github.com/TrustVC/w3c/issues/72)) ([3fbc3a3](https://github.com/TrustVC/w3c/commit/3fbc3a332dfe33e56b5d077ff67d6b219e0a3d00))
+
 # [1.3.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.2...@trustvc/w3c-context@1.3.0-alpha.3) (2025-08-13)
 
 
