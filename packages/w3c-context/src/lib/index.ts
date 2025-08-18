@@ -16,6 +16,7 @@ import multikeyV1 from '../context/multikey-v1.json';
 import promissoryNoteContext from '../context/promissory-note.json';
 import qrCodeContext from '../context/qrcode-context.json';
 import renderContext from '../context/render-method-context.json';
+import renderContextV2 from '../context/render-method-context-v2.json';
 import statusList2021V1 from '../context/status-list-2021-v1.json';
 import trContext from '../context/transferable-records-context.json';
 import warehouseReceiptContext from '../context/warehouse-receipt.json';
@@ -33,6 +34,7 @@ export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/
 
 export const TR_CONTEXT_URL = 'https://trustvc.io/context/transferable-records-context.json';
 export const RENDER_CONTEXT_URL = 'https://trustvc.io/context/render-method-context.json';
+export const RENDER_CONTEXT_V2_URL = 'https://trustvc.io/context/render-method-context-v2.json';
 export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-context.json';
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 
@@ -61,6 +63,10 @@ export const trContexts: { [key: string]: Document } = {
 
 export const renderContexts: { [key: string]: Document } = {
   [RENDER_CONTEXT_URL]: renderContext,
+};
+
+export const renderContextsV2: { [key: string]: Document } = {
+  [RENDER_CONTEXT_V2_URL]: renderContextV2,
 };
 
 export const attachmentsContexts: { [key: string]: Document } = {
@@ -103,6 +109,7 @@ export async function getDocumentLoader(
     contexts,
     trContexts,
     renderContexts,
+    renderContextsV2,
     attachmentsContexts,
     qrCodeContexts,
     templateContexts,

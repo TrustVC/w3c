@@ -176,6 +176,7 @@ const ecdsaCredentialV2_0: VerifiableCredential = {
     'https://w3id.org/security/data-integrity/v2',
     'https://w3id.org/vc/status-list/2021/v1',
     'https://trustvc.io/context/transferable-records-context.json',
+    'https://trustvc.io/context/render-method-context-v2.json',
     'https://trustvc.io/context/attachments-context.json',
     'https://trustvc.io/context/qrcode-context.json',
     'https://trustvc.io/context/bill-of-lading.json',
