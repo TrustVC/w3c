@@ -1,3 +1,10 @@
+# [1.3.0-alpha.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.4...@trustvc/w3c-credential-status@1.3.0-alpha.5) (2025-08-18)
+
+
+### Bug Fixes
+
+* rendermethod v2 ([#73](https://github.com/TrustVC/w3c/issues/73)) ([6e1a067](https://github.com/TrustVC/w3c/commit/6e1a06772e23278bd2de6beaaee5ca9adb5608aa))
+
 # [1.3.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.3...@trustvc/w3c-credential-status@1.3.0-alpha.4) (2025-08-18)
 
 
