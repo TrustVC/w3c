@@ -1,3 +1,10 @@
+# [1.3.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.5...@trustvc/w3c-context@1.3.0-alpha.6) (2025-08-19)
+
+
+### Features
+
+* add support for w3c data model 2.0 with bitstring status list and ecdsa ([#75](https://github.com/TrustVC/w3c/issues/75)) ([7fe399e](https://github.com/TrustVC/w3c/commit/7fe399e7b58910912cce4920bab177732791538b))
+
 # [1.3.0-alpha.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.4...@trustvc/w3c-context@1.3.0-alpha.5) (2025-08-18)
 
 
