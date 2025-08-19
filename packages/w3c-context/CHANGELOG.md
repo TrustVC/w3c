@@ -1,3 +1,10 @@
+# [1.3.0-alpha.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.6...@trustvc/w3c-context@1.3.0-alpha.7) (2025-08-19)
+
+
+### Bug Fixes
+
+* expose version detection function ([#76](https://github.com/TrustVC/w3c/issues/76)) ([0cc8941](https://github.com/TrustVC/w3c/commit/0cc8941b9dc8a8a8cac800ad76ec64cfd7e29753))
+
 # [1.3.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.5...@trustvc/w3c-context@1.3.0-alpha.6) (2025-08-19)
 
 
