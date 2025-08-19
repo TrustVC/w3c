@@ -1,16 +1,21 @@
 import {
   BBS_V1_URL,
   CredentialContextVersion,
+  DATA_INTEGRITY_V2_URL,
   STATUS_LIST_2021_CREDENTIAL_URL,
 } from '@trustvc/w3c-context';
 import { PrivateKeyPair } from '@trustvc/w3c-issuer';
-import { _checkCredentialSubjectForStatusList2021Credential } from './BitstringStatusList/assertions';
+import {
+  _checkCredentialSubjectForStatusList2021Credential,
+  _checkCredentialSubjectForBitstringStatusListCredential,
+} from './BitstringStatusList/assertions';
 import {
   VCBitstringCredentialSubjectType,
   VCCredentialStatusType,
 } from './BitstringStatusList/types';
 import {
   CreateVCCredentialStatusOptions,
+  CryptoSuiteName,
   GeneralCredentialStatus,
   RawCredentialStatusVC,
 } from './types';
@@ -34,14 +39,14 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
  * @param {object} options.credentialSubject - The credential subject.
  * @param {PrivateKeyPair} keyPair - The key pair options for signing.
  * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'StatusList2021Credential'.
- * @param {string} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
+ * @param {CryptoSuiteName} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
  * @returns {Promise<RawCredentialStatusVC>}
  */
 export const createCredentialStatusPayload = async (
   options: CreateVCCredentialStatusOptions,
   keyPair: PrivateKeyPair,
   type: VCCredentialStatusType = 'StatusList2021Credential',
-  cryptoSuite = 'BbsBlsSignature2020',
+  cryptoSuite: CryptoSuiteName = 'BbsBlsSignature2020',
 ): Promise<RawCredentialStatusVC> => {
   try {
     const { id, credentialSubject } = options;
@@ -49,6 +54,9 @@ export const createCredentialStatusPayload = async (
     switch (type) {
       case 'StatusList2021Credential':
         _checkCredentialSubjectForStatusList2021Credential(credentialSubject);
+        break;
+      case 'BitstringStatusListCredential':
+        _checkCredentialSubjectForBitstringStatusListCredential(credentialSubject);
         break;
       default:
         throw new Error(`Unsupported type: ${type}`);
@@ -58,12 +66,18 @@ export const createCredentialStatusPayload = async (
       credentialSubject.id = `${id}#list`;
     }
 
-    const context = [CredentialContextVersion.v1];
+    // Determine version based on credential type
+    const isV2 = type === 'BitstringStatusListCredential';
+    const context = [isV2 ? CredentialContextVersion.v2 : CredentialContextVersion.v1];
 
+    // Add cryptosuite-specific contexts
     if (cryptoSuite === 'BbsBlsSignature2020') {
       context.push(BBS_V1_URL);
+    } else {
+      context.push(DATA_INTEGRITY_V2_URL);
     }
 
+    // Add status list context only for v1.1 (v2.0 has it built-in)
     if (type === 'StatusList2021Credential') {
       context.push(STATUS_LIST_2021_CREDENTIAL_URL);
     }
@@ -74,8 +88,12 @@ export const createCredentialStatusPayload = async (
       '@context': context,
       type: ['VerifiableCredential', type],
       issuer: keyPair.controller,
-      issuanceDate: new Date().toISOString(),
-      validFrom,
+      ...(isV2
+        ? { validFrom }
+        : {
+            issuanceDate: new Date().toISOString(),
+            validFrom,
+          }),
       credentialSubject,
     };
 
@@ -89,11 +107,13 @@ export const createCredentialStatusPayload = async (
 };
 
 /**
- * Checks if the input credential status is a StatusList2021Credential.
+ * Checks if the input credential status is a StatusList2021Credential / BitstringStatusListCredential.
  * @param {GeneralCredentialStatus} credentialStatus - The credential status to be checked.
- * @returns {boolean} - Returns true if the credential status is a StatusList2021Credential, false otherwise.
+ * @returns {boolean} - Returns true if the credential status is a StatusList2021Credential / BitstringStatusListCredential, false otherwise.
  */
-export const isCredentialStatusStatusList = (credentialStatus: GeneralCredentialStatus) => {
+export const isCredentialStatusStatusList = (
+  credentialStatus: GeneralCredentialStatus,
+): boolean => {
   try {
     assertCredentialStatusStatusListType(credentialStatus?.type);
     return true;
