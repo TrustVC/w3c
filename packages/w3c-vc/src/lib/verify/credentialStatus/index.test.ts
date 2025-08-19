@@ -190,13 +190,10 @@ describe('verifyCredentialStatus', () => {
     expect(status).toBe(true);
 
     // Test with different index to verify it returns false
-    const { status: status2, purpose } = await verifyCredentialStatus(
-      {
-        ...credentialStatus2,
-        statusListIndex: '10',
-      },
-      'BitstringStatusListEntry',
-    );
+    const { status: status2, purpose } = await verifyCredentialStatus({
+      ...credentialStatus2,
+      statusListIndex: '10',
+    });
     expect(status2).toBe(false);
     expect(purpose).toBe('revocation');
   });
