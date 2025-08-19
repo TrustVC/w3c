@@ -125,6 +125,36 @@ const isEcdsaSdBaseProof = (proofValue: string): boolean => {
 };
 
 /**
+ * Extracts mandatory pointers from an ECDSA-SD-2023 base proof value
+ * @param {string} proofValue - The base proof value string
+ * @returns {Promise<string[]>} - Array of mandatory pointers, empty array if extraction fails
+ */
+const extractMandatoryPointers = async (proofValue: string): Promise<string[]> => {
+  try {
+    if (!isEcdsaSdBaseProof(proofValue)) {
+      return [];
+    }
+
+    // Decode the base64url-no-pad-encoded value
+    const decodedProofValue = Buffer.from(proofValue.slice(1), 'base64url');
+
+    // CBOR decode the components after the 3-byte header
+    const cbor = await import('cbor');
+    const components = cbor.decode(decodedProofValue.slice(3));
+
+    // Components array: [baseSignature, publicKey, hmacKey, signatures, mandatoryPointers]
+    if (Array.isArray(components) && components.length === 5) {
+      return components[4] || [];
+    }
+
+    return [];
+  } catch (error) {
+    // If we can't parse the mandatory pointers, return empty array
+    return [];
+  }
+};
+
+/**
  * Signs a credential using the specified cryptosuite. Defaults to 'BbsBlsSignature2020'.
  * @param {object} credential - The credential to be signed.
  * @param {object} keyPair - The key pair options for signing.
@@ -370,15 +400,21 @@ export const deriveCredential = async (
 
         const selectivePointers = revealedAttributes;
 
-        // Ensure credentialSubject is included if no credentialSubject properties are selected
-        // This maintains credential validity while allowing selective disclosure within credentialSubject
-        const hasCredentialSubjectPointers = selectivePointers.some((pointer) =>
+        // Extract mandatory pointers from the base proof
+        const mandatoryPointers = await extractMandatoryPointers(proof.proofValue as string);
+
+        // Check if credentialSubject is already in mandatory pointers or selective pointers
+        const hasCredentialSubjectInMandatory = mandatoryPointers.some((pointer) =>
+          pointer.startsWith('/credentialSubject'),
+        );
+        const hasCredentialSubjectInSelective = selectivePointers.some((pointer) =>
           pointer.startsWith('/credentialSubject'),
         );
 
         let finalSelectivePointers = selectivePointers;
-        if (!hasCredentialSubjectPointers) {
-          // If no credentialSubject properties are selected, include the entire credentialSubject
+        if (!hasCredentialSubjectInMandatory && !hasCredentialSubjectInSelective) {
+          // Only add /credentialSubject if it's not already in mandatory pointers
+          // and no credentialSubject properties are selected
           // This ensures the derived credential remains valid per W3C VC specification
           finalSelectivePointers = [...selectivePointers, '/credentialSubject'];
         }

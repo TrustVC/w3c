@@ -1,0 +1,13 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "EMBEDDED_RENDERER": {
+      "@id": "https://example.org/terms#EmbeddedRenderer",
+      "@context": {
+        "templateName": "https://example.org/terms#templateName"
+      }
+    }
+  }
+}

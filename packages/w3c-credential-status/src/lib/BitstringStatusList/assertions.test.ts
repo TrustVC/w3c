@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   _checkCredentialSubjectForStatusList2021Credential,
+  _checkCredentialSubjectForBitstringStatusListCredential,
   isBoolean,
   isNonNegativeInteger,
   isNumber,
@@ -81,62 +82,103 @@ describe('assertions', () => {
     });
   });
 
-  describe('_checkCredentialSubjectForStatusList2021Credential', () => {
+  describe.each([
+    {
+      functionName: '_checkCredentialSubjectForStatusList2021Credential',
+      testFunction: _checkCredentialSubjectForStatusList2021Credential,
+      expectedType: 'StatusList2021' as const,
+      credentialType: 'StatusList2021Credential',
+      wrongType: 'BitstringStatusList' as const,
+    },
+    {
+      functionName: '_checkCredentialSubjectForBitstringStatusListCredential',
+      testFunction: _checkCredentialSubjectForBitstringStatusListCredential,
+      expectedType: 'BitstringStatusList' as const,
+      credentialType: 'BitstringStatusListCredential',
+      wrongType: 'StatusList2021' as const,
+    },
+  ])('$functionName', ({ testFunction, expectedType, credentialType, wrongType }) => {
     it('should throw if no credentialSubject', () => {
-      expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential(undefined as any),
-      ).toThrowErrorMatchingInlineSnapshot(`[Error: Credential subject must be an object.]`);
+      expect(() => testFunction(undefined as any)).toThrow('Credential subject must be an object.');
     });
 
     it('should throw if no type', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({} as any),
-      ).toThrowErrorMatchingInlineSnapshot(`[Error: Credential subject must have a type.]`);
+        testFunction({
+          statusPurpose: 'revocation',
+          encodedList: 'test',
+        } as any),
+      ).toThrow('Credential subject must have a type.');
     });
+
     it('should throw if wrong type', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({ type: 'test' } as any),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[Error: Invalid type for credentialSubject: Credential subject for StatusList2021Credential must have type "StatusList2021".]`,
+        testFunction({
+          type: wrongType,
+          statusPurpose: 'revocation',
+          encodedList: 'test',
+        } as any),
+      ).toThrow(
+        `Invalid type for credentialSubject: Credential subject for ${credentialType} must have type "${expectedType}".`,
       );
     });
 
     it('should throw if no statusPurpose', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({ type: 'StatusList2021' } as any),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[Error: Credential subject must have a statusPurpose.]`,
-      );
+        testFunction({
+          type: expectedType,
+          encodedList: 'test',
+        } as any),
+      ).toThrow('Credential subject must have a statusPurpose.');
     });
-    it('should throw if wrong statusPurpose', () => {
+
+    it('should throw if invalid statusPurpose', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({
-          type: 'StatusList2021',
+        testFunction({
+          type: expectedType,
+          encodedList: 'test',
           statusPurpose: 'test',
         } as any),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[Error: Unsupported statusPurpose: statusPurpose must be "revocation" or "suspension".]`,
-      );
+      ).toThrow('Unsupported statusPurpose: statusPurpose must be "revocation" or "suspension".');
     });
 
     it('should throw if no encodedList', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({
-          type: 'StatusList2021',
+        testFunction({
+          type: expectedType,
           statusPurpose: 'revocation',
         } as any),
-      ).toThrowErrorMatchingInlineSnapshot(`[Error: Credential subject must have an encodedList.]`);
+      ).toThrow('Credential subject must have an encodedList.');
     });
+
     it('should throw if empty encodedList', () => {
       expect(() =>
-        _checkCredentialSubjectForStatusList2021Credential({
-          type: 'StatusList2021',
+        testFunction({
+          type: expectedType,
           statusPurpose: 'revocation',
           encodedList: '',
         } as any),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[Error: Credential subject must have a non-empty encodedList.]`,
-      );
+      ).toThrow('Credential subject must have a non-empty encodedList.');
+    });
+
+    it('should not throw for valid credential subject with revocation', () => {
+      expect(() =>
+        testFunction({
+          type: expectedType,
+          statusPurpose: 'revocation',
+          encodedList: 'H4sIAAAAAAAAA-3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAIC3AYbSVKsAQAAA',
+        }),
+      ).not.toThrow();
+    });
+
+    it('should not throw for valid credential subject with suspension', () => {
+      expect(() =>
+        testFunction({
+          type: expectedType,
+          statusPurpose: 'suspension',
+          encodedList: 'H4sIAAAAAAAAA-3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAIC3AYbSVKsAQAAA',
+        }),
+      ).not.toThrow();
     });
   });
 });

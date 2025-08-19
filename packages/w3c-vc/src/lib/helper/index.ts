@@ -1,5 +1,6 @@
 import { CredentialContextVersion } from '@trustvc/w3c-context';
 import {
+  assertBitstringStatusListEntry,
   assertCredentialStatusType,
   assertStatusList2021Entry,
   assertTransferableRecords,
@@ -289,8 +290,12 @@ export function _checkCredential<T extends VerifiableCredential>(
       throw new Error('"proof" property is already there.');
     }
 
-    // The "id" is generated programmatically later on
-    if (credential.id) {
+    // The "id" is generated programmatically later on, except for status list credentials which require it
+    const isStatusListCredential = credential.type?.some(
+      (type: string) =>
+        type === 'BitstringStatusListCredential' || type === 'StatusList2021Credential',
+    );
+    if (credential.id && !isStatusListCredential) {
       throw new Error('"id" is a defined field and should not be set by the user.');
     }
   }
@@ -448,6 +453,8 @@ export const _checkCredentialStatus = (
 
   if (type === 'StatusList2021Entry') {
     assertStatusList2021Entry(credentialStatus as BitstringStatusListCredentialStatus);
+  } else if (type === 'BitstringStatusListEntry') {
+    assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
   } else if (type === 'TransferableRecords') {
     assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
   } else {
@@ -468,12 +475,21 @@ export const prefilCredentialId = (
   credential: RawVerifiableCredential,
   cryptoSuite?: string,
 ): RawVerifiableCredential => {
-  // Use proper URI format for ECDSA-SD-2023
-  // Use blank node format for BBS+ (maintains backward compatibility)
-  if (cryptoSuite === 'ecdsa-sd-2023') {
-    credential.id = `urn:uuid:${uuidv7()}`;
+  // Don't overwrite existing id for status list credentials types
+  const isStatusListCredential = credential.type?.some(
+    (type: string) =>
+      type === 'BitstringStatusListCredential' || type === 'StatusList2021Credential',
+  );
+  if (credential.id && isStatusListCredential) {
+    // Keep the existing id for status list credentials
   } else {
-    credential.id = `urn:bnid:_:${uuidv7()}`;
+    // Use proper URI format for ECDSA-SD-2023
+    // Use blank node format for BBS+ (maintains backward compatibility)
+    if (cryptoSuite === 'ecdsa-sd-2023') {
+      credential.id = `urn:uuid:${uuidv7()}`;
+    } else {
+      credential.id = `urn:bnid:_:${uuidv7()}`;
+    }
   }
 
   if (credential?.credentialStatus?.type === 'TransferableRecords') {

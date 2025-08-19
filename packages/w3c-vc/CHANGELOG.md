@@ -1,3 +1,24 @@
+# [1.3.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.5...@trustvc/w3c-vc@1.3.0-alpha.6) (2025-08-19)
+
+
+### Features
+
+* add support for w3c data model 2.0 with bitstring status list and ecdsa ([#75](https://github.com/TrustVC/w3c/issues/75)) ([7fe399e](https://github.com/TrustVC/w3c/commit/7fe399e7b58910912cce4920bab177732791538b))
+
+# [1.3.0-alpha.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.4...@trustvc/w3c-vc@1.3.0-alpha.5) (2025-08-18)
+
+
+### Bug Fixes
+
+* rendermethod v2 ([#73](https://github.com/TrustVC/w3c/issues/73)) ([6e1a067](https://github.com/TrustVC/w3c/commit/6e1a06772e23278bd2de6beaaee5ca9adb5608aa))
+
+# [1.3.0-alpha.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.3...@trustvc/w3c-vc@1.3.0-alpha.4) (2025-08-18)
+
+
+### Bug Fixes
+
+* rendermethod v2 ([#72](https://github.com/TrustVC/w3c/issues/72)) ([3fbc3a3](https://github.com/TrustVC/w3c/commit/3fbc3a332dfe33e56b5d077ff67d6b219e0a3d00))
+
 # [1.3.0-alpha.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.2...@trustvc/w3c-vc@1.3.0-alpha.3) (2025-08-13)
 
 

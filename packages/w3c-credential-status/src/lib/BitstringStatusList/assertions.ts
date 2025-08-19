@@ -76,12 +76,16 @@ export const assertStatusListIndexWithinRange = (
 };
 
 /**
- * Check if the credential subject is valid for a StatusList2021Credential.
+ * Check if the credential subject is valid for the given credential type.
  * @param credentialSubject - The credential subject to be signed.
+ * @param expectedType - The expected credential subject type.
+ * @param credentialType - The credential type for error messages.
  * @throws {Error} - Throws an error if the credential subject is invalid.
  */
-export function _checkCredentialSubjectForStatusList2021Credential(
+export function _checkCredentialSubjectForStatusListCredential(
   credentialSubject: VCBitstringCredentialSubject,
+  expectedType: 'StatusList2021' | 'BitstringStatusList',
+  credentialType: 'StatusList2021Credential' | 'BitstringStatusListCredential',
 ): void {
   // Check if credentialSubject is an object
   if (!credentialSubject) {
@@ -93,9 +97,9 @@ export function _checkCredentialSubjectForStatusList2021Credential(
     throw new Error('Credential subject must have a type.');
   }
   // Check if credentialSubject has the correct type
-  if (credentialSubject.type !== 'StatusList2021') {
+  if (credentialSubject.type !== expectedType) {
     throw new Error(
-      'Invalid type for credentialSubject: Credential subject for StatusList2021Credential must have type "StatusList2021".',
+      `Invalid type for credentialSubject: Credential subject for ${credentialType} must have type "${expectedType}".`,
     );
   }
 
@@ -113,4 +117,34 @@ export function _checkCredentialSubjectForStatusList2021Credential(
   if (!credentialSubject?.encodedList?.length) {
     throw new Error('Credential subject must have a non-empty encodedList.');
   }
+}
+
+/**
+ * Check if the credential subject is valid for a StatusList2021Credential.
+ * @param credentialSubject - The credential subject to be signed.
+ * @throws {Error} - Throws an error if the credential subject is invalid.
+ */
+export function _checkCredentialSubjectForStatusList2021Credential(
+  credentialSubject: VCBitstringCredentialSubject,
+): void {
+  _checkCredentialSubjectForStatusListCredential(
+    credentialSubject,
+    'StatusList2021',
+    'StatusList2021Credential',
+  );
+}
+
+/**
+ * Check if the credential subject is valid for a BitstringStatusListCredential.
+ * @param credentialSubject - The credential subject to be signed.
+ * @throws {Error} - Throws an error if the credential subject is invalid.
+ */
+export function _checkCredentialSubjectForBitstringStatusListCredential(
+  credentialSubject: VCBitstringCredentialSubject,
+): void {
+  _checkCredentialSubjectForStatusListCredential(
+    credentialSubject,
+    'BitstringStatusList',
+    'BitstringStatusListCredential',
+  );
 }
