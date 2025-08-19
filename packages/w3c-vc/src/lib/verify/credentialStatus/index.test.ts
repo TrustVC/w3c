@@ -1,12 +1,12 @@
 import * as w3c_credential_status from '@trustvc/w3c-credential-status';
 import { CredentialStatusPurpose, CredentialStatusType } from '@trustvc/w3c-credential-status';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, afterEach } from 'vitest';
 import { SignedVerifiableCredential } from '../../types';
 import * as w3c_vc from './../../w3c-vc';
 import { verifyCredentialStatus } from './index';
 
 // First 10 (index 0 - 9) position is marked as True.
-const credentialStatusVC: SignedVerifiableCredential = {
+const credentialStatusVC_BBS_V1: SignedVerifiableCredential = {
   '@context': [
     'https://www.w3.org/2018/credentials/v1',
     'https://w3id.org/security/bbs/v1',
@@ -33,7 +33,7 @@ const credentialStatusVC: SignedVerifiableCredential = {
   },
 };
 
-const credentialStatusVC_withInvalidEncodedList = {
+const credentialStatusVC_withInvalidEncodedList: SignedVerifiableCredential = {
   '@context': [
     'https://www.w3.org/2018/credentials/v1',
     'https://w3id.org/security/bbs/v1',
@@ -68,10 +68,22 @@ const credentialStatus = {
   statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
 };
 
+const credentialStatus2 = {
+  id: 'https://trustvc.github.io/did/credentials/statuslist/2#1',
+  type: 'BitstringStatusListEntry' as CredentialStatusType,
+  statusPurpose: 'revocation' as CredentialStatusPurpose,
+  statusListIndex: '5',
+  statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/2',
+};
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('verifyCredentialStatus', () => {
   it('should verify a credential status successfully', async () => {
     vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
-      credentialStatusVC,
+      credentialStatusVC_BBS_V1,
     );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
@@ -95,7 +107,7 @@ describe('verifyCredentialStatus', () => {
 
   it('should return an error if the credential is not verified', async () => {
     vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
-      credentialStatusVC,
+      credentialStatusVC_BBS_V1,
     );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: false });
 
@@ -117,7 +129,7 @@ describe('verifyCredentialStatus', () => {
 
   it('should return an error if statusPurpose does not match the statusPurpose in the VC', async () => {
     vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
-      credentialStatusVC,
+      credentialStatusVC_BBS_V1,
     );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
@@ -161,7 +173,7 @@ describe('verifyCredentialStatus', () => {
 
   it('should return an error if statusListIndex is out of range', async () => {
     vi.spyOn(w3c_credential_status, 'fetchCredentialStatusVC').mockResolvedValue(
-      credentialStatusVC,
+      credentialStatusVC_BBS_V1,
     );
     vi.spyOn(w3c_vc, 'verifyCredential').mockResolvedValue({ verified: true });
 
@@ -171,5 +183,21 @@ describe('verifyCredentialStatus', () => {
     });
 
     expect(error).toBe('Invalid statusListIndex: Index out of range: min=0, max=131071');
+  });
+
+  it('should verify a credential status successfully with ECDSA-SD-2023 and v2.0 context', async () => {
+    const { status } = await verifyCredentialStatus(credentialStatus2);
+    expect(status).toBe(true);
+
+    // Test with different index to verify it returns false
+    const { status: status2, purpose } = await verifyCredentialStatus(
+      {
+        ...credentialStatus2,
+        statusListIndex: '10',
+      },
+      'BitstringStatusListEntry',
+    );
+    expect(status2).toBe(false);
+    expect(purpose).toBe('revocation');
   });
 });

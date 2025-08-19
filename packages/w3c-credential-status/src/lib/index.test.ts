@@ -1,10 +1,14 @@
-import { PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
+import {
+  BBSPrivateKeyPair,
+  EcdsaSd2023PrivateKeyPair,
+  VerificationType,
+} from '@trustvc/w3c-issuer';
 import { describe, expect, it } from 'vitest';
 import { createCredentialStatusPayload } from './index';
 
-const PRIVATE_KEY_PAIR: PrivateKeyPair = {
+const BLS_KEY_PAIR: BBSPrivateKeyPair = {
   id: 'did:web:trustvc.github.io:did:1#keys-1',
-  type: 'Bls12381G2Key2020' as VerificationType,
+  type: VerificationType.Bls12381G2Key2020,
   controller: 'did:web:trustvc.github.io:did:1',
   seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
   privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
@@ -12,9 +16,18 @@ const PRIVATE_KEY_PAIR: PrivateKeyPair = {
     'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
 };
 
+const ECDSA_SD_KEY_PAIR: EcdsaSd2023PrivateKeyPair = {
+  '@context': 'https://w3id.org/security/multikey/v1',
+  id: 'did:web:trustvc.github.io:did:1#multikey-1',
+  type: VerificationType.Multikey,
+  controller: 'did:web:trustvc.github.io:did:1',
+  publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+  secretKeyMultibase: 'z42tmUXTVn3n9BihE6NhdMpvVBTnFTgmb6fw18o5Ud6puhRW',
+};
+
 describe('w3c-credential-status', () => {
   describe('createCredentialStatusVC', () => {
-    it('should create a credential status VC successfully', async () => {
+    it('should create a credential status VC successfully with BLS cryptosuite', async () => {
       const credentialStatusPayload = await createCredentialStatusPayload(
         {
           id: 'https://example.com/credentials/3732',
@@ -25,7 +38,7 @@ describe('w3c-credential-status', () => {
             encodedList: 'encodedList',
           },
         },
-        PRIVATE_KEY_PAIR,
+        BLS_KEY_PAIR,
       );
 
       expect(credentialStatusPayload).toMatchObject({
@@ -47,13 +60,84 @@ describe('w3c-credential-status', () => {
       });
     });
 
+    it('should create a credential status VC with ECDSA-SD-2023 and v1.1 context', async () => {
+      const credentialStatusPayload = await createCredentialStatusPayload(
+        {
+          id: 'https://example.com/credentials/3732',
+          credentialSubject: {
+            type: 'StatusList2021',
+            id: 'https://example.com/credentials/status/3#list',
+            statusPurpose: 'revocation',
+            encodedList: 'encodedList',
+          },
+        },
+        ECDSA_SD_KEY_PAIR,
+        'StatusList2021Credential',
+        'ecdsa-sd-2023',
+      );
+
+      expect(credentialStatusPayload).toMatchObject({
+        '@context': [
+          'https://www.w3.org/2018/credentials/v1',
+          'https://w3id.org/security/data-integrity/v2',
+          'https://w3id.org/vc/status-list/2021/v1',
+        ],
+        credentialSubject: {
+          encodedList: 'encodedList',
+          id: 'https://example.com/credentials/status/3#list',
+          statusPurpose: 'revocation',
+          type: 'StatusList2021',
+        },
+        issuanceDate: expect.any(String),
+        issuer: 'did:web:trustvc.github.io:did:1',
+        type: ['VerifiableCredential', 'StatusList2021Credential'],
+        validFrom: expect.any(String),
+      });
+    });
+
+    it('should create a credential status VC with ECDSA-SD-2023 and v2.0 context', async () => {
+      const credentialStatusPayload = await createCredentialStatusPayload(
+        {
+          id: 'https://example.com/credentials/3732',
+          credentialSubject: {
+            type: 'BitstringStatusList',
+            id: 'https://example.com/credentials/status/3#list',
+            statusPurpose: 'revocation',
+            encodedList: 'encodedList',
+          },
+        },
+        ECDSA_SD_KEY_PAIR,
+        'BitstringStatusListCredential',
+        'ecdsa-sd-2023',
+      );
+
+      expect(credentialStatusPayload).toMatchObject({
+        '@context': [
+          'https://www.w3.org/ns/credentials/v2',
+          'https://w3id.org/security/data-integrity/v2',
+        ],
+        credentialSubject: {
+          encodedList: 'encodedList',
+          id: 'https://example.com/credentials/status/3#list',
+          statusPurpose: 'revocation',
+          type: 'BitstringStatusList',
+        },
+        issuer: 'did:web:trustvc.github.io:did:1',
+        type: ['VerifiableCredential', 'BitstringStatusListCredential'],
+        validFrom: expect.any(String),
+      });
+
+      // Explicitly verify that issuanceDate is not present in v2.0
+      expect(credentialStatusPayload).not.toHaveProperty('issuanceDate');
+    });
+
     it('should return an error if type is not supported', async () => {
       expect(
         createCredentialStatusPayload(
           {
             id: 'https://example.com/credentials/3732',
           } as any,
-          PRIVATE_KEY_PAIR,
+          BLS_KEY_PAIR,
           'unsupported' as any,
         ),
       ).rejects.toThrowError('Unsupported type: unsupported');
