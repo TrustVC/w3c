@@ -5,6 +5,10 @@ import {
   isSignedDocument,
   signCredential,
   verifyCredential,
+  isRawDocumentV1_1,
+  isRawDocumentV2_0,
+  isSignedDocumentV1_1,
+  isSignedDocumentV2_0,
 } from './lib/w3c-vc';
 import { getDocumentLoader } from '@trustvc/w3c-context';
 
@@ -25,4 +29,8 @@ export {
   signCredential,
   verifyCredential,
   verifyCredentialStatus,
+  isRawDocumentV1_1,
+  isRawDocumentV2_0,
+  isSignedDocumentV1_1,
+  isSignedDocumentV2_0,
 };
