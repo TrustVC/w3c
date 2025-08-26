@@ -110,13 +110,14 @@ export const isSignedDocumentV2_0 = (
  * @param {string} proofValue - The proof value string to check
  * @returns {boolean} - true if this is a base proof, false otherwise
  */
-const isEcdsaSdBaseProof = (proofValue: string): boolean => {
+const isEcdsaSdBaseProof = async (proofValue: string): Promise<boolean> => {
   try {
     if (!proofValue || !proofValue.startsWith('u')) {
       return false;
     }
-    // Decode to check the structure
-    const decoded = Buffer.from(proofValue.slice(1), 'base64url');
+    // @ts-ignore: No types available for base64url-universal
+    const { decode } = await import('base64url-universal');
+    const decoded = decode(proofValue.slice(1));
     // Check if it has the base proof header (0xd9, 0x5d, 0x00)
     return decoded.length >= 3 && decoded[0] === 0xd9 && decoded[1] === 0x5d && decoded[2] === 0x00;
   } catch {
@@ -131,7 +132,7 @@ const isEcdsaSdBaseProof = (proofValue: string): boolean => {
  */
 const extractMandatoryPointers = async (proofValue: string): Promise<string[]> => {
   try {
-    if (!isEcdsaSdBaseProof(proofValue)) {
+    if (!(await isEcdsaSdBaseProof(proofValue))) {
       return [];
     }
 
@@ -289,7 +290,7 @@ export const verifyCredential = async (
 
         if (cryptosuite === 'ecdsa-sd-2023') {
           // Check if this is a base credential (non-derived) by examining the proofValue structure
-          if (isEcdsaSdBaseProof(proof.proofValue as string)) {
+          if (await isEcdsaSdBaseProof(proof.proofValue as string)) {
             // This is a base proof - ECDSA-SD-2023 base credentials require derivation before verification
             return {
               verified: false,
@@ -385,7 +386,7 @@ export const deriveCredential = async (
 
       if (cryptosuite === 'ecdsa-sd-2023') {
         // Check if this is already a derived credential by examining the proofValue structure
-        if (!isEcdsaSdBaseProof(proof.proofValue as string)) {
+        if (!(await isEcdsaSdBaseProof(proof.proofValue as string))) {
           return {
             error: `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
           };

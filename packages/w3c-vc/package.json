@@ -37,6 +37,7 @@
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
     "@trustvc/w3c-credential-status": "^1.3.0-alpha.7",
     "@trustvc/w3c-issuer": "^1.3.0-alpha.5",
+    "base64url-universal": "^2.0.0",
     "cbor": "^9.0.2",
     "did-resolver": "^4.1.0",
     "jsonld": "^6.0.0",
