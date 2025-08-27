@@ -1,3 +1,10 @@
+# [1.3.0-alpha.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.7...@trustvc/w3c@1.3.0-alpha.8) (2025-08-27)
+
+
+### Bug Fixes
+
+* use base64url decode ([#77](https://github.com/TrustVC/w3c/issues/77)) ([7ab0824](https://github.com/TrustVC/w3c/commit/7ab08247d7ff537ca5bf8db3267ba6b85d1ae3b6))
+
 # [1.3.0-alpha.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.6...@trustvc/w3c@1.3.0-alpha.7) (2025-08-19)
 
 
