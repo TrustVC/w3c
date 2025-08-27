@@ -119,7 +119,13 @@ const isEcdsaSdBaseProof = async (proofValue: string): Promise<boolean> => {
     const { decode } = await import('base64url-universal');
     const decoded = decode(proofValue.slice(1));
     // Check if it has the base proof header (0xd9, 0x5d, 0x00)
-    return decoded.length >= 3 && decoded[0] === 0xd9 && decoded[1] === 0x5d && decoded[2] === 0x00;
+    // Convert to numbers to handle both Buffer (Node.js) and Uint8Array (browser) environments
+    return (
+      decoded.length >= 3 &&
+      Number(decoded[0]) === 0xd9 &&
+      Number(decoded[1]) === 0x5d &&
+      Number(decoded[2]) === 0x00
+    );
   } catch {
     return false;
   }
