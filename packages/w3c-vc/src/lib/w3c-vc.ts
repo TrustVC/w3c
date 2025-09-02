@@ -126,6 +126,38 @@ const isEcdsaSdBaseProof = async (proofValue: string): Promise<boolean> => {
 };
 
 /**
+ * Determines whether a verifiable credential is a derived credential.
+ *
+ * Derived credentials are selective disclosure proofs that contain only a subset
+ * of the original credential's claims, rather than the full base credential.
+ *
+ * @param {SignedVerifiableCredential} document - The document to check.
+ * @returns {Promise<boolean>} - True if the document is a derived credential, false otherwise.
+ */
+export const isDerived = async (document: SignedVerifiableCredential) => {
+  // BBS+ signatures always indicate derived credentials (selective disclosure proofs)
+  if (document.proof?.type === 'BbsBlsSignatureProof2020') {
+    return true;
+  } else if (document.proof?.type === 'DataIntegrityProof') {
+    // For Data Integrity Proofs, check the cryptosuite to determine the specific verification approach
+    const proof = jsonld.getValues(document, 'proof')[0];
+    const cryptosuite = proof.cryptosuite;
+
+    // ECDSA Selective Disclosure 2023 cryptosuite
+    if (cryptosuite === 'ecdsa-sd-2023') {
+      // Check if this is a base proof (original credential) or derived proof (selective disclosure)
+      if (await isEcdsaSdBaseProof(proof.proofValue as string)) {
+        return false; // Base proof - contains all original claims
+      } else return true; // Derived proof - contains only selected claims
+    }
+    // Other Data Integrity cryptosuites are not derived
+    return false;
+  }
+  // No recognized proof type for selective disclosure
+  return false;
+};
+
+/**
  * Extracts mandatory pointers from an ECDSA-SD-2023 base proof value
  * @param {string} proofValue - The base proof value string
  * @returns {Promise<string[]>} - Array of mandatory pointers, empty array if extraction fails
