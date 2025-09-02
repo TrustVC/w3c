@@ -1,3 +1,10 @@
+# [1.3.0-alpha.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.6...@trustvc/w3c-issuer@1.3.0-alpha.7) (2025-09-02)
+
+
+### Bug Fixes
+
+* update package lock ([#80](https://github.com/TrustVC/w3c/issues/80)) ([8b7f586](https://github.com/TrustVC/w3c/commit/8b7f586bb1f7736a0c58cc19d8455988a0222987))
+
 # [1.3.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.5...@trustvc/w3c-issuer@1.3.0-alpha.6) (2025-08-27)
 
 
