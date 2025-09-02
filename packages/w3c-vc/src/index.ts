@@ -9,6 +9,7 @@ import {
   isRawDocumentV2_0,
   isSignedDocumentV1_1,
   isSignedDocumentV2_0,
+  isDerived,
 } from './lib/w3c-vc';
 import { getDocumentLoader } from '@trustvc/w3c-context';
 
@@ -33,4 +34,5 @@ export {
   isRawDocumentV2_0,
   isSignedDocumentV1_1,
   isSignedDocumentV2_0,
+  isDerived,
 };
