@@ -1,3 +1,10 @@
+# [1.3.0-alpha.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.5...@trustvc/w3c-issuer@1.3.0-alpha.6) (2025-08-27)
+
+
+### Bug Fixes
+
+* handle both buffer and uint8array env in base proof header check ([#78](https://github.com/TrustVC/w3c/issues/78)) ([972deb7](https://github.com/TrustVC/w3c/commit/972deb7c1c08083766a6b46290ae6d5648bacff1))
+
 # [1.3.0-alpha.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.4...@trustvc/w3c-issuer@1.3.0-alpha.5) (2025-08-19)
 
 

@@ -119,10 +119,48 @@ const isEcdsaSdBaseProof = async (proofValue: string): Promise<boolean> => {
     const { decode } = await import('base64url-universal');
     const decoded = decode(proofValue.slice(1));
     // Check if it has the base proof header (0xd9, 0x5d, 0x00)
-    return decoded.length >= 3 && decoded[0] === 0xd9 && decoded[1] === 0x5d && decoded[2] === 0x00;
+    // Convert to numbers to handle both Buffer (Node.js) and Uint8Array (browser) environments
+    return (
+      decoded.length >= 3 &&
+      Number(decoded[0]) === 0xd9 &&
+      Number(decoded[1]) === 0x5d &&
+      Number(decoded[2]) === 0x00
+    );
   } catch {
     return false;
   }
+};
+
+/**
+ * Determines whether a verifiable credential is a derived credential.
+ *
+ * Derived credentials are selective disclosure proofs that contain only a subset
+ * of the original credential's claims, rather than the full base credential.
+ *
+ * @param {SignedVerifiableCredential} document - The document to check.
+ * @returns {Promise<boolean>} - True if the document is a derived credential, false otherwise.
+ */
+export const isDerived = async (document: SignedVerifiableCredential) => {
+  // BBS+ signatures always indicate derived credentials (selective disclosure proofs)
+  if (document.proof?.type === 'BbsBlsSignatureProof2020') {
+    return true;
+  } else if (document.proof?.type === 'DataIntegrityProof') {
+    // For Data Integrity Proofs, check the cryptosuite to determine the specific verification approach
+    const proof = jsonld.getValues(document, 'proof')[0];
+    const cryptosuite = proof.cryptosuite;
+
+    // ECDSA Selective Disclosure 2023 cryptosuite
+    if (cryptosuite === 'ecdsa-sd-2023') {
+      // Check if this is a base proof (original credential) or derived proof (selective disclosure)
+      if (await isEcdsaSdBaseProof(proof.proofValue as string)) {
+        return false; // Base proof - contains all original claims
+      } else return true; // Derived proof - contains only selected claims
+    }
+    // Other Data Integrity cryptosuites are not derived
+    return false;
+  }
+  // No recognized proof type for selective disclosure
+  return false;
 };
 
 /**
