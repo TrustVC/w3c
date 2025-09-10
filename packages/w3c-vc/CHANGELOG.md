@@ -1,3 +1,10 @@
+# [1.3.0-alpha.11](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.10...@trustvc/w3c-vc@1.3.0-alpha.11) (2025-09-10)
+
+
+### Bug Fixes
+
+* add derivation support for ecdsa bitstring vc ([#81](https://github.com/TrustVC/w3c/issues/81)) ([5130d91](https://github.com/TrustVC/w3c/commit/5130d91079e67c2fc2b4dbf948995e930bc2ed12))
+
 # [1.3.0-alpha.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.9...@trustvc/w3c-vc@1.3.0-alpha.10) (2025-09-02)
 
 
