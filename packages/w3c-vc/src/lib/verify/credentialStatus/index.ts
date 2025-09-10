@@ -9,7 +9,7 @@ import {
 } from '@trustvc/w3c-credential-status';
 import { _checkCredentialStatus } from '../../helper';
 import { CredentialStatus, CredentialStatusResult } from './types';
-import { verifyCredential } from '../../w3c-vc';
+import { deriveCredential, verifyCredential } from '../../w3c-vc';
 import { SignedVerifiableCredential } from '../../types';
 import { DocumentLoader } from '@trustvc/w3c-context';
 
@@ -52,14 +52,27 @@ export const verifyCredentialStatus = async (
     assertStatusListIndexWithinRange(bitstringStatusList, index);
 
     // Check if the statusListCredential is valid
-    const vcStatusListVerificationResult = await verifyCredential(vcStatusList, options);
+    const DERIVE_CREDENTIAL_ERROR = 'Use deriveCredential() first';
+    let vcStatusListVerificationResult = await verifyCredential(vcStatusList, options);
+
+    // Handle ECDSA-SD-2023 base credentials that need derivation before verification
+    if (
+      !vcStatusListVerificationResult?.verified &&
+      vcStatusListVerificationResult.error?.includes(DERIVE_CREDENTIAL_ERROR)
+    ) {
+      const derivedResult = await deriveCredential(vcStatusList, []);
+      vcStatusListVerificationResult = await verifyCredential(derivedResult.derived, options);
+    }
+
+    // Throw error if verification still fails
     if (!vcStatusListVerificationResult?.verified) {
-      console.error(
-        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}. Error: ${vcStatusListVerificationResult.error}`,
-      );
-      throw new Error(
-        `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}`,
-      );
+      const errorMessage = `Failed to verify Credential Status VC: ${vcStatusListVerificationResult.verified}`;
+      const detailedError = vcStatusListVerificationResult.error
+        ? `. Error: ${vcStatusListVerificationResult.error}`
+        : '';
+
+      console.error(errorMessage + detailedError);
+      throw new Error(errorMessage);
     }
 
     const status = bitstringStatusList.getStatus(index);
