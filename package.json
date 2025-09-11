@@ -16,6 +16,7 @@
     "lint:fix": "nx run-many --target=lint --fix",
     "build": "nx run-many --target=build",
     "copy-files": "bash ./scripts/copy-files.sh",
+    "build-website": "nx run @trustvc/temp-trustvc-website:build && npm run copy-files",
     "clean": "nx clear-cache && nx run-many --target=clean",
     "dev": "nx run-many --target=dev",
     "precommit": "lint-staged",
