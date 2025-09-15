@@ -36,6 +36,7 @@
   ],
   "release": {
     "projects": [
+      "@trustvc/temp-trustvc-website",
       "@trustvc/w3c",
       "@trustvc/w3c-context",
       "@trustvc/w3c-credential-status",
