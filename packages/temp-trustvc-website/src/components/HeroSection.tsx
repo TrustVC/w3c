@@ -1,43 +1,50 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 const heroVariants = [
   {
-    rollingWord: "Trustworthy",
-    subtitle: "All",
+    rollingWord: 'Trustworthy',
+    subtitle: 'All',
     stats: [
-      { label: "Documents Verified", value: "2.05M+" },
-      { label: "Active Users", value: "510K+" },
-      { label: "Organizations", value: "50+" },
-      { label: "Countries", value: "20+" },
+      { label: 'Documents Verified', value: '50K+' },
+      { label: 'Active Users', value: '10K+' },
+      { label: 'Organizations', value: '20+' },
+      { label: 'Countries', value: '10+' },
+    ],
+    // stats: [
+    //   { label: 'Documents Verified', value: '2.05M+' },
+    //   { label: 'Active Users', value: '510K+' },
+    //   { label: 'Organizations', value: '50+' },
+    //   { label: 'Countries', value: '20+' },
+    // ],
+  },
+  {
+    rollingWord: 'Trade',
+    subtitle: 'TradeTrust',
+    stats: [
+      { label: 'Documents Verified', value: '50K+' },
+      { label: 'Active Users', value: '10K+' },
+      { label: 'Organizations', value: '20+' },
+      { label: 'Countries', value: '10+' },
     ],
   },
   {
-    rollingWord: "Trade",
-    subtitle: "TradeTrust",
-    stats: [
-      { label: "Documents Verified", value: "50K+" },
-      { label: "Active Users", value: "10K+" },
-      { label: "Organizations", value: "20+" },
-      { label: "Countries", value: "10+" },
-    ],
+    rollingWord: 'Academic',
+    subtitle: 'OpenCerts',
+    stats: [{ label: 'Coming Soon', value: '' }],
+    // stats: [
+    //   { label: "Documents Verified", value: "2.0M+" },
+    //   { label: "Active Users", value: "500K+" },
+    //   { label: "Organizations", value: "30+" },
+    //   { label: "Countries", value: "SG" },
+    // ],
   },
   {
-    rollingWord: "Academic",
-    subtitle: "OpenCerts",
-    stats: [
-      { label: "Documents Verified", value: "2.0M+" },
-      { label: "Active Users", value: "500K+" },
-      { label: "Organizations", value: "30+" },
-      { label: "Countries", value: "SG" },
-    ],
-  },
-  {
-    rollingWord: "Legal",
-    subtitle: "E-Apostilles",
-    stats: [{ label: "Coming Soon", value: "" }],
+    rollingWord: 'Legal',
+    subtitle: 'E-Apostilles',
+    stats: [{ label: 'Coming Soon', value: '' }],
   },
 ];
 
@@ -76,11 +83,11 @@ const HeroSection = () => {
         <div className="absolute top-20 left-10 w-72 h-72 bg-trust-blue/20 rounded-full blur-3xl animate-float" />
         <div
           className="absolute bottom-20 right-10 w-96 h-96 bg-trust-indigo/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "1s" }}
+          style={{ animationDelay: '1s' }}
         />
         <div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-trust-purple/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "2s" }}
+          style={{ animationDelay: '2s' }}
         />
       </div>
 
@@ -91,10 +98,10 @@ const HeroSection = () => {
             <span className="block">Simple </span>
             <span
               className={cn(
-                "block transition-all duration-500",
+                'block transition-all duration-500',
                 isAnimating
-                  ? "opacity-0 transform -translate-y-4"
-                  : "opacity-100 transform translate-y-0"
+                  ? 'opacity-0 transform -translate-y-4'
+                  : 'opacity-100 transform translate-y-0',
               )}
             >
               <span className="bg-gradient-trust bg-clip-text text-transparent">
@@ -107,9 +114,9 @@ const HeroSection = () => {
 
         {/* Description */}
         <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-          One SDK, multiple verification systems. Instantly verify trade
-          documents, academic certificates, and legal apostilles powered by
-          decentralized ledger technology and open standards for digital trust.
+          One SDK, multiple verification systems. Instantly verify trade documents, academic
+          certificates, and legal apostilles powered by decentralized ledger technology and open
+          standards for digital trust.
         </p>
 
         {/* Tabs, Stats and Growth Container */}
@@ -122,10 +129,10 @@ const HeroSection = () => {
                   key={index}
                   onClick={() => handleTabClick(index)}
                   className={cn(
-                    "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                    'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
                     currentVariant === index
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background/50',
                   )}
                 >
                   {tab.subtitle}
@@ -137,13 +144,13 @@ const HeroSection = () => {
           {/* Stats Section */}
           <div
             className={cn(
-              "transition-all duration-500 mb-6",
+              'transition-all duration-500 mb-6',
               isAnimating
-                ? "opacity-0 transform translate-y-4"
-                : "opacity-100 transform translate-y-0"
+                ? 'opacity-0 transform translate-y-4'
+                : 'opacity-100 transform translate-y-0',
             )}
           >
-            {variant.subtitle === "E-Apostilles" ? (
+            {variant.subtitle === 'E-Apostilles' || variant.subtitle === 'OpenCerts' ? (
               <div className="flex justify-center">
                 <div className="text-center">
                   <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
@@ -158,9 +165,7 @@ const HeroSection = () => {
                     <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium">
-                      {stat.label}
-                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
                   </div>
                 ))}
               </div>

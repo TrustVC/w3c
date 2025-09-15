@@ -1,41 +1,35 @@
-import { ArrowRight, Shield, GraduationCap, Scale } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { ArrowRight, Shield, GraduationCap, Scale } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const services = [
   {
     icon: Shield,
-    title: "TradeTrust",
+    title: 'TradeTrust',
     description:
-      "An open-source framework for digital trade documents. It allows trading partners to create, exchange, verify digitised documents, and transfer ownership of documents across different digital platforms seamlessly.",
-    link: "https://tradetrust.io",
+      'An open-source framework for digital trade documents. It allows trading partners to create, exchange, verify digitised documents, and transfer ownership of documents across different digital platforms seamlessly.',
+    link: 'https://tradetrust.io',
     available: true,
-    gradientClass: "bg-gradient-tradetrust",
+    gradientClass: 'bg-gradient-tradetrust',
   },
   {
     icon: GraduationCap,
-    title: "OpenCerts",
+    title: 'OpenCerts',
     description:
-      "OpenCerts is an open-source framework which education institutions can adopt for issuing certificates. Verify academic certificates, diplomas, and professional certifications instantly.",
-    link: "https://opencerts.io",
-    available: true,
-    gradientClass: "bg-gradient-opencerts",
+      'OpenCerts is an open-source framework which education institutions can adopt for issuing certificates. Verify academic certificates, diplomas, and professional certifications instantly.',
+    link: 'https://opencerts.io',
+    available: false,
+    gradientClass: 'bg-gradient-opencerts',
   },
   {
     icon: Scale,
-    title: "E-Apostilles",
+    title: 'E-Apostilles',
     description:
-      "A digital certificate of authenticity for public documents, launched by the Singapore Academy of Law (SAL) in partnership with IMDA in June 2025 to simplify and secure cross-border legal notarisation.",
-    link: "#",
+      'A digital certificate of authenticity for public documents, launched by the Singapore Academy of Law (SAL) in partnership with IMDA in June 2025 to simplify and secure cross-border legal notarisation.',
+    link: '#',
     available: false,
-    gradientClass: "bg-gradient-apostilles",
+    gradientClass: 'bg-gradient-apostilles',
   },
 ];
 
@@ -46,15 +40,12 @@ const ServicesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Trusted by Industries{" "}
-            <span className="bg-gradient-trust bg-clip-text text-transparent">
-              Worldwide
-            </span>
+            Trusted by Industries{' '}
+            <span className="bg-gradient-trust bg-clip-text text-transparent">Worldwide</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Multiple specialized frameworks, one powerful engine. See how
-            TrustVC powers verification across industries and transforms how the
-            world handles digital documents.
+            Multiple specialised frameworks, one powerful engine. See how TrustVC powers
+            verification across industries and transforms how the world handles digital documents.
           </p>
         </div>
 
@@ -71,14 +62,10 @@ const ServicesSection = () => {
               />
 
               <CardHeader className="relative z-10">
-                <div
-                  className={`w-12 h-12 rounded-lg ${service.gradientClass} p-2.5 mb-4`}
-                >
+                <div className={`w-12 h-12 rounded-lg ${service.gradientClass} p-2.5 mb-4`}>
                   <service.icon className="w-full h-full text-white" />
                 </div>
-                <CardTitle className="text-2xl font-bold">
-                  {service.title}
-                </CardTitle>
+                <CardTitle className="text-2xl font-bold">{service.title}</CardTitle>
                 <CardDescription className="text-muted-foreground">
                   {service.description}
                 </CardDescription>
@@ -102,11 +89,7 @@ const ServicesSection = () => {
                     </a>
                   </Button>
                 ) : (
-                  <Button
-                    disabled
-                    variant="ghost"
-                    className="p-0 h-auto cursor-not-allowed"
-                  >
+                  <Button disabled variant="ghost" className="p-0 h-auto cursor-not-allowed">
                     <span className="flex items-center gap-2 text-muted-foreground">
                       Coming Soon
                     </span>
