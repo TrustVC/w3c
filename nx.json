@@ -5,24 +5,16 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "test": {
-      "dependsOn": [
-        "^test"
-      ],
-      "outputs": [
-        "{projectRoot}/coverage"
-      ],
+      "dependsOn": ["^test"],
+      "outputs": ["{projectRoot}/coverage"],
       "cache": true
     },
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": true
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ],
+      "dependsOn": ["^lint"],
       "cache": true
     }
   },
@@ -39,13 +31,12 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        ""
-      ]
+      "exclude": [""]
     }
   ],
   "release": {
     "projects": [
+      "@trustvc/temp-trustvc-website",
       "@trustvc/w3c",
       "@trustvc/w3c-context",
       "@trustvc/w3c-credential-status",
