@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Moon, Sun, Monitor } from 'lucide-react';
+import TrustVCDarkLogo from '@/assets/logos/TrustVC-Coloured-Dark.svg';
+import TrustVCLightLogo from '@/assets/logos/TrustVC-Coloured-Light.svg';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,12 +40,16 @@ const Navigation = () => {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-primary">
-            TrustVC
+          <Link to="/" className="flex items-center">
+            <img
+              src={theme === 'dark' ? TrustVCDarkLogo : TrustVCLightLogo}
+              alt="TrustVC"
+              className="h-8 w-auto"
+            />
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center justify-end mr-4 flex-1">
+          {/* <div className="hidden md:flex items-center justify-end mr-4 flex-1">
             <div className="flex items-center space-x-8">
               <a
                 href="https://afa-cdi.atlassian.net/servicedesk/customer/portal/10/group/-1"
@@ -57,7 +63,7 @@ const Navigation = () => {
                 Support
               </a>
             </div>
-          </div>
+          </div> */}
 
           {/* Right Side Items */}
           <div className="flex items-center space-x-4">
