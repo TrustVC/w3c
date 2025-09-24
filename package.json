@@ -1,7 +1,8 @@
 {
   "name": "@trustvc/w3c",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "version": "0.0.0",
   "description": "",
