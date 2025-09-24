@@ -31,6 +31,8 @@
     }
   },
   "dependencies": {
+    "@digitalbazaar/bls12-381-multikey": "^2.1.0",
+    "@digitalbazaar/bbs-2023-cryptosuite": "^2.0.1",
     "@digitalbazaar/data-integrity": "^2.5.0",
     "@digitalbazaar/ecdsa-multikey": "^1.8.0",
     "@digitalbazaar/ecdsa-sd-2023-cryptosuite": "^3.4.1",

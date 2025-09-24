@@ -1,7 +1,8 @@
 {
   "name": "@trustvc/w3c-cli",
   "version": "1.3.0-alpha.12",
-  "description": "CLI for TrustVC W3C",
+  "description": "⚠️ DEPRECATED: CLI for TrustVC W3C - This package is no longer maintained.",
+  "deprecated": "This CLI package is deprecated due to incompatibility with modern cryptosuites.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "bin": {

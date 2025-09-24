@@ -1,3 +1,7 @@
+# DEPRECATED CLI PROJECT CONFIGURATION
+# This file has been renamed from project.json to exclude the deprecated CLI from NX builds and tests
+# The @trustvc/w3c-cli package is deprecated due to incompatibility with modern cryptosuites
+
 {
   "name": "@trustvc/w3c-cli",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",

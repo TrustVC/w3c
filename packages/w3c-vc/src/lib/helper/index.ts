@@ -350,12 +350,12 @@ function _checkCredentialSubjects(credential: VerifiableCredential): void {
 
   if (Array.isArray(credential?.credentialSubject)) {
     credential?.credentialSubject.map((subject: CredentialSubject) =>
-      _checkCredentialSubject({ subject }),
+      _checkCredentialSubject(subject),
     );
     return;
   }
 
-  _checkCredentialSubject({ subject: credential?.credentialSubject });
+  _checkCredentialSubject(credential?.credentialSubject);
 }
 
 /**
@@ -483,9 +483,9 @@ export const prefilCredentialId = (
   if (credential.id && isStatusListCredential) {
     // Keep the existing id for status list credentials
   } else {
-    // Use proper URI format for ECDSA-SD-2023
+    // Use proper URI format for ECDSA-SD-2023 and BBS-2023
     // Use blank node format for BBS+ (maintains backward compatibility)
-    if (cryptoSuite === 'ecdsa-sd-2023') {
+    if (cryptoSuite === 'ecdsa-sd-2023' || cryptoSuite === 'bbs-2023') {
       credential.id = `urn:uuid:${uuidv7()}`;
     } else {
       credential.id = `urn:bnid:_:${uuidv7()}`;
