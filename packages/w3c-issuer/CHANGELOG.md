@@ -1,3 +1,10 @@
+# [1.3.0-alpha.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.9...@trustvc/w3c-issuer@1.3.0-alpha.10) (2025-09-24)
+
+
+### Features
+
+* bbs2023 implementation ([#88](https://github.com/TrustVC/w3c/issues/88)) ([082e6f0](https://github.com/TrustVC/w3c/commit/082e6f0f1365ee7781816db4c4604e4a10073557))
+
 # [1.3.0-alpha.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.8...@trustvc/w3c-issuer@1.3.0-alpha.9) (2025-09-24)
 
 
