@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-vc",
-  "version": "1.3.0-alpha.11",
+  "version": "1.3.0-alpha.12",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -35,8 +35,8 @@
     "@digitalbazaar/ecdsa-multikey": "^1.8.0",
     "@digitalbazaar/ecdsa-sd-2023-cryptosuite": "^3.4.1",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
-    "@trustvc/w3c-credential-status": "^1.3.0-alpha.10",
-    "@trustvc/w3c-issuer": "^1.3.0-alpha.8",
+    "@trustvc/w3c-credential-status": "^1.3.0-alpha.11",
+    "@trustvc/w3c-issuer": "^1.3.0-alpha.9",
     "base64url-universal": "^2.0.0",
     "cbor": "^9.0.2",
     "did-resolver": "^4.1.0",
