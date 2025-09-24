@@ -1,3 +1,10 @@
+# [1.3.0-alpha.11](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.10...@trustvc/w3c-context@1.3.0-alpha.11) (2025-09-24)
+
+
+### Features
+
+* add resolve, resolveRepresentation and dereference functions ([#87](https://github.com/TrustVC/w3c/issues/87)) ([493a248](https://github.com/TrustVC/w3c/commit/493a24876ee39500c659a884caf6e8d82d8c4f56))
+
 # [1.3.0-alpha.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@1.3.0-alpha.9...@trustvc/w3c-context@1.3.0-alpha.10) (2025-09-10)
 
 
