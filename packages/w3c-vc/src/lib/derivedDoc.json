@@ -1,0 +1,48 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/security/data-integrity/v2",
+    "https://trustvc.io/context/render-method-context-v2.json",
+    "https://trustvc.io/context/coo.json",
+    "https://trustvc.io/context/attachments-context.json",
+    "https://trustvc.io/context/transferable-records-context.json",
+    "https://trustvc.io/context/qrcode-context.json"
+  ],
+  "id": "urn:uuid:019931dd-aa7f-7332-90f2-fec5f71c70bd",
+  "type": [
+    "VerifiableCredential"
+  ],
+  "issuer": "did:web:trustvc.github.io:did:1",
+  "validFrom": "2024-04-01T12:19:52Z",
+  "renderMethod": [
+    {
+      "type": "EMBEDDED_RENDERER",
+      "templateName": "CHAFTA_COO",
+      "id": "https://generic-templates.tradetrust.io"
+    }
+  ],
+  "qrCode": {
+    "type": "TrustVCQRCode",
+    "uri": "https://actions.tradetrust.io?q=%7B%22type%22%3A%22DOCUMENT%22%2C%22payload%22%3A%7B%22uri%22%3A%22https%3A%2F%2Fgallery.tradetrust.io%2Fstatic%2Fw3c%2Fv2_0%2Fcertificate-of-origin-revoked.json%22%2C%22redirect%22%3A%22https%3A%2F%2Fref.tradetrust.io%2F%22%2C%22chainId%22%3A%22101010%22%7D%7D"
+  },
+  "credentialSubject": {
+    "type": [
+      "Coo"
+    ],
+    "supplyChainConsignmentId": "CONS-EX456789",
+    "exportCountryCode": "IN",
+    "exporterName": "ABC Exports Pvt. Ltd.",
+    "exporterId": "EXP-IN-00987",
+    "exporterLine1": "12/F, Industrial Plaza",
+    "exporterLine2": "Near MIDC, Vashi",
+    "exporterCityName": "Navi Mumbai"
+  },
+  "proof": {
+    "type": "DataIntegrityProof",
+    "created": "2025-09-10T04:23:54Z",
+    "verificationMethod": "did:web:trustvc.github.io:did:1#multikey-1",
+    "cryptosuite": "ecdsa-sd-2023",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "u2V0BhVhA4rzd6CfB4kgKNCBy1K4D5sSjFBpTaVDGk5EtbjVPhTyyrlvAu_CofcRzjMElTccJ4RLX4Ms2f-uUyHYY4wCC4lgjgCQCsbptCV2AXhOhbd0YsBYNq6SQYnflgVe0D2ESzJQVKOuJWEBhXnfbfS7em991WBifMncE3fzxMbxQWY0KD9Yl6JH4gYbX4IleIyBCCaS01yZ0Zsyy7QvJ7F94vughVd8IMb-IWEArNf8oLP8ZEgFmf3u-ndgVmjcbowqVVaO3cl2eeohAi-MXiRtljCisN8Gjxe6qd_vkcTr6LYRPRkfbIgMfGTrqWEACf13dkafuOo4d6Dd4CgmXNzI_FkJwSZrmqXQQAdKkdvKc9fxXMs8l_36Acq92-ioI8u6bxlji5BhbE9Ri-dWJWED4ts0aFyHe2B9i5SdhPXP7QRph2j503B1Zz8kn1tOro0aynDiMKeqlpomqhKjZzg1Q8hOd_VyA22Frv3zzzGxlWEDe_clbPuRzP5-zksT8xBE8D_TzicpdO857_g_d1XGwUiyBV_MyBqMUQ3rg7R59bVsbN2ebXWxeg-u9LhiSsueJWECCgKGJJ12wus2Di9QfdlbkPWWtW2VEHT9ErVvCkdPuWhdQqo9qO8PmW3p50Y6oLWrNKNC2oErT03O-WwIHwpLhWEB6xy9RYeM2YtLXymVxUwBXm9A2nTRr69OGROV6LZ65gEvMQKJQ4iHFeNl65m9TnRIUZIO3vWdWXyoanf0NAzOEWEBeZaphT-5V4mx-r1LXkEv748DJi_9UQOBDOr86LmaXwOELYApROFe-1Y5vxYOTk--4bRflfbCQr9YVP09o8Di5WEBmu0llGrlJ-Q0TajtnxPJy2jXy9ghLpyS_Q4k8HZRekzrH-DRs82e8k5KdThmIfrvkHvOkXdt2A75ZNoVH7bfMogBYIGjhDa5TjIVXwgnPft7rT6zaMWtWo0EjTctORkpr9LQRAVggEtnT9WWAGpPWbczyTrjfotr-IChl4EfoRuclVxUCVVyJAAECAwUGBxAR"
+  }
+}
