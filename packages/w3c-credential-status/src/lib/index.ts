@@ -22,6 +22,7 @@ import {
 import {
   assertCredentialStatusStatusListType,
   getValidFromDateFromCredentialStatusVC,
+  validateCredentialStatus,
 } from './utils';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
@@ -38,18 +39,19 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
  * @param {string} options.id - The ID of the credential.
  * @param {object} options.credentialSubject - The credential subject.
  * @param {PrivateKeyPair} keyPair - The key pair options for signing.
- * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'StatusList2021Credential'.
- * @param {CryptoSuiteName} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
+ * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'BitstringStatusListCredential'.
+ * @param {CryptoSuiteName} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'ecdsa-sd-2023'.
  * @returns {Promise<RawCredentialStatusVC>}
  */
 export const createCredentialStatusPayload = async (
   options: CreateVCCredentialStatusOptions,
   keyPair: PrivateKeyPair,
-  type: VCCredentialStatusType = 'StatusList2021Credential',
-  cryptoSuite: CryptoSuiteName = 'BbsBlsSignature2020',
+  type: VCCredentialStatusType = 'BitstringStatusListCredential',
+  cryptoSuite: CryptoSuiteName = 'ecdsa-sd-2023',
 ): Promise<RawCredentialStatusVC> => {
   try {
     const { id, credentialSubject } = options;
+    await validateCredentialStatus(options, type, cryptoSuite);
 
     switch (type) {
       case 'StatusList2021Credential':
