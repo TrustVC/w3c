@@ -1,3 +1,10 @@
+# [1.3.0-alpha.14](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.13...@trustvc/w3c@1.3.0-alpha.14) (2025-10-06)
+
+
+### Bug Fixes
+
+* update proof type ([#90](https://github.com/TrustVC/w3c/issues/90)) ([01a316b](https://github.com/TrustVC/w3c/commit/01a316bf3ea860bb9743ecec5361cb78ee02842e))
+
 # [1.3.0-alpha.13](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.12...@trustvc/w3c@1.3.0-alpha.13) (2025-09-24)
 
 
