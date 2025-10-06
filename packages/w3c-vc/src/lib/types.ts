@@ -30,7 +30,7 @@ export type CredentialSubjects = CredentialSubject | CredentialSubject[];
 
 export type Proof = {
   type: string;
-  created: string;
+  created?: string;
   proofPurpose: string;
   verificationMethod: string;
   proofValue: string;
