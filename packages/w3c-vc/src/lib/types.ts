@@ -54,7 +54,7 @@ export type Evidences = Evidence | Evidence[];
 
 export type Proof = {
   type: string;
-  created: string;
+  created?: string;
   proofPurpose: string;
   verificationMethod: string;
   proofValue: string;

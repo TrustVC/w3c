@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c-vc",
-  "version": "1.3.0-alpha.10",
+  "version": "1.3.0-alpha.14",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -31,12 +31,14 @@
     }
   },
   "dependencies": {
+    "@digitalbazaar/bls12-381-multikey": "^2.1.0",
+    "@digitalbazaar/bbs-2023-cryptosuite": "^2.0.1",
     "@digitalbazaar/data-integrity": "^2.5.0",
     "@digitalbazaar/ecdsa-multikey": "^1.8.0",
     "@digitalbazaar/ecdsa-sd-2023-cryptosuite": "^3.4.1",
     "@mattrglobal/jsonld-signatures-bbs": "^1.2.0",
-    "@trustvc/w3c-credential-status": "^1.3.0-alpha.9",
-    "@trustvc/w3c-issuer": "^1.3.0-alpha.7",
+    "@trustvc/w3c-credential-status": "^1.3.0-alpha.12",
+    "@trustvc/w3c-issuer": "^1.3.0-alpha.10",
     "base64url-universal": "^2.0.0",
     "cbor": "^9.0.2",
     "did-resolver": "^4.1.0",

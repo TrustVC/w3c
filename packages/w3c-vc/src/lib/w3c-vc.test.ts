@@ -1,613 +1,319 @@
-import { EcdsaSd2023PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
 import { describe, expect, it } from 'vitest';
 import { deriveCredential, signCredential, verifyCredential } from './w3c-vc';
-import { VerifiableCredential } from './types';
+import {
+  modernCryptosuiteTestScenarios,
+  bbs2020TestScenarios,
+} from './__fixtures__/test-scenarios';
 
-const modifiedCredential: any = {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3id.org/security/bbs/v1',
-    'https://w3id.org/vc/status-list/2021/v1',
-    'https://trustvc.io/context/transferable-records-context.json',
-    'https://trustvc.io/context/render-method-context.json',
-    'https://trustvc.io/context/attachments-context.json',
-    'https://trustvc.io/context/qrcode-context.json',
-    'https://trustvc.io/context/bill-of-lading.json',
-  ],
-  qrCode: {
-    type: 'TrustVCQRCode',
-    uri: 'https://localhost:3000/qrcode',
-  },
-  credentialStatus: {
-    type: 'TransferableRecords',
-    tokenNetwork: {
-      chain: 'MATIC',
-      chainId: '80001',
-    },
-    tokenRegistry: '0xE0a94770B8e969B5D9179d6dA8730B01e19279e2',
-  },
-  credentialSubject: {
-    billOfLadingName: 'TrustVC Bill of Lading',
-    scac: 'SGPU',
-    blNumber: 'SGCNM21566325',
-    vessel: 'vessel',
-    voyageNo: 'voyageNo',
-    portOfLoading: 'Singapore',
-    portOfDischarge: 'Paris',
-    carrierName: 'A.P. Moller',
-    placeOfReceipt: 'Beijing',
-    placeOfDelivery: 'Singapore',
-    packages: [
-      { packagesDescription: 'package 1', packagesWeight: '10', packagesMeasurement: '20' },
-      { packagesDescription: 'package 2', packagesWeight: '10', packagesMeasurement: '20' },
-    ],
-    shipperName: 'Shipper Name',
-    shipperAddressStreet: '101 ORCHARD ROAD',
-    shipperAddressCountry: 'SINGAPORE',
-    consigneeName: 'Consignee name',
-    notifyPartyName: 'Notify Party Name',
-    links: 'https://localhost:3000/url',
-    attachments: [
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample1.pdf', mimeType: 'application/pdf' },
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample2.pdf', mimeType: 'application/pdf' },
-    ],
-    type: ['BillOfLading'],
-  },
-  renderMethod: [
-    {
-      id: 'https://localhost:3000/renderer',
-      type: 'EMBEDDED_RENDERER',
-      templateName: 'BILL_OF_LADING',
-    },
-  ],
-  expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: ['VerifiableCredential'],
-};
+/**
+ * W3C Verifiable Credentials Test Suite
+ *
+ * This test suite covers:
+ * - Modern cryptosuites: ECDSA-SD-2023 and BBS-2023 (full functionality)
+ * - Legacy BBS2020 cryptosuite (deprecation + verification)
+ */
+describe('W3C Verifiable Credentials', () => {
+  describe('Legacy BBS2020 Cryptosuite', () => {
+    describe.each(bbs2020TestScenarios)(
+      'BBS2020 $version Operations (Deprecated)',
+      ({ cryptosuite, keyPair, credential, derivedCredential }) => {
+        it('should return deprecation error when signing', async () => {
+          // Remove proof to get unsigned credential
+          const { proof: _proof, ...testCredential } = credential;
 
-const revealDocument: any = {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3id.org/security/bbs/v1',
-    'https://w3id.org/vc/status-list/2021/v1',
-    'https://trustvc.io/context/transferable-records-context.json',
-    'https://trustvc.io/context/render-method-context.json',
-    'https://trustvc.io/context/attachments-context.json',
-    'https://trustvc.io/context/qrcode-context.json',
-    'https://trustvc.io/context/bill-of-lading.json',
-  ],
-  credentialSubject: {
-    type: ['BillOfLading'],
-    '@explicit': true,
-    billOfLadingName: {},
-    blNumber: {},
-    packages: {},
-    shipperName: {},
-    attachments: {},
-  },
-  type: ['VerifiableCredential'],
-};
+          // BBS2020 signing should return deprecation error
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          expect(signedCredential.signed).toBeUndefined();
+          expect(signedCredential.error).toBe(
+            'BbsBlsSignature2020 is no longer supported. Please use the latest cryptosuite versions instead.',
+          );
+        });
 
-const modifiedKeyPair: any = {
-  id: 'did:web:trustvc.github.io:did:1#keys-1',
-  controller: 'did:web:trustvc.github.io:did:1',
-  type: VerificationType.Bls12381G2Key2020,
-  publicKeyBase58:
-    'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
-};
+        it('should return deprecation error when deriving', async () => {
+          // BBS2020 derivation should return deprecation error
+          const revealDocument: any = {
+            '@context': credential['@context'],
+            credentialSubject: {
+              type: ['BillOfLading'],
+              '@explicit': true,
+              billOfLadingName: {},
+              blNumber: {},
+            },
+            type: ['VerifiableCredential'],
+          };
 
-// ECDSA-SD-2023 key pair for testing
-const ecdsaKeyPair: EcdsaSd2023PrivateKeyPair = {
-  '@context': 'https://w3id.org/security/multikey/v1',
-  id: 'did:web:trustvc.github.io:did:1#multikey-1',
-  type: VerificationType.Multikey,
-  controller: 'did:web:trustvc.github.io:did:1',
-  publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
-  secretKeyMultibase: 'z42tmUXTVn3n9BihE6NhdMpvVBTnFTgmb6fw18o5Ud6puhRW',
-};
+          const derivedResult = await deriveCredential(credential, revealDocument);
+          expect(derivedResult.derived).toBeUndefined();
+          expect(derivedResult.error).toBe(
+            'BbsBlsSignature2020 is no longer supported for derivation. Please use the latest cryptosuite versions instead.',
+          );
+        });
 
-// Modified ECDSA-SD-2023 credential for v1.1 testing
-const ecdsaCredentialV1_1: VerifiableCredential = {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3id.org/security/data-integrity/v2',
-    'https://w3id.org/vc/status-list/2021/v1',
-    'https://trustvc.io/context/transferable-records-context.json',
-    'https://trustvc.io/context/render-method-context.json',
-    'https://trustvc.io/context/attachments-context.json',
-    'https://trustvc.io/context/qrcode-context.json',
-    'https://trustvc.io/context/bill-of-lading.json',
-  ],
-  qrCode: {
-    type: 'TrustVCQRCode',
-    uri: 'https://localhost:3000/qrcode',
-  },
-  credentialStatus: {
-    type: 'TransferableRecords',
-    tokenNetwork: {
-      chain: 'MATIC',
-      chainId: '80001',
-    },
-    tokenRegistry: '0xE0a94770B8e969B5D9179d6dA8730B01e19279e2',
-  },
-  credentialSubject: {
-    billOfLadingName: 'TrustVC Bill of Lading',
-    scac: 'SGPU',
-    blNumber: 'SGCNM21566325',
-    vessel: 'vessel',
-    voyageNo: 'voyageNo',
-    portOfLoading: 'Singapore',
-    portOfDischarge: 'Paris',
-    carrierName: 'A.P. Moller',
-    placeOfReceipt: 'Beijing',
-    placeOfDelivery: 'Singapore',
-    packages: [
-      { packagesDescription: 'package 1', packagesWeight: '10', packagesMeasurement: '20' },
-      { packagesDescription: 'package 2', packagesWeight: '10', packagesMeasurement: '20' },
-    ],
-    shipperName: 'Shipper Name',
-    shipperAddressStreet: '101 ORCHARD ROAD',
-    shipperAddressCountry: 'SINGAPORE',
-    consigneeName: 'Consignee name',
-    notifyPartyName: 'Notify Party Name',
-    links: 'https://localhost:3000/url',
-    attachments: [
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample1.pdf', mimeType: 'application/pdf' },
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample2.pdf', mimeType: 'application/pdf' },
-    ],
-    type: ['BillOfLading'],
-  },
-  renderMethod: [
-    {
-      id: 'https://localhost:3000/renderer',
-      type: 'EMBEDDED_RENDERER',
-      templateName: 'BILL_OF_LADING',
-    },
-  ],
-  expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: ['VerifiableCredential'],
-};
+        it('should still verify existing credentials (backward compatibility)', async () => {
+          // Should still be able to verify existing BBS2020 credentials
+          const baseVerificationResult = await verifyCredential(credential);
+          expect(baseVerificationResult.verified).toBe(true);
+          expect(baseVerificationResult.error).toBeUndefined();
 
-// Modified ECDSA-SD-2023 credential for v2.0 testing
-const ecdsaCredentialV2_0: VerifiableCredential = {
-  '@context': [
-    'https://www.w3.org/ns/credentials/v2',
-    'https://w3id.org/security/data-integrity/v2',
-    'https://w3id.org/vc/status-list/2021/v1',
-    'https://trustvc.io/context/transferable-records-context.json',
-    'https://trustvc.io/context/render-method-context-v2.json',
-    'https://trustvc.io/context/attachments-context.json',
-    'https://trustvc.io/context/qrcode-context.json',
-    'https://trustvc.io/context/bill-of-lading.json',
-  ],
-  qrCode: {
-    type: 'TrustVCQRCode',
-    uri: 'https://localhost:3000/qrcode',
-  },
-  credentialStatus: {
-    type: 'TransferableRecords',
-    tokenNetwork: {
-      chain: 'MATIC',
-      chainId: '80001',
-    },
-    tokenRegistry: '0xE0a94770B8e969B5D9179d6dA8730B01e19279e2',
-  },
-  credentialSubject: {
-    billOfLadingName: 'TrustVC Bill of Lading',
-    scac: 'SGPU',
-    blNumber: 'SGCNM21566325',
-    vessel: 'vessel',
-    voyageNo: 'voyageNo',
-    portOfLoading: 'Singapore',
-    portOfDischarge: 'Paris',
-    carrierName: 'A.P. Moller',
-    placeOfReceipt: 'Beijing',
-    placeOfDelivery: 'Singapore',
-    packages: [
-      { packagesDescription: 'package 1', packagesWeight: '10', packagesMeasurement: '20' },
-      { packagesDescription: 'package 2', packagesWeight: '10', packagesMeasurement: '20' },
-    ],
-    shipperName: 'Shipper Name',
-    shipperAddressStreet: '101 ORCHARD ROAD',
-    shipperAddressCountry: 'SINGAPORE',
-    consigneeName: 'Consignee name',
-    notifyPartyName: 'Notify Party Name',
-    links: 'https://localhost:3000/url',
-    attachments: [
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample1.pdf', mimeType: 'application/pdf' },
-      { data: 'BASE64_ENCODED_FILE', filename: 'sample2.pdf', mimeType: 'application/pdf' },
-    ],
-    type: ['BillOfLading'],
-  },
-  renderMethod: [
-    {
-      id: 'https://localhost:3000/renderer',
-      type: 'EMBEDDED_RENDERER',
-      templateName: 'BILL_OF_LADING',
-    },
-  ],
-  validUntil: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: ['VerifiableCredential'],
-};
+          const derivedVerificationResult = await verifyCredential(derivedCredential);
+          expect(derivedVerificationResult.verified).toBe(true);
+          expect(derivedVerificationResult.error).toBeUndefined();
+        });
 
-// Parameterized test data for ECDSA-SD-2023 tests
-const ecdsaTestScenarios = [
-  {
-    version: 'v1.1',
-    credential: ecdsaCredentialV1_1,
-    dateField: 'issuanceDate',
-    dateValue: '2024-04-01T12:19:52Z',
-  },
-  {
-    version: 'v2.0',
-    credential: ecdsaCredentialV2_0,
-    dateField: 'validFrom',
-    dateValue: '2024-04-01T12:19:52Z',
-  },
-];
+        it('should detect tampered credentials (comprehensive security)', async () => {
+          // Test tampering with base credential - modify credentialSubject
+          const tamperedBaseCredential = {
+            ...credential,
+            credentialSubject: {
+              ...credential.credentialSubject,
+              billOfLadingName: 'TAMPERED Bill of Lading',
+            },
+          };
 
-describe('BBS+ v1.1 Credential Signing and Verification', () => {
-  it('should successfully sign, derive and verify a credential', async () => {
-    let signingKeyPair = modifiedKeyPair;
-    signingKeyPair = {
-      ...signingKeyPair,
-      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
-    };
+          const baseVerificationResult = await verifyCredential(tamperedBaseCredential);
+          expect(baseVerificationResult.verified).toBe(false);
+          expect(baseVerificationResult.error).toBeDefined();
 
-    let credential = modifiedCredential;
-    credential = { ...credential, issuanceDate: '2024-04-01T12:19:52Z' };
+          // Test tampering with base credential proof value
+          const tamperedProofCredential = {
+            ...credential,
+            proof: {
+              ...credential.proof,
+              proofValue: credential.proof.proofValue.replace(/A/g, 'B'),
+            },
+          };
 
-    const signedCredential = await signCredential(credential, signingKeyPair);
-    expect(signedCredential.signed).toBeDefined();
-    expect(signedCredential.error).toBeUndefined();
+          const proofVerificationResult = await verifyCredential(tamperedProofCredential);
+          expect(proofVerificationResult.verified).toBe(false);
+          expect(proofVerificationResult.error).toBeDefined();
 
-    let verificationResult = await verifyCredential(signedCredential.signed);
-    expect(verificationResult.verified).toBe(true);
-    expect(verificationResult.error).toBeUndefined();
+          // Test tampering with derived credential - modify credentialSubject
+          const tamperedDerivedCredential = {
+            ...derivedCredential,
+            credentialSubject: {
+              ...derivedCredential.credentialSubject,
+              billOfLadingName: 'TAMPERED Derived Bill of Lading',
+            },
+          };
 
-    const derivedCredential = await deriveCredential(signedCredential.signed, revealDocument);
-    expect(derivedCredential.derived).toBeDefined();
-    expect(derivedCredential.error).toBeUndefined();
+          const derivedVerificationResult = await verifyCredential(tamperedDerivedCredential);
+          expect(derivedVerificationResult.verified).toBe(false);
+          expect(derivedVerificationResult.error).toBeDefined();
 
-    verificationResult = await verifyCredential(derivedCredential.derived);
-    expect(verificationResult.verified).toBe(true);
-    expect(verificationResult.error).toBeUndefined();
-  });
+          // Test tampering with derived credential proof value
+          const tamperedDerivedProofCredential = {
+            ...derivedCredential,
+            proof: {
+              ...derivedCredential.proof,
+              proofValue: derivedCredential.proof.proofValue.replace(/A/g, 'B'),
+            },
+          };
 
-  it('should fail to sign if the private key is missing from the key pair', async () => {
-    let credential = modifiedCredential;
-    credential = { ...credential, issuanceDate: '2024-04-01T12:19:52Z' };
-
-    const signedCredential = await signCredential(credential, modifiedKeyPair);
-    expect(signedCredential.signed).toBeUndefined();
-    expect(signedCredential.error).toBeDefined();
-    expect(signedCredential.error).equals('"privateKeyBase58" property in keyPair is required.');
-  });
-
-  it('should fail to sign if the id field is present in the credential', async () => {
-    let signingKeyPair = modifiedKeyPair;
-    signingKeyPair = {
-      ...signingKeyPair,
-      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
-    };
-
-    let credential = modifiedCredential;
-    credential = {
-      ...credential,
-      issuanceDate: '2024-04-01T12:19:52Z',
-      id: 'urn:uuid:0192d19c-d82c-7cc7-9431-cb495374f43b',
-    };
-
-    const signedCredential = await signCredential(credential, signingKeyPair);
-    expect(signedCredential.signed).toBeUndefined();
-    expect(signedCredential.error).toBeDefined();
-    expect(signedCredential.error).equals(
-      '"id" is a defined field and should not be set by the user.',
+          const derivedProofVerificationResult = await verifyCredential(
+            tamperedDerivedProofCredential,
+          );
+          expect(derivedProofVerificationResult.verified).toBe(false);
+          expect(derivedProofVerificationResult.error).toBeDefined();
+        });
+      },
     );
   });
 
-  it('should fail to sign if a required property in the credential is missing', async () => {
-    let signingKeyPair = modifiedKeyPair;
-    signingKeyPair = {
-      ...signingKeyPair,
-      privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
-    };
+  describe('Modern Cryptosuites (ECDSA-SD-2023 & BBS-2023)', () => {
+    describe.each(modernCryptosuiteTestScenarios)(
+      '$cryptosuite $version Credential Operations',
+      ({ cryptosuite, keyPair, credential, dateField, dateValue }) => {
+        it('should successfully sign, derive, and verify credentials', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
 
-    const signedCredential = await signCredential(modifiedCredential, signingKeyPair);
-    expect(signedCredential.signed).toBeUndefined();
-    expect(signedCredential.error).toBeDefined();
-    expect(signedCredential.error).equals('"issuanceDate" property is required.');
-  });
+          // Sign the credential
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          expect(signedCredential.signed).toBeDefined();
+          expect(signedCredential.error).toBeUndefined();
+          expect(signedCredential.signed?.proof?.type).toBe('DataIntegrityProof');
 
-  it('should fail verification if the signed credential is tampered with', async () => {
-    let signedCredential = modifiedCredential;
-    signedCredential = {
-      ...signedCredential,
-      id: 'urn:bnid:_:0193b647-66b6-7ffc-ae79-ef9c590f3301',
-      credentialStatus: {
-        ...signedCredential.credentialStatus,
-        tokenId: '398124e7f1ec797a3dea6322e5ce4ff5ee242ab6293c2acf41a95178dfb27dae',
+          // Derive the credential with selective disclosure
+          const selectivePointers = ['/credentialSubject/billOfLadingName'];
+          const derivedCredential = await deriveCredential(
+            signedCredential.signed,
+            selectivePointers,
+          );
+          expect(derivedCredential.derived).toBeDefined();
+          expect(derivedCredential.error).toBeUndefined();
+
+          // Verify core mandatory pointers are included
+          expect(derivedCredential.derived?.issuer).toBeDefined();
+          expect(derivedCredential.derived?.[dateField]).toBeDefined();
+
+          // Verify selective disclosure works
+          const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
+            ? derivedCredential.derived?.credentialSubject[0]
+            : derivedCredential.derived?.credentialSubject;
+          expect(credentialSubject?.billOfLadingName).toBeDefined();
+          expect(credentialSubject?.blNumber).toBeUndefined();
+
+          // Verify the derived credential
+          const verificationResult = await verifyCredential(derivedCredential.derived);
+          expect(verificationResult.verified).toBe(true);
+          expect(verificationResult.error).toBeUndefined();
+        });
+
+        it('should support custom mandatory pointers with selective disclosure', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign with custom mandatory pointers
+          const customMandatoryPointers = ['/credentialSubject/billOfLadingName'];
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite, {
+            mandatoryPointers: customMandatoryPointers,
+          });
+          expect(signedCredential.signed).toBeDefined();
+          expect(signedCredential.error).toBeUndefined();
+
+          // Derive with selective disclosure
+          const selectivePointers = ['/credentialSubject/blNumber'];
+          const derivedCredential = await deriveCredential(
+            signedCredential.signed,
+            selectivePointers,
+          );
+          expect(derivedCredential.derived).toBeDefined();
+          expect(derivedCredential.error).toBeUndefined();
+
+          // Verify mandatory and selective pointers are included
+          const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
+            ? derivedCredential.derived?.credentialSubject[0]
+            : derivedCredential.derived?.credentialSubject;
+          expect(credentialSubject?.billOfLadingName).toBeDefined(); // Mandatory
+          expect(credentialSubject?.blNumber).toBeDefined(); // Selected
+          expect(credentialSubject?.scac).toBeUndefined(); // Not selected
+
+          // Verify the derived credential
+          const verificationResult = await verifyCredential(derivedCredential.derived);
+          expect(verificationResult.verified).toBe(true);
+          expect(verificationResult.error).toBeUndefined();
+        });
+
+        it('should automatically include entire credentialSubject when no properties selected', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign the credential
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          expect(signedCredential.signed).toBeDefined();
+
+          // Derive with no credentialSubject pointers
+          const selectivePointers: string[] = [];
+          const derivedCredential = await deriveCredential(
+            signedCredential.signed,
+            selectivePointers,
+          );
+          expect(derivedCredential.derived).toBeDefined();
+
+          // Verify entire credentialSubject is included
+          const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
+            ? derivedCredential.derived?.credentialSubject[0]
+            : derivedCredential.derived?.credentialSubject;
+          expect(credentialSubject?.scac).toBeDefined();
+          expect(credentialSubject?.vessel).toBeDefined();
+          expect(credentialSubject?.billOfLadingName).toBeDefined();
+          expect(credentialSubject?.blNumber).toBeDefined();
+
+          // Verify the derived credential
+          const verificationResult = await verifyCredential(derivedCredential.derived);
+          expect(verificationResult.verified).toBe(true);
+          expect(verificationResult.error).toBeUndefined();
+        });
+
+        it('should require derivation before verification', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign the credential
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          expect(signedCredential.signed).toBeDefined();
+
+          // Verify original signed credential directly (should fail)
+          const verificationResult = await verifyCredential(signedCredential.signed);
+          expect(verificationResult.verified).toBe(false);
+          expect(verificationResult.error).toBe(
+            `${cryptosuite} base credentials must be derived before verification. Use deriveCredential() first.`,
+          );
+        });
+
+        it('should prevent multiple rounds of derivation', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign and first derivation
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          const firstDerivedCredential = await deriveCredential(signedCredential.signed, [
+            '/credentialSubject/blNumber',
+          ]);
+          expect(firstDerivedCredential.derived).toBeDefined();
+
+          // Attempt second derivation (should fail)
+          const secondDerivedCredential = await deriveCredential(firstDerivedCredential.derived, [
+            '/credentialSubject/billOfLadingName',
+          ]);
+          expect(secondDerivedCredential.derived).toBeUndefined();
+          expect(secondDerivedCredential.error).toBe(
+            `${cryptosuite} derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.`,
+          );
+        });
+
+        it('should detect tampered credentials', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign and derive credential
+          const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+          const derivedCredential = await deriveCredential(signedCredential.signed, [
+            '/credentialSubject/billOfLadingName',
+          ]);
+
+          // Tamper with the derived credential
+          const tamperedCredential = {
+            ...derivedCredential.derived,
+            [dateField]: new Date().toISOString(),
+          };
+
+          // Verify tampered credential (should fail)
+          const verificationResult = await verifyCredential(tamperedCredential);
+          expect(verificationResult.verified).toBe(false);
+          expect(verificationResult.error).equals('Invalid signature.');
+        });
+
+        it('should validate key pair requirements', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          const invalidKeyPair: any = {
+            id: 'did:web:trustvc.github.io:did:1#multikey-1',
+            type: 'Multikey',
+            controller: 'did:web:trustvc.github.io:did:1',
+            publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+            // Missing secretKeyMultibase
+          };
+
+          // Sign with invalid key pair (should fail)
+          const signedCredential = await signCredential(
+            testCredential,
+            invalidKeyPair,
+            cryptosuite,
+          );
+          expect(signedCredential.signed).toBeUndefined();
+          expect(signedCredential.error).toBe(
+            '"secretKeyMultibase" property in keyPair is required.',
+          );
+        });
+
+        it('should reject unsupported cryptosuites', async () => {
+          const testCredential = { ...credential, [dateField]: dateValue };
+
+          // Sign with unsupported cryptosuite (should fail)
+          const signedCredential = await signCredential(
+            testCredential,
+            keyPair,
+            'unsupported-suite' as any,
+          );
+          expect(signedCredential.signed).toBeUndefined();
+          expect(signedCredential.error).toBe('"unsupported-suite" is not supported.');
+        });
       },
-      issuanceDate: '2024-04-01T12:19:53Z',
-      proof: {
-        type: 'BbsBlsSignature2020',
-        created: '2024-08-23T03:08:31Z',
-        proofPurpose: 'assertionMethod',
-        proofValue:
-          'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
-      },
-    };
-
-    const verificationResult = await verifyCredential(signedCredential);
-    expect(verificationResult.verified).toBe(false);
-    expect(verificationResult.error).equals('Invalid signature.');
-  });
-
-  it('should fail verification if an unsupported signature suite is used', async () => {
-    let signedCredential = modifiedCredential;
-    signedCredential = {
-      ...signedCredential,
-      issuanceDate: '2024-04-01T12:19:52Z',
-      proof: {
-        type: 'Ed25519Signature2020',
-        created: '2024-08-23T03:08:31Z',
-        proofPurpose: 'assertionMethod',
-        proofValue:
-          'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1',
-      },
-    };
-
-    const verificationResult = await verifyCredential(signedCredential);
-    expect(verificationResult.verified).toBe(false);
-    expect(verificationResult.error).equals('"proof" type is not of BbsBlsSignature2020.');
-  });
-
-  it('should fail verification if the verification method cannot be found', async () => {
-    let signedCredential = modifiedCredential;
-    signedCredential = {
-      ...signedCredential,
-      id: 'urn:bnid:_:0193b647-66b6-7ffc-ae79-ef9c590f3301',
-      credentialStatus: {
-        ...signedCredential.credentialStatus,
-        tokenId: '398124e7f1ec797a3dea6322e5ce4ff5ee242ab6293c2acf41a95178dfb27dae',
-      },
-      issuanceDate: '2024-04-01T12:19:52Z',
-      proof: {
-        type: 'BbsBlsSignature2020',
-        created: '2024-08-23T03:08:31Z',
-        proofPurpose: 'assertionMethod',
-        proofValue:
-          'sHGTYvavHMHVJ3NgyEgiyDDa0IjG3wS9GChizckQHANWzcZRqBjD4uSZjxmS2fGzEgJJB6/JaL7FY9rx42Bkg/SRjvaaUiBVyOwUXeXUZMdlGEIpjzO8GDognziPqN7S9KEZagvnv3MESEx0EwvgEw==',
-        verificationMethod: 'did:web:trustvc.github.io:did:1#keys-2',
-      },
-    };
-
-    const verificationResult = await verifyCredential(signedCredential);
-    expect(verificationResult.verified).toBe(false);
-    expect(verificationResult.error).equals(
-      'Verification method did:web:trustvc.github.io:did:1#keys-2 could not be found.',
     );
   });
 });
-
-describe.each(ecdsaTestScenarios)(
-  'ECDSA-SD-2023 $version Credential Signing and Verification',
-  ({ version, credential, dateField, dateValue }) => {
-    it(`should successfully sign, derive, and verify a ${version} credential with ECDSA-SD-2023`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023');
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-      expect(signedCredential.signed?.proof?.type).toBe('DataIntegrityProof');
-
-      // Derive the credential with selective disclosure
-      const selectivePointers = ['/credentialSubject/billOfLadingName'];
-      const derivedCredential = await deriveCredential(signedCredential.signed, selectivePointers);
-      expect(derivedCredential.derived).toBeDefined();
-      expect(derivedCredential.error).toBeUndefined();
-
-      // Verify that mandatory core pointers are always included
-      expect(derivedCredential.derived?.issuer).toBeDefined(); // Core mandatory: /issuer
-      expect(derivedCredential.derived?.[dateField]).toBeDefined(); // Core mandatory: date field
-
-      // Verify that selective disclosure works within credentialSubject
-      const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
-        ? derivedCredential.derived?.credentialSubject[0]
-        : derivedCredential.derived?.credentialSubject;
-      expect(credentialSubject?.billOfLadingName).toBeDefined(); // Selected field
-      expect(credentialSubject?.blNumber).toBeUndefined(); // Not selected, should be hidden
-
-      // Verify the derived credential
-      const verificationResult = await verifyCredential(derivedCredential.derived);
-      expect(verificationResult.verified).toBe(true);
-      expect(verificationResult.error).toBeUndefined();
-    });
-
-    it(`should successfully sign ${version} credential with custom mandatory pointers, derive, and verify`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign with mandatory pointers (core pointers will be added automatically)
-      const customMandatoryPointers = ['/credentialSubject/billOfLadingName'];
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023', {
-        mandatoryPointers: customMandatoryPointers,
-      });
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-      expect(signedCredential.signed?.proof?.type).toBe('DataIntegrityProof');
-
-      // Derive with selective disclosure (only reveal specific fields)
-      const selectivePointers = ['/credentialSubject/blNumber'];
-      const derivedCredential = await deriveCredential(signedCredential.signed, selectivePointers);
-      expect(derivedCredential.derived).toBeDefined();
-      expect(derivedCredential.error).toBeUndefined();
-
-      // Verify that mandatory core pointers are always included (automatically added)
-      expect(derivedCredential.derived?.issuer).toBeDefined(); // Core mandatory: /issuer
-      expect(derivedCredential.derived?.[dateField]).toBeDefined(); // Core mandatory: date field
-
-      // Verify that mandatory pointers are always included
-      const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
-        ? derivedCredential.derived?.credentialSubject[0]
-        : derivedCredential.derived?.credentialSubject;
-      expect(credentialSubject?.billOfLadingName).toBeDefined(); // Custom mandatory
-
-      // Verify that selective pointers are included
-      expect(credentialSubject?.blNumber).toBeDefined(); // Selected field
-      expect(credentialSubject?.scac).toBeUndefined(); // Not selected, should be hidden
-
-      // Verify the derived credential
-      const verificationResult = await verifyCredential(derivedCredential.derived);
-      expect(verificationResult.verified).toBe(true);
-      expect(verificationResult.error).toBeUndefined();
-    });
-
-    it(`should automatically include entire credentialSubject when no credentialSubject properties are selected (${version})`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023');
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-      expect(signedCredential.signed?.proof?.type).toBe('DataIntegrityProof');
-
-      // Derive with no credentialSubject pointers - should automatically include entire credentialSubject
-      const selectivePointers: string[] = [];
-      const derivedCredential = await deriveCredential(signedCredential.signed, selectivePointers);
-      expect(derivedCredential.derived).toBeDefined();
-      expect(derivedCredential.error).toBeUndefined();
-
-      // Verify that core mandatory pointers are automatically included
-      expect(derivedCredential.derived?.issuer).toBeDefined(); // Core mandatory: /issuer (auto-added)
-      expect(derivedCredential.derived?.[dateField]).toBeDefined(); // Core mandatory: date field (auto-added)
-
-      // Verify that entire credentialSubject is included (since no credentialSubject properties were selected)
-      const credentialSubject = Array.isArray(derivedCredential.derived?.credentialSubject)
-        ? derivedCredential.derived?.credentialSubject[0]
-        : derivedCredential.derived?.credentialSubject;
-      expect(credentialSubject?.scac).toBeDefined(); // All properties should be present
-      expect(credentialSubject?.vessel).toBeDefined(); // All properties should be present
-      expect(credentialSubject?.billOfLadingName).toBeDefined(); // All properties should be present
-      expect(credentialSubject?.blNumber).toBeDefined(); // All properties should be present
-
-      // Verify the derived credential
-      const verificationResult = await verifyCredential(derivedCredential.derived);
-      expect(verificationResult.verified).toBe(true);
-      expect(verificationResult.error).toBeUndefined();
-    });
-
-    it(`should require derivation before verification for ECDSA-SD-2023 ${version} credentials`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023');
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-
-      // Verify the original signed credential directly (without derivation) - should fail
-      // ECDSA-SD-2023 credentials require derivation before verification
-      const verificationResult = await verifyCredential(signedCredential.signed);
-      expect(verificationResult.verified).toBe(false);
-      expect(verificationResult.error).toBeDefined();
-      expect(verificationResult.error).toBe(
-        'ecdsa-sd-2023 base credentials must be derived before verification. Use deriveCredential() first.',
-      );
-    });
-
-    it(`should fail when attempting to derive from an already derived ECDSA-SD-2023 ${version} credential`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023');
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-
-      // First derivation - should succeed
-      const selectivePointers = ['/credentialSubject/blNumber'];
-      const firstDerivedCredential = await deriveCredential(
-        signedCredential.signed,
-        selectivePointers,
-      );
-      expect(firstDerivedCredential.derived).toBeDefined();
-      expect(firstDerivedCredential.error).toBeUndefined();
-
-      // Attempt second derivation from the already derived credential - should fail
-      const secondSelectivePointers = ['/credentialSubject/billOfLadingName'];
-      const secondDerivedCredential = await deriveCredential(
-        firstDerivedCredential.derived,
-        secondSelectivePointers,
-      );
-      expect(secondDerivedCredential.derived).toBeUndefined();
-      expect(secondDerivedCredential.error).toBeDefined();
-      expect(secondDerivedCredential.error).toBe(
-        'ecdsa-sd-2023 derived credentials cannot be further derived. Multiple rounds of derivation are not supported by this cryptosuite.',
-      );
-    });
-
-    it(`should fail verification if the ${version} credential is tampered with`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(testCredential, ecdsaKeyPair, 'ecdsa-sd-2023');
-      expect(signedCredential.signed).toBeDefined();
-      expect(signedCredential.error).toBeUndefined();
-
-      // Derive the credential with selective disclosure
-      const selectivePointers = ['/credentialSubject/billOfLadingName'];
-      const derivedCredential = await deriveCredential(signedCredential.signed, selectivePointers);
-      expect(derivedCredential.derived).toBeDefined();
-      expect(derivedCredential.error).toBeUndefined();
-
-      const tamperedCredential = {
-        ...derivedCredential.derived,
-        [dateField]: new Date().toISOString(),
-      };
-
-      // Verify the derived credential - should fail
-      const verificationResult = await verifyCredential(tamperedCredential);
-      expect(verificationResult.verified).toBe(false);
-      expect(verificationResult.error).equals('Invalid signature.');
-    });
-
-    it(`should fail to sign with ECDSA-SD-2023 if key pair is missing required properties (${version})`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      const invalidKeyPair: any = {
-        id: 'did:web:trustvc.github.io:did:1#multikey-1',
-        type: 'Multikey',
-        controller: 'did:web:trustvc.github.io:did:1',
-        publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
-        // Missing secretKeyMultibase
-      };
-
-      // Sign the credential
-      const signedCredential = await signCredential(
-        testCredential,
-        invalidKeyPair,
-        'ecdsa-sd-2023',
-      );
-      expect(signedCredential.signed).toBeUndefined();
-      expect(signedCredential.error).toBeDefined();
-      expect(signedCredential.error).toBe('"secretKeyMultibase" property in keyPair is required.');
-    });
-
-    it(`should fail to sign with unsupported cryptosuite (${version})`, async () => {
-      const testCredential = { ...credential, [dateField]: dateValue };
-
-      // Sign the credential
-      const signedCredential = await signCredential(
-        testCredential,
-        ecdsaKeyPair,
-        'unsupported-suite' as any,
-      );
-      expect(signedCredential.signed).toBeUndefined();
-      expect(signedCredential.error).toBeDefined();
-      expect(signedCredential.error).toBe('"unsupported-suite" is not supported.');
-    });
-  },
-);

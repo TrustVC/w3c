@@ -1,5 +1,13 @@
 # TrustVC W3C CLI
 
+> **⚠️ DEPRECATED PACKAGE**
+> 
+> This CLI package has been deprecated and is no longer maintained. The CLI was built using legacy BBS+ cryptosuites that have been superseded by modern W3C Data Integrity cryptosuites (ECDSA-SD-2023, BBS-2023).
+
+---
+
+## Legacy Documentation
+
 `w3c-cli` is a command-line interface tool designed to demonstrate how to interact with Verifiable Credentials (VCs) and Decentralized Identifiers (DIDs) using functions from the following repositories:
 
 - [`w3c-issuer`](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer)

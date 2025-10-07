@@ -50,8 +50,7 @@
       "@trustvc/w3c-context",
       "@trustvc/w3c-credential-status",
       "@trustvc/w3c-issuer",
-      "@trustvc/w3c-vc",
-      "@trustvc/w3c-cli"
+      "@trustvc/w3c-vc"
     ],
     "changelog": {
       "projectChangelogs": {

@@ -1,3 +1,24 @@
+# [1.3.0-alpha.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.9...@trustvc/w3c-issuer@1.3.0-alpha.10) (2025-09-24)
+
+
+### Features
+
+* bbs2023 implementation ([#88](https://github.com/TrustVC/w3c/issues/88)) ([082e6f0](https://github.com/TrustVC/w3c/commit/082e6f0f1365ee7781816db4c4604e4a10073557))
+
+# [1.3.0-alpha.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.8...@trustvc/w3c-issuer@1.3.0-alpha.9) (2025-09-24)
+
+
+### Features
+
+* add resolve, resolveRepresentation and dereference functions ([#87](https://github.com/TrustVC/w3c/issues/87)) ([493a248](https://github.com/TrustVC/w3c/commit/493a24876ee39500c659a884caf6e8d82d8c4f56))
+
+# [1.3.0-alpha.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.7...@trustvc/w3c-issuer@1.3.0-alpha.8) (2025-09-10)
+
+
+### Bug Fixes
+
+* add derivation support for ecdsa bitstring vc ([#81](https://github.com/TrustVC/w3c/issues/81)) ([5130d91](https://github.com/TrustVC/w3c/commit/5130d91079e67c2fc2b4dbf948995e930bc2ed12))
+
 # [1.3.0-alpha.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@1.3.0-alpha.6...@trustvc/w3c-issuer@1.3.0-alpha.7) (2025-09-02)
 
 
