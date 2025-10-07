@@ -82,7 +82,7 @@ function _getId<T extends { id?: string }>(obj: T | string): string | undefined 
 
 // These properties of a Verifiable Credential (VC) must be objects containing a type field
 // if they are present in the VC.
-const mustHaveType = ['proof', 'credentialStatus'];
+const mustHaveType = ['proof', 'credentialStatus', 'termsOfUse', 'refreshService'];
 
 // Regular expression to validate date-time format according to XML schema.
 // Z and T must be uppercase

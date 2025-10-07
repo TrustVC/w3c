@@ -24,9 +24,33 @@ export type CredentialStatus = {
   type: string;
 } & Record<string, any>;
 export type CredentialStatuses = CredentialStatus | CredentialStatus[];
-
+export type CredentialSchema = {
+  id: string;
+  type: string;
+} & Record<string, any>;
+export type CredentialSchemas = CredentialSchema | CredentialSchema[];
 export type CredentialSubject = Record<string, any>;
 export type CredentialSubjects = CredentialSubject | CredentialSubject[];
+
+export type TermsOfUse = {
+  type: string;
+} & Record<string, any>;
+export type TermsOfUses = TermsOfUse | TermsOfUse[];
+
+export type RelatedResource = {
+  type: string;
+} & Record<string, any>;
+export type RelatedResources = RelatedResource | RelatedResource[];
+
+export type RefreshService = {
+  type: string;
+} & Record<string, any>;
+export type RefreshServices = RefreshService | RefreshService[];
+
+export type Evidence = {
+  type: string;
+} & Record<string, any>;
+export type Evidences = Evidence | Evidence[];
 
 export type Proof = {
   type: string;
@@ -50,6 +74,11 @@ export type SignedVerifiableCredential = {
   expirationDate?: string;
   credentialStatus?: CredentialStatuses;
   credentialSubject: CredentialSubjects;
+  credentialSchema?: CredentialSchemas;
+  termsOfUse?: TermsOfUses;
+  evidence?: Evidences;
+  relatedResource?: RelatedResources;
+  refreshService?: RefreshServices;
   renderMethod?: Record<string, any>;
   qrCode?: Record<string, any>;
   proof?: Proof;
