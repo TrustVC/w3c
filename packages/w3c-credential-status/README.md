@@ -176,8 +176,8 @@ const optionsV2 = {
       type: 'BitstringStatusList', // v2.0 credential subject type
       statusPurpose: purpose,
       encodedList,
-    };
-}
+    },
+};
 
 // Example with ECDSA-SD-2023
 const credentialStatusVCV2_ECDSA = await createCredentialStatusPayload(
@@ -191,7 +191,7 @@ const credentialStatusVCV2_ECDSA = await createCredentialStatusPayload(
 const credentialStatusVCV2_BBS = await createCredentialStatusPayload(
   optionsV2, 
   keyPair, 
-  'BitstringStatusListCredential', // v2.0 credential type
+  'BitstringStatusListCredential', // v2.0 credential type,
   'bbs-2023' // modern cryptosuite
 );
 
@@ -207,8 +207,8 @@ const optionsV1 = {
       type: 'StatusList2021', // v1.1 credential subject type
       statusPurpose: purpose,
       encodedList,
-    };
-}
+    },
+};
 
 const credentialStatusVCV1 = await createCredentialStatusPayload(
   optionsV1, 
@@ -376,7 +376,7 @@ const credentialStatusPayload = await createCredentialStatusPayload(
     },
   },
   keypairData, // Your key pair data
-  'BitstringStatusListCredential'
+  'BitstringStatusListCredential',
   'ecdsa-sd-2023' // Use 'ecdsa-sd-2023' or 'bbs-2023'
 );
 

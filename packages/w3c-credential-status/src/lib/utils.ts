@@ -1,15 +1,13 @@
-import { DocumentLoader, getDocumentLoader, VC_V1_URL } from '@trustvc/w3c-context';
+import { DocumentLoader, getDocumentLoader } from '@trustvc/w3c-context';
 import {
   assertAllowedStatusPurpose,
   isNonNegativeInteger,
   isNumber,
   isString,
 } from './BitstringStatusList/assertions';
-import { CredentialStatusPurpose, VCCredentialStatusType } from './BitstringStatusList/types';
+import { CredentialStatusPurpose } from './BitstringStatusList/types';
 import {
   BitstringStatusListCredentialStatus,
-  CreateVCCredentialStatusOptions,
-  CryptoSuiteName,
   GeneralCredentialStatus,
   SignedCredentialStatusVC,
   TransferableRecordsCredentialStatus,

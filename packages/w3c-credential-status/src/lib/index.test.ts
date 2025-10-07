@@ -4,10 +4,8 @@ import {
   Bbs2023PrivateKeyPair,
   VerificationType,
 } from '@trustvc/w3c-issuer';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { createCredentialStatusPayload } from './index';
-import * as utils from './utils';
-import { VC_V1_URL } from '@trustvc/w3c-context';
 
 const BLS_KEY_PAIR: BBSPrivateKeyPair = {
   id: 'did:web:trustvc.github.io:did:1#keys-1',
@@ -60,6 +58,41 @@ describe('w3c-credential-status', () => {
       ).rejects.toThrowError(
         'BbsBlsSignature2020 is no longer supported. Please use the latest cryptosuite versions instead.',
       );
+    });
+
+    it('should create a credential status VC with ECDSA-SD-2023 and v1.1 context', async () => {
+      const credentialStatusPayload = await createCredentialStatusPayload(
+        {
+          id: 'https://example.com/credentials/3732',
+          credentialSubject: {
+            type: 'StatusList2021',
+            id: 'https://example.com/credentials/status/3#list',
+            statusPurpose: 'revocation',
+            encodedList: 'encodedList',
+          },
+        },
+        ECDSA_SD_KEY_PAIR,
+        'StatusList2021Credential',
+        'ecdsa-sd-2023',
+      );
+
+      expect(credentialStatusPayload).toMatchObject({
+        '@context': [
+          'https://www.w3.org/2018/credentials/v1',
+          'https://w3id.org/security/data-integrity/v2',
+          'https://w3id.org/vc/status-list/2021/v1',
+        ],
+        credentialSubject: {
+          encodedList: 'encodedList',
+          id: 'https://example.com/credentials/status/3#list',
+          statusPurpose: 'revocation',
+          type: 'StatusList2021',
+        },
+        issuanceDate: expect.any(String),
+        issuer: 'did:web:trustvc.github.io:did:1',
+        type: ['VerifiableCredential', 'StatusList2021Credential'],
+        validFrom: expect.any(String),
+      });
     });
 
     it('should create a credential status VC with ECDSA-SD-2023 and v2.0 context', async () => {
