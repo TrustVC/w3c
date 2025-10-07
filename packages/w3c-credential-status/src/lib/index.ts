@@ -1,5 +1,4 @@
 import {
-  BBS_V1_URL,
   CredentialContextVersion,
   DATA_INTEGRITY_V2_URL,
   STATUS_LIST_2021_CREDENTIAL_URL,
@@ -22,7 +21,6 @@ import {
 import {
   assertCredentialStatusStatusListType,
   getValidFromDateFromCredentialStatusVC,
-  validateCredentialStatus,
 } from './utils';
 
 export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
@@ -51,7 +49,12 @@ export const createCredentialStatusPayload = async (
 ): Promise<RawCredentialStatusVC> => {
   try {
     const { id, credentialSubject } = options;
-    await validateCredentialStatus(options, type, cryptoSuite);
+
+    if (cryptoSuite === 'BbsBlsSignature2020') {
+      throw new Error(
+        'BbsBlsSignature2020 is no longer supported. Please use the latest cryptosuite versions instead.',
+      );
+    }
 
     switch (type) {
       case 'StatusList2021Credential':
@@ -71,13 +74,7 @@ export const createCredentialStatusPayload = async (
     // Determine version based on credential type
     const isV2 = type === 'BitstringStatusListCredential';
     const context = [isV2 ? CredentialContextVersion.v2 : CredentialContextVersion.v1];
-
-    // Add cryptosuite-specific contexts
-    if (cryptoSuite === 'BbsBlsSignature2020') {
-      context.push(BBS_V1_URL);
-    } else {
-      context.push(DATA_INTEGRITY_V2_URL);
-    }
+    context.push(DATA_INTEGRITY_V2_URL);
 
     // Add status list context only for v1.1 (v2.0 has it built-in)
     if (type === 'StatusList2021Credential') {

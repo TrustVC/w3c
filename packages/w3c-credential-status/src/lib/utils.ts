@@ -188,39 +188,3 @@ export const getValidFromDateFromCredentialStatusVC = async (url: string): Promi
     return defaultValidFrom;
   }
 };
-
-export const validateCredentialStatus = async (
-  options: CreateVCCredentialStatusOptions,
-  type: VCCredentialStatusType,
-  cryptoSuite: CryptoSuiteName,
-) => {
-  const { id } = options;
-  // Do not support bbsBlsSignature for new VCs
-  if (type === 'BitstringStatusListCredential' && cryptoSuite === 'BbsBlsSignature2020') {
-    throw new Error(
-      'BbsBlsSignature2020 is no longer supported. Please use the latest cryptosuite versions instead.',
-    );
-  }
-
-  // for StatusList2021Credential verify if vc already exists
-  if (type === 'StatusList2021Credential') {
-    if (cryptoSuite !== 'BbsBlsSignature2020' || !id) {
-      throw new Error('Please use the recommended BitstringStatusListCredential instead.');
-    }
-
-    // if vc already exists with v1.1 context and StatusList2021Credential allow BbsBlsSignature2020
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const credential = (await fetchCredentialStatusVC(id)) as any;
-      if (!credential?.['@context']?.includes(VC_V1_URL)) {
-        throw new Error(
-          'Please use the recommended BitstringStatusListCredential with modern cryptosuite.',
-        );
-      }
-    } catch {
-      throw new Error(
-        'Credential Status VC not found. For creating new VCs, please use BitstringStatusListCredential with modern cryptosuite.',
-      );
-    }
-  }
-};

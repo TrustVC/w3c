@@ -23,7 +23,7 @@ The revocation or suspension of Verifiable Credentials is achieved by changing t
 - Credential status type: `BitstringStatusListEntry`
 - Credential subject type: `BitstringStatusList`
 
-This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports creation of data model v2.0 VC's using modern ECDSA-SD-2023 / BBS-2023 cryptosuites and legacy BBS+ signature for existing VCs created with data model v1.1 .
+This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports creation of data model v2.0 VC's using modern ECDSA-SD-2023 / BBS-2023 cryptosuites.
 
 ## Table of Contents
 
@@ -63,10 +63,10 @@ npm install @trustvc/w3c-credential-status
 
 ## Features
 
-- **Dual Version Support**: Compatible with W3C VC Data Model v2.0 and backward compatible with existing v1.1
+- **Version Support**: Compatible with both W3C VC Data Model v1.1 and v2.0
 - **Multiple Cryptosuites**: Supports modern signatures ECDSA-SD-2023 and BBS2023
-- **Status Types**: Creates `BitstringStatusListCredential`
-- **Backward Compatibility**: Existing v1.1 implementations continue to work with StatusList2021Credential
+- **Flexible Status Types**: Create both `StatusList2021Credential` and `BitstringStatusListCredential`
+- **Backward Compatibility**: Existing v1.1 implementations continue to work
 - Create Credential Status Verifiable Credentials with various cryptographic suites
 - Update revocation status for existing VCs
 
@@ -158,9 +158,9 @@ import { PrivateKeyPair } from '@trustvc/w3c-issuer';
  * - options.credentialSubject (object): The credential subject.
  * - keyPair (PrivateKeyPair): The key pair options for signing
  * - type (VCCredentialStatusType): The type of the credential status VC. 
- *   Options: 'BitstringStatusListCredential' (v2.0) or 'StatusList2021Credential' (v1.1 - only for existing VCs with resolvable hostingUrl)
+ *   Options: 'StatusList2021Credential' (v1.1) or 'BitstringStatusListCredential' (v2.0)
  * - cryptoSuite (string): The cryptosuite to be used for signing. 
- *   Options: 'ecdsa-sd-2023', or 'bbs-2023' (for v2.0) or 'BbsBlsSignature2020' (for v1.1 - only for existing VCs with resolvable hostingUrl)
+ *   Options: 'ecdsa-sd-2023', or 'bbs-2023'
  *
  * Returns:
  * - A Promise that resolves to:
@@ -199,7 +199,7 @@ console.log('Credential Status VC (ECDSA):', credentialStatusVCV2_ECDSA);
 console.log('Credential Status VC (BBS):', credentialStatusVCV2_BBS);
 
 
-// Example for W3C VC Data Model v1.1 (legacy) - works with existing v1.1 where the hostingUrl is resolvable
+// Example for W3C VC Data Model v1.1 (legacy)
 const optionsV1 = {
     id: hostingUrl,
     credentialSubject: {
@@ -302,45 +302,6 @@ Signed Credential: {
 
 </details>
 
-<details>
-  <summary>signCredential Result (v1.1 with BBS+) Legacy</summary>
-
-```js
-Signed Credential: {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
-    'https://w3id.org/security/bbs/v1',
-    'https://w3id.org/vc/status-list/2021/v1'
-  ],
-  credentialStatus: {
-    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-    statusListIndex: '1',
-    statusPurpose: 'revocation',
-    type: 'StatusList2021Entry'
-  },
-  issuanceDate: '2024-04-01T12:19:52Z',
-  credentialSubject: {
-    id: 'did:example:b34ca6cd37bbf23',
-    type: [ 'Person' ],
-    name: 'TrustVC'
-  },
-  expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: [ 'VerifiableCredential' ],
-  proof: {
-    type: 'BbsBlsSignature2020',
-    created: '2024-10-02T09:04:07Z',
-    proofPurpose: 'assertionMethod',
-    proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
-    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
-  }
-}
-```
-
-</details>
-
 ---
 
 ### 2. Update revocation status for existing VC
@@ -435,7 +396,7 @@ const signedCredentialStatusVC = signed;
 
 ### `createCredentialStatusPayload`
 
-> Creates a credential status payload for W3C VC Data v2.0 and existing v1.1 VC with resolvable hostingUrl. 
+> Creates a credential status payload for both W3C VC Data Model v1.1 and v2.0. 
 >
 > #### Parameters:
 >
@@ -450,7 +411,7 @@ const signedCredentialStatusVC = signed;
 > `cryptoSuite (CryptoSuiteName)`: The cryptosuite for signing. Options:
 > - `'ecdsa-sd-2023'` (modern ECDSA-SD-2023 signatures)
 > - `'bbs-2023'` (modern BBS-2023 signatures)
-> - `'BbsBlsSignature2020'` (legacy BBS+ signatures)
+> - `'BbsBlsSignature2020'` (DEPRECATED: legacy BBS+ signatures, use `'ecdsa-sd-2023'` or `'bbs-2023'` instead)
 
 ### `signCredential`
 

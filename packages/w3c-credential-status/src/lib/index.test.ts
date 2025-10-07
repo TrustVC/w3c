@@ -62,65 +62,6 @@ describe('w3c-credential-status', () => {
       );
     });
 
-    it('should throw error if url does not resolve for existing v1.1 signed using BbsBlsSignature2020', async () => {
-      await expect(
-        createCredentialStatusPayload(
-          {
-            id: 'https://example.com/credentials/3732',
-            credentialSubject: {
-              type: 'StatusList2021',
-              id: 'https://example.com/credentials/status/3#list',
-              statusPurpose: 'revocation',
-              encodedList: 'encodedList',
-            },
-          },
-          BLS_KEY_PAIR,
-          'StatusList2021Credential',
-          'BbsBlsSignature2020',
-        ),
-      ).rejects.toThrowError(
-        'Credential Status VC not found. For creating new VCs, please use BitstringStatusListCredential with modern cryptosuite.',
-      );
-    });
-
-    it('should allow to re create an existing credential status VC successfully with BLS cryptosuite', async () => {
-      vi.spyOn(utils, 'validateCredentialStatus').mockResolvedValueOnce({
-        '@context': [VC_V1_URL],
-      } as any);
-      const credentialStatusPayload = await createCredentialStatusPayload(
-        {
-          id: 'https://example.com/credentials/3732',
-          credentialSubject: {
-            type: 'StatusList2021',
-            id: 'https://example.com/credentials/status/3#list',
-            statusPurpose: 'revocation',
-            encodedList: 'encodedList',
-          },
-        },
-        BLS_KEY_PAIR,
-        'StatusList2021Credential',
-        'BbsBlsSignature2020',
-      );
-
-      expect(credentialStatusPayload).toMatchObject({
-        '@context': [
-          'https://www.w3.org/2018/credentials/v1',
-          'https://w3id.org/security/bbs/v1',
-          'https://w3id.org/vc/status-list/2021/v1',
-        ],
-        credentialSubject: {
-          encodedList: 'encodedList',
-          id: 'https://example.com/credentials/status/3#list',
-          statusPurpose: 'revocation',
-          type: 'StatusList2021',
-        },
-        issuanceDate: expect.any(String),
-        issuer: 'did:web:trustvc.github.io:did:1',
-        type: ['VerifiableCredential', 'StatusList2021Credential'],
-        validFrom: expect.any(String),
-      });
-    });
-
     it('should create a credential status VC with ECDSA-SD-2023 and v2.0 context', async () => {
       const credentialStatusPayload = await createCredentialStatusPayload(
         {
