@@ -12,7 +12,7 @@ const BLS_KEY_PAIR: BBSPrivateKeyPair = {
   type: VerificationType.Bls12381G2Key2020,
   controller: 'did:web:trustvc.github.io:did:1',
   seedBase58: 'GWP69tmSWJjqC1RoJ27FehcVqkVyeYAz6h5ABwoNSNdS',
-  privateKeyBase58: '4LDU56PUhA9ZEutnR1qCWQnUhtLtpLu2EHSq4h1o7vtF',
+  privateKeyBase58: 'privateKeyBase58',
   publicKeyBase58:
     'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ',
 };
@@ -23,7 +23,7 @@ const ECDSA_SD_KEY_PAIR: EcdsaSd2023PrivateKeyPair = {
   type: VerificationType.Multikey,
   controller: 'did:web:trustvc.github.io:did:1',
   publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
-  secretKeyMultibase: 'z42tmUXTVn3n9BihE6NhdMpvVBTnFTgmb6fw18o5Ud6puhRW',
+  secretKeyMultibase: 'secretKeyMultibase',
 };
 
 const BBS2023_KEY_PAIR: Bbs2023PrivateKeyPair = {
@@ -33,8 +33,7 @@ const BBS2023_KEY_PAIR: Bbs2023PrivateKeyPair = {
   controller: 'did:web:trustvc.github.io:did:1',
   publicKeyMultibase:
     'zUC75kRac7BdtjawFUxowfgD6mzqnRHFxAfMDaBynebdYgakviQkPS1KNJEw7uGWqj91H3hSE4pTERb3EZKLgKXjpqHWrN8dyE8SKyPBE3k7kUGjBNAqJoNGgUzqUW3DSaWrcNr',
-  secretKeyMultibase:
-    'zrv1rbvMrsjWcLvfhAKhky5MwFMYoz9WdG9p7YGgUA3eL6z5U3owcX7Tk1P2MJseP8CnZ9AhUsj7HTKTrnB6FNkvEL2',
+  secretKeyMultibase: 'secretKeyMultibase',
 };
 
 describe('w3c-credential-status', () => {
