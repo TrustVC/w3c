@@ -33,18 +33,22 @@ describe('query', () => {
           "assertionMethod": [
             "did:web:trustvc.github.io:did:1#keys-1",
             "did:web:trustvc.github.io:did:1#multikey-1",
+            "did:web:trustvc.github.io:did:1#multikey-2",
           ],
           "authentication": [
             "did:web:trustvc.github.io:did:1#keys-1",
             "did:web:trustvc.github.io:did:1#multikey-1",
+            "did:web:trustvc.github.io:did:1#multikey-2",
           ],
           "capabilityDelegation": [
             "did:web:trustvc.github.io:did:1#keys-1",
             "did:web:trustvc.github.io:did:1#multikey-1",
+            "did:web:trustvc.github.io:did:1#multikey-2",
           ],
           "capabilityInvocation": [
             "did:web:trustvc.github.io:did:1#keys-1",
             "did:web:trustvc.github.io:did:1#multikey-1",
+            "did:web:trustvc.github.io:did:1#multikey-2",
           ],
           "id": "did:web:trustvc.github.io:did:1",
           "verificationMethod": [
@@ -58,6 +62,12 @@ describe('query', () => {
               "controller": "did:web:trustvc.github.io:did:1",
               "id": "did:web:trustvc.github.io:did:1#multikey-1",
               "publicKeyMultibase": "zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc",
+              "type": "Multikey",
+            },
+            {
+              "controller": "did:web:trustvc.github.io:did:1",
+              "id": "did:web:trustvc.github.io:did:1#multikey-2",
+              "publicKeyMultibase": "zUC7HnpncVAkTjtL6B8prX6bQM2WA5sJ7rXFeCqyrvPnrzoFBjYsVUTNwzhhPUazja73tWwPeEBWCUgq5qBSrtrXiYhVvBCgZPTCiWANj7TSiZJ6SnyC3pkt94GiuChhAvmRRbt",
               "type": "Multikey",
             },
           ],
