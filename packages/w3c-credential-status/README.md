@@ -23,7 +23,7 @@ The revocation or suspension of Verifiable Credentials is achieved by changing t
 - Credential status type: `BitstringStatusListEntry`
 - Credential subject type: `BitstringStatusList`
 
-This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports creation of data model v2.0 VC's using modern ECDSA-SD-2023 / BBS-2023 cryptosuites.
+This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports modern ECDSA-SD-2023 and BBS-2023 cryptosuites.
 
 ## Table of Contents
 
@@ -214,7 +214,7 @@ const credentialStatusVCV1 = await createCredentialStatusPayload(
   optionsV1, 
   keyPair, 
   'StatusList2021Credential', // v1.1 credential type
-  'BbsBlsSignature2020' // legacy cryptosuite
+  'BbsBlsSignature2020' // ⚠️ DEPRECATED - this will result in error. Use modern cryptosuites
 );
 // Sign the credential status payload
 const { signed, error } = await signCredential(credentialStatusPayload, keypairData);
@@ -411,7 +411,7 @@ const signedCredentialStatusVC = signed;
 > `cryptoSuite (CryptoSuiteName)`: The cryptosuite for signing. Options:
 > - `'ecdsa-sd-2023'` (modern ECDSA-SD-2023 signatures)
 > - `'bbs-2023'` (modern BBS-2023 signatures)
-> - `'BbsBlsSignature2020'` (DEPRECATED: legacy BBS+ signatures, use `'ecdsa-sd-2023'` or `'bbs-2023'` instead)
+> - `'BbsBlsSignature2020'` (⚠️ DEPRECATED: legacy BBS+ signatures, use `'ecdsa-sd-2023'` or `'bbs-2023'` instead)
 
 ### `signCredential`
 
