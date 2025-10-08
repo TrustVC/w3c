@@ -1,3 +1,10 @@
+# [1.3.0-alpha.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.15...@trustvc/w3c@1.3.0-alpha.16) (2025-10-08)
+
+
+### Features
+
+* status list update for bbs and v2.0 ([#89](https://github.com/TrustVC/w3c/issues/89)) ([c49bbfe](https://github.com/TrustVC/w3c/commit/c49bbfe0c61eb99993aefa44951b2dbc98aaac0f))
+
 # [1.3.0-alpha.15](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.14...@trustvc/w3c@1.3.0-alpha.15) (2025-10-07)
 
 
