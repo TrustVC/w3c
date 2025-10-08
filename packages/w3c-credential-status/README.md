@@ -23,7 +23,7 @@ The revocation or suspension of Verifiable Credentials is achieved by changing t
 - Credential status type: `BitstringStatusListEntry`
 - Credential subject type: `BitstringStatusList`
 
-This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports both legacy BBS+ signatures and modern ECDSA-SD-2023 cryptosuites.
+This module provides functionality to create/update a signed Verifiable Credential (VC) for credential status, using a specified cryptographic suite and key pair. It supports modern ECDSA-SD-2023 and BBS-2023 cryptosuites.
 
 ## Table of Contents
 
@@ -63,8 +63,8 @@ npm install @trustvc/w3c-credential-status
 
 ## Features
 
-- **Dual Version Support**: Compatible with both W3C VC Data Model v1.1 and v2.0
-- **Multiple Cryptosuites**: Supports BBS+ (legacy) and ECDSA-SD-2023 (modern) signatures
+- **Version Support**: Compatible with both W3C VC Data Model v1.1 and v2.0
+- **Multiple Cryptosuites**: Supports modern signatures ECDSA-SD-2023 and BBS2023
 - **Flexible Status Types**: Create both `StatusList2021Credential` and `BitstringStatusListCredential`
 - **Backward Compatibility**: Existing v1.1 implementations continue to work
 - Create Credential Status Verifiable Credentials with various cryptographic suites
@@ -160,30 +160,13 @@ import { PrivateKeyPair } from '@trustvc/w3c-issuer';
  * - type (VCCredentialStatusType): The type of the credential status VC. 
  *   Options: 'StatusList2021Credential' (v1.1) or 'BitstringStatusListCredential' (v2.0)
  * - cryptoSuite (string): The cryptosuite to be used for signing. 
- *   Options: 'BbsBlsSignature2020' (legacy) or 'ecdsa-sd-2023' (modern)
+ *   Options: 'ecdsa-sd-2023', or 'bbs-2023'
  *
  * Returns:
  * - A Promise that resolves to:
  * - RawCredentialStatusVC: The signed credential status Verifiable Credential.
  */
 
-// Example for W3C VC Data Model v1.1 (legacy)
-const optionsV1 = {
-    id: hostingUrl,
-    credentialSubject: {
-      id: `${hostingUrl}#list`,
-      type: 'StatusList2021', // v1.1 credential subject type
-      statusPurpose: purpose,
-      encodedList,
-    };
-}
-
-const credentialStatusVCV1 = await createCredentialStatusPayload(
-  optionsV1, 
-  keyPair, 
-  'StatusList2021Credential', // v1.1 credential type
-  'BbsBlsSignature2020' // legacy cryptosuite
-);
 
 // Example for W3C VC Data Model v2.0 (modern)
 const optionsV2 = {
@@ -193,18 +176,46 @@ const optionsV2 = {
       type: 'BitstringStatusList', // v2.0 credential subject type
       statusPurpose: purpose,
       encodedList,
-    };
-}
+    },
+};
 
-const credentialStatusVCV2 = await createCredentialStatusPayload(
+// Example with ECDSA-SD-2023
+const credentialStatusVCV2_ECDSA = await createCredentialStatusPayload(
   optionsV2, 
   keyPair, 
   'BitstringStatusListCredential', // v2.0 credential type
   'ecdsa-sd-2023' // modern cryptosuite
 );
 
-console.log('Credential Status VC:', credentialStatusVCV2);
+// Example with BBS-2023
+const credentialStatusVCV2_BBS = await createCredentialStatusPayload(
+  optionsV2, 
+  keyPair, 
+  'BitstringStatusListCredential', // v2.0 credential type,
+  'bbs-2023' // modern cryptosuite
+);
 
+console.log('Credential Status VC (ECDSA):', credentialStatusVCV2_ECDSA);
+console.log('Credential Status VC (BBS):', credentialStatusVCV2_BBS);
+
+
+// Example for W3C VC Data Model v1.1 (legacy)
+const optionsV1 = {
+    id: hostingUrl,
+    credentialSubject: {
+      id: `${hostingUrl}#list`,
+      type: 'StatusList2021', // v1.1 credential subject type
+      statusPurpose: purpose,
+      encodedList,
+    },
+};
+
+const credentialStatusVCV1 = await createCredentialStatusPayload(
+  optionsV1, 
+  keyPair, 
+  'StatusList2021Credential', // v1.1 credential type
+  'BbsBlsSignature2020' // ⚠️ DEPRECATED - this will result in error. Use modern cryptosuites
+);
 // Sign the credential status payload
 const { signed, error } = await signCredential(credentialStatusPayload, keypairData);
 
@@ -215,45 +226,6 @@ if (error) {
 const signedCredentialStatusVC = signed;
 
 ```
-
-<details>
-  <summary>signCredential Result (v1.1 with BBS+)</summary>
-
-```js
-Signed Credential: {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3c-ccg.github.io/citizenship-vocab/contexts/citizenship-v1.jsonld',
-    'https://w3id.org/security/bbs/v1',
-    'https://w3id.org/vc/status-list/2021/v1'
-  ],
-  credentialStatus: {
-    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
-    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
-    statusListIndex: '1',
-    statusPurpose: 'revocation',
-    type: 'StatusList2021Entry'
-  },
-  issuanceDate: '2024-04-01T12:19:52Z',
-  credentialSubject: {
-    id: 'did:example:b34ca6cd37bbf23',
-    type: [ 'Person' ],
-    name: 'TrustVC'
-  },
-  expirationDate: '2029-12-03T12:19:52Z',
-  issuer: 'did:web:trustvc.github.io:did:1',
-  type: [ 'VerifiableCredential' ],
-  proof: {
-    type: 'BbsBlsSignature2020',
-    created: '2024-10-02T09:04:07Z',
-    proofPurpose: 'assertionMethod',
-    proofValue: 'tissP5pJF1q4txCMWNZI5LgwhXMWrLI8675ops8FwlQE/zBUQnVO9Iey505MjkNDD5GdmQmnb6+RUKkLVGEJLIJrKQXlU3Xr4DlMW7ShH/sIpuvZoobGs/0hw/B5agXz8cVWfnDGWtDYciVh0rwQvg==',
-    verificationMethod: 'did:web:trustvc.github.io:did:1#keys-1'
-  }
-}
-```
-
-</details>
 
 <details>
   <summary>signCredential Result (v2.0 with ECDSA-SD-2023)</summary>
@@ -287,6 +259,43 @@ Signed Credential: {
     proofPurpose: 'assertionMethod',
     proofValue: 'u2V0AhVhAip...',
     verificationMethod: 'did:web:trustvc.github.io:did:1#multikey-1'
+  }
+}
+```
+
+</details>
+
+<details>
+  <summary>signCredential Result (v2.0 with BBS-2023)</summary>
+
+```js
+Signed Credential: {
+  '@context': [
+    'https://www.w3.org/ns/credentials/v2',
+    'https://w3id.org/security/data-integrity/v2'
+  ],
+  credentialStatus: {
+    id: 'https://trustvc.github.io/did/credentials/statuslist/1#1',
+    type: 'BitstringStatusListEntry',
+    statusPurpose: 'revocation',
+    statusListIndex: '10',
+    statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1'
+  },
+  validFrom: '2024-04-01T12:19:52Z',
+  credentialSubject: {
+    id: 'did:example:b34ca6cd37bbf23',
+    type: [ 'Person' ],
+    name: 'TrustVC'
+  },
+  validUntil: '2029-12-03T12:19:52Z',
+  issuer: 'did:web:trustvc.github.io:did:1',
+  type: [ 'VerifiableCredential' ],
+  proof: {
+    type: 'DataIntegrityProof',
+    cryptosuite: 'bbs-2023',
+    proofPurpose: 'assertionMethod',
+    proofValue: 'u2V0ChVhQi0FELn9kYULQF...',
+    verificationMethod: 'did:web:trustvc.github.io:did:1#multikey-2'
   }
 }
 ```
@@ -356,20 +365,19 @@ After updating the status list, encode it and create a signed credential status 
 // Encode the updated status list
 const encodedList = await statusList.encode();
 
-// Create the credential status payload (v1.1 example)
 const credentialStatusPayload = await createCredentialStatusPayload(
   {
     id: hostingUrl,
     credentialSubject: {
       id: `${hostingUrl}#list`,
-      type: 'StatusList2021', // Use 'BitstringStatusList' for v2.0
+      type: 'BitstringStatusList',
       statusPurpose: purpose,
       encodedList,
     },
   },
   keypairData, // Your key pair data
-  'StatusList2021Credential', // Use 'BitstringStatusListCredential' for v2.0
-  'BbsBlsSignature2020' // Use 'ecdsa-sd-2023' for modern cryptosuite
+  'BitstringStatusListCredential',
+  'ecdsa-sd-2023' // Use 'ecdsa-sd-2023' or 'bbs-2023'
 );
 
 // Sign the credential status payload
@@ -388,7 +396,7 @@ const signedCredentialStatusVC = signed;
 
 ### `createCredentialStatusPayload`
 
-> Creates a credential status payload for both W3C VC Data Model v1.1 and v2.0.
+> Creates a credential status payload for both W3C VC Data Model v1.1 and v2.0. 
 >
 > #### Parameters:
 >
@@ -397,12 +405,13 @@ const signedCredentialStatusVC = signed;
 > `keypairData (object)`: The key pair data used for signing.
 >
 > `credentialType (VCCredentialStatusType)`: The type of credential. Options:
-> - `'StatusList2021Credential'` (v1.1 legacy)
 > - `'BitstringStatusListCredential'` (v2.0 modern)
+> - `'StatusList2021Credential'` (v1.1 legacy)
 >
 > `cryptoSuite (CryptoSuiteName)`: The cryptosuite for signing. Options:
-> - `'BbsBlsSignature2020'` (legacy BBS+ signatures)
 > - `'ecdsa-sd-2023'` (modern ECDSA-SD-2023 signatures)
+> - `'bbs-2023'` (modern BBS-2023 signatures)
+> - `'BbsBlsSignature2020'` (⚠️ DEPRECATED: legacy BBS+ signatures, use `'ecdsa-sd-2023'` or `'bbs-2023'` instead)
 
 ### `signCredential`
 
@@ -474,10 +483,10 @@ To migrate from W3C VC Data Model v1.1 to v2.0:
    - `StatusList2021` → `BitstringStatusList`
 
 2. **Update cryptosuite:**
-   - `BbsBlsSignature2020` → `ecdsa-sd-2023`
+   - `BbsBlsSignature2020` → `ecdsa-sd-2023` or `bbs-2023`
 
 3. **Update key pair format:**
-   - Legacy BLS keys → Modern ECDSA multikey format
+   - Legacy BLS keys → Modern multikey format (ECDSA or BBS2023)
 
 4. **Update contexts:**
    - v1.1 contexts → v2.0 contexts (handled automatically)
