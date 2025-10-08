@@ -1,5 +1,4 @@
 import {
-  BBS_V1_URL,
   CredentialContextVersion,
   DATA_INTEGRITY_V2_URL,
   STATUS_LIST_2021_CREDENTIAL_URL,
@@ -38,18 +37,24 @@ export const VCCredentialStatusTypeToVCCredentialSubjectType: Record<
  * @param {string} options.id - The ID of the credential.
  * @param {object} options.credentialSubject - The credential subject.
  * @param {PrivateKeyPair} keyPair - The key pair options for signing.
- * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'StatusList2021Credential'.
- * @param {CryptoSuiteName} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'BbsBlsSignature2020'.
+ * @param {VCCredentialStatusType} type - The type of the credential status VC. Defaults to 'BitstringStatusListCredential'.
+ * @param {CryptoSuiteName} cryptoSuite - The cryptosuite to be used for signing. Defaults to 'ecdsa-sd-2023'.
  * @returns {Promise<RawCredentialStatusVC>}
  */
 export const createCredentialStatusPayload = async (
   options: CreateVCCredentialStatusOptions,
   keyPair: PrivateKeyPair,
-  type: VCCredentialStatusType = 'StatusList2021Credential',
-  cryptoSuite: CryptoSuiteName = 'BbsBlsSignature2020',
+  type: VCCredentialStatusType = 'BitstringStatusListCredential',
+  cryptoSuite: CryptoSuiteName = 'ecdsa-sd-2023',
 ): Promise<RawCredentialStatusVC> => {
   try {
     const { id, credentialSubject } = options;
+
+    if (cryptoSuite === 'BbsBlsSignature2020') {
+      throw new Error(
+        'BbsBlsSignature2020 is no longer supported. Please use the latest cryptosuite versions instead.',
+      );
+    }
 
     switch (type) {
       case 'StatusList2021Credential':
@@ -69,13 +74,7 @@ export const createCredentialStatusPayload = async (
     // Determine version based on credential type
     const isV2 = type === 'BitstringStatusListCredential';
     const context = [isV2 ? CredentialContextVersion.v2 : CredentialContextVersion.v1];
-
-    // Add cryptosuite-specific contexts
-    if (cryptoSuite === 'BbsBlsSignature2020') {
-      context.push(BBS_V1_URL);
-    } else {
-      context.push(DATA_INTEGRITY_V2_URL);
-    }
+    context.push(DATA_INTEGRITY_V2_URL);
 
     // Add status list context only for v1.1 (v2.0 has it built-in)
     if (type === 'StatusList2021Credential') {

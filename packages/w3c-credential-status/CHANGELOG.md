@@ -1,3 +1,10 @@
+# [1.3.0-alpha.13](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.12...@trustvc/w3c-credential-status@1.3.0-alpha.13) (2025-10-08)
+
+
+### Features
+
+* status list update for bbs and v2.0 ([#89](https://github.com/TrustVC/w3c/issues/89)) ([c49bbfe](https://github.com/TrustVC/w3c/commit/c49bbfe0c61eb99993aefa44951b2dbc98aaac0f))
+
 # [1.3.0-alpha.12](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.3.0-alpha.11...@trustvc/w3c-credential-status@1.3.0-alpha.12) (2025-09-24)
 
 

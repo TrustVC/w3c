@@ -1,3 +1,17 @@
+# [1.3.0-alpha.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.15...@trustvc/w3c-vc@1.3.0-alpha.16) (2025-10-08)
+
+
+### Features
+
+* status list update for bbs and v2.0 ([#89](https://github.com/TrustVC/w3c/issues/89)) ([c49bbfe](https://github.com/TrustVC/w3c/commit/c49bbfe0c61eb99993aefa44951b2dbc98aaac0f))
+
+# [1.3.0-alpha.15](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.14...@trustvc/w3c-vc@1.3.0-alpha.15) (2025-10-07)
+
+
+### Bug Fixes
+
+* type checks ([#91](https://github.com/TrustVC/w3c/issues/91)) ([3e965d4](https://github.com/TrustVC/w3c/commit/3e965d42de6378605b81f951eb6ae7478e981544))
+
 # [1.3.0-alpha.14](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.3.0-alpha.13...@trustvc/w3c-vc@1.3.0-alpha.14) (2025-10-06)
 
 
