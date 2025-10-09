@@ -1,3 +1,10 @@
+# [1.3.0-alpha.17](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.16...@trustvc/w3c@1.3.0-alpha.17) (2025-10-09)
+
+
+### Bug Fixes
+
+* update check credential function ([#92](https://github.com/TrustVC/w3c/issues/92)) ([87e1075](https://github.com/TrustVC/w3c/commit/87e1075f77f926728f75ef2bdd150644412af5bb))
+
 # [1.3.0-alpha.16](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.3.0-alpha.15...@trustvc/w3c@1.3.0-alpha.16) (2025-10-08)
 
 
