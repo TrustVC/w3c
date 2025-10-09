@@ -37,9 +37,14 @@ export type TermsOfUse = {
 } & Record<string, any>;
 export type TermsOfUses = TermsOfUse | TermsOfUse[];
 
-export type RelatedResource = {
-  type: string;
-} & Record<string, any>;
+type RelatedResource = {
+  id: string;
+  mediaType?: string;
+} & (
+  | { digestSRI: string; digestMultibase?: string }
+  | { digestSRI?: string; digestMultibase: string }
+) &
+  Record<string, any>;
 export type RelatedResources = RelatedResource | RelatedResource[];
 
 export type RefreshService = {

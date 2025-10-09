@@ -25,6 +25,7 @@ import {
   proofTypeMapping,
   RawVerifiableCredential,
   VerifiableCredential,
+  CredentialSchema,
 } from '../types';
 
 /**
@@ -82,7 +83,14 @@ function _getId<T extends { id?: string }>(obj: T | string): string | undefined 
 
 // These properties of a Verifiable Credential (VC) must be objects containing a type field
 // if they are present in the VC.
-const mustHaveType = ['proof', 'credentialStatus', 'termsOfUse', 'refreshService'];
+const mustHaveType = [
+  'proof',
+  'credentialStatus',
+  'credentialSchema',
+  'termsOfUse',
+  'refreshService',
+  'evidence',
+];
 
 // Regular expression to validate date-time format according to XML schema.
 // Z and T must be uppercase
@@ -202,6 +210,8 @@ export function _checkCredential<T extends VerifiableCredential>(
   const isV2 = firstContext === CredentialContextVersion.v2;
 
   if (isV2) {
+    _checkCredentialSchemas(credential);
+
     // v2.0 format: validFrom is optional, validUntil is optional
     if ('validFrom' in credential) {
       assertDateString({ credential, prop: 'validFrom' });
@@ -221,6 +231,15 @@ export function _checkCredential<T extends VerifiableCredential>(
           console.warn('Credential has expired.');
           // throw new Error('Credential has expired.');
         }
+      }
+    }
+    // Validate temporal relationship between validFrom and validUntil
+    if ('validFrom' in credential && 'validUntil' in credential) {
+      const validFromDate = new Date(credential.validFrom);
+      const validUntilDate = new Date(credential.validUntil);
+
+      if (validFromDate > validUntilDate) {
+        throw new Error('validFrom must be temporally the same or earlier than validUntil');
       }
     }
 
@@ -378,6 +397,56 @@ function _checkCredentialSubject(subject: CredentialSubject): void {
       id: subject.id,
       propertyName: 'credentialSubject.id',
     });
+  }
+}
+/**
+ * Validates the credentialSchema field in a Verifiable Credential.
+ * Throws an error if the field is missing or invalid.
+ *
+ * @param {VerifiableCredential} credential - The Verifiable Credential object.
+ * @throws {Error} If the credentialSchema field is missing or invalid.
+ */
+function _checkCredentialSchemas(credential: VerifiableCredential): void {
+  if ('credentialSchema' in credential) {
+    const schemas = Array.isArray(credential.credentialSchema)
+      ? credential.credentialSchema
+      : [credential.credentialSchema];
+
+    for (const schema of schemas) {
+      _checkCredentialSchema(schema);
+    }
+  }
+}
+
+/**
+ * Validates a credential schema object to ensure it contains valid properties.
+ * Throws an error if the credential schema is not valid.
+ *
+ * @param {CredentialSchema} schema - The credential schema object to validate.
+ * @throws {Error} If the credential schema is invalid.
+ */
+function _checkCredentialSchema(schema: CredentialSchema): void {
+  // Validate credentialSchema if present
+
+  if (typeof schema !== 'object' || schema === null) {
+    throw new Error('credentialSchema must be an object');
+  }
+
+  if (!schema.id) {
+    throw new Error(
+      'credentialSchema objects must have an id property that is a URL identifying the schema file',
+    );
+  }
+
+  if (typeof schema.id !== 'string') {
+    throw new Error('credentialSchema id property must be a URL string');
+  }
+
+  // Basic URL validation for schema id
+  try {
+    new URL(schema.id);
+  } catch (e) {
+    throw new Error('credentialSchema id property must be a valid URL');
   }
 }
 
