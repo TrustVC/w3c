@@ -72,45 +72,35 @@ export default function Support() {
     }
   }
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { email, summary, description, whereEncountered } = values;
     
-    const fullDescription = whereEncountered && whereEncountered.length > 0
-      ? `${description || ''}\n\nWhere encountered: ${whereEncountered.join(', ')}`
-      : description || '';
+    // Use description as is
+    const fullDescription = description || '';
   
     try {
-      // Simulate form submission for demo purposes
-      // In production, this would submit to your actual API
-      
-      // Show loading state
-      toast.success('Submitting your request...');
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Generate a mock ticket ID
-      const mockTicketId = `TRUST-${Date.now().toString().slice(-6)}`;
-      
-      // Navigate to success page with mock ticket ID
-      toast.success('Ticket created successfully!');
-      navigate("/support/success", { state: { ticketId: mockTicketId } });
-      
-      /* 
-      // Original API submission code (commented out for demo)
+      // Create FormData for multipart/form-data request
       const formData = new FormData();
       formData.append('email', email);
       formData.append('summary', summary);
       formData.append('description', fullDescription);
-  
-      const files = fileRef.current?.files;
-      if (files) {
-        for (let i = 0; i < files.length; i++) {
-          formData.append('attachments', files[i]);
-        }
+      
+      // Convert whereEncountered to array of objects with value property
+      const platformData = (whereEncountered || []).map(item => ({ value: item }));
+      formData.append('platform', JSON.stringify(platformData));
+
+      // Add file attachments
+      if (selectedFiles && selectedFiles.length > 0) {
+        selectedFiles.forEach(file => {
+          formData.append('attachments', file);
+        });
       }
   
-      const response = await fetch('http://localhost:3001/api/create-ticket', {
+      // Show loading state
+      toast.success('Submitting your request...');
+      
+      // Submit to AWS API endpoint
+      const response = await fetch('https://nrw2toa8ed.execute-api.ap-southeast-1.amazonaws.com/dev/service-request', {
         method: 'POST',
         body: formData,
       });
@@ -118,18 +108,22 @@ export default function Support() {
       const data = await response.json();
   
       if (response.ok && data.success) {
-        toast.success(data.message || 'Ticket created successfully!');
-        navigate("/support/success", { state: { ticketId: data.ticketId } });
+        const ticketId = data.data?.serviceRequest?.issueKey || 'Unknown';
+        const message = data.data?.message || 'Ticket created successfully!';
+        const attachmentCount = data.data?.attachmentsUploaded || 0;
+        
+        toast.success(`${message}${attachmentCount > 0 ? ` (${attachmentCount} attachments uploaded)` : ''}`);
+        navigate("/support/success", { state: { ticketId, webUrl: data.data?.serviceRequest?.webUrl } });
       } else {
-        const errorMessage = data.details || data.error || 'Failed to create ticket';
+        // Handle the actual error response format
+        const errorMessage = data.error?.message || data.message || data.error || 'Failed to create ticket';
+        console.error('API Error:', data);
         toast.error(errorMessage);
-        navigate("/support/error");
+        navigate("/support/error", { state: { error: data.error || data } });
       }
-      */
     } catch (error) {
       console.error('Submission error:', error);
       toast.error('Network error. Please try again.');
-      // Navigate to error page when submission fails
       navigate("/support/error");
     }
   }
@@ -230,6 +224,8 @@ export default function Support() {
                                             (field.value || []).filter((value) => value !== option)
                                           );
                                     }}
+                                    className="h-4 w-4 !rounded-none border-2 border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                    style={{ borderRadius: '2px' }}
                                   />
                                 </FormControl>
                                 <FormLabel className="font-normal cursor-pointer">

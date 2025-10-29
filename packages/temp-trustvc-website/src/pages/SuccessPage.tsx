@@ -39,10 +39,10 @@ export default function SuccessPage() {
               You will receive an email confirmation shortly.
             </p>
             <Button
-              onClick={() => navigate("/support")}
+              onClick={() => navigate("/")}
               className="w-full max-w-xs bg-gradient-trust hover:opacity-90"
             >
-              Back to Support
+              Back to Home
             </Button>
           </CardContent>
         </Card>
