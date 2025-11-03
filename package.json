@@ -18,7 +18,7 @@
     "copy-files": "bash ./scripts/copy-files.sh",
     "build-website": "nx run @trustvc/temp-trustvc-website:build && npm run copy-files",
     "clean": "nx clear-cache && nx run-many --target=clean",
-    "dev": "nx run-many --target=dev",
+    "dev": "nx run-many --target=dev --exclude=@trustvc/w3c-cli",
     "precommit": "lint-staged",
     "cli:install": "npm install --prefix apps/w3c-cli",
     "cli:dev": "npm run dev --prefix apps/w3c-cli",

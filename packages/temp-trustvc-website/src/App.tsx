@@ -8,6 +8,8 @@ import Navigation from '@/components/Navigation';
 import Index from './pages/Index';
 import Gallery from './pages/Gallery';
 import Support from './pages/Support';
+import SuccessPage from './pages/SuccessPage';
+import ErrorPage from './pages/ErrorPage';
 import News from './pages/News';
 import Contact from './pages/Contact';
 import TradeTrust from './pages/TradeTrust';
@@ -26,6 +28,9 @@ const App = () => (
           <Navigation />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/support/success" element={<SuccessPage />} />
+            <Route path="/support/error" element={<ErrorPage />} />
             {/* <Route path="/contact" element={<Contact />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
