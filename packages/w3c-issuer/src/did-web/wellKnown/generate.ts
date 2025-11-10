@@ -1,5 +1,5 @@
 import { VerificationMethod } from 'did-resolver';
-import { VerificationContext, VerificationType } from '../../lib/types';
+import { VerificationType, VerificationContext } from '../../lib/types';
 import {
   KeyPair,
   DidWellKnownDocument,
@@ -7,6 +7,8 @@ import {
   WellKnownEnum,
   BBSKeyPair,
   ECDSAKeyPair,
+  Bbs2023KeyPair,
+  EcdsaSd2023KeyPair,
 } from './types';
 
 /**
@@ -36,7 +38,11 @@ export const generateWellKnownDid = ({
           s?.publicKeyBase58 === (newKeyPair as BBSKeyPair)?.publicKeyBase58) ||
         (newKeyPair.type === VerificationType.EcdsaSecp256k1RecoveryMethod2020 &&
           s?.blockchainAccountId &&
-          s?.blockchainAccountId === (newKeyPair as ECDSAKeyPair)?.blockchainAccountId)
+          s?.blockchainAccountId === (newKeyPair as ECDSAKeyPair)?.blockchainAccountId) ||
+        (newKeyPair.type === VerificationType.Multikey &&
+          s?.publicKeyMultibase &&
+          s?.publicKeyMultibase ===
+            (newKeyPair as Bbs2023KeyPair | EcdsaSd2023KeyPair)?.publicKeyMultibase)
       );
     })
   ) {
@@ -88,6 +94,13 @@ export const generateWellKnownDid = ({
     (newKeyPair as ECDSAKeyPair).blockchainAccountId
   ) {
     newVerificationMethod.blockchainAccountId = (newKeyPair as ECDSAKeyPair).blockchainAccountId;
+  } else if (
+    newKeyPair.type === VerificationType.Multikey &&
+    (newKeyPair as Bbs2023KeyPair | EcdsaSd2023KeyPair).publicKeyMultibase
+  ) {
+    newVerificationMethod.publicKeyMultibase = (
+      newKeyPair as Bbs2023KeyPair | EcdsaSd2023KeyPair
+    ).publicKeyMultibase;
   }
 
   if (!wellKnown[WellKnownEnum.VERIFICATION_METHOD]) {

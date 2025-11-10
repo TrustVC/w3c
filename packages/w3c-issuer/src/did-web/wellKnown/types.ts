@@ -32,7 +32,7 @@ export const WellKnownAttribute: readonly WellKnownAttributeType[] = [
   WellKnownEnum.CAPABILITY_DELEGATION,
 ] as const;
 
-export type KeyPair = BBSKeyPair | ECDSAKeyPair;
+export type KeyPair = BBSKeyPair | ECDSAKeyPair | MultikeyKeyPair;
 export type BBSKeyPair = {
   id: string;
   type: VerificationType;
@@ -47,8 +47,21 @@ export type ECDSAKeyPair = {
   publicKeyMultibase?: string;
   blockchainAccountId?: string;
 };
+export type MultikeyKeyPair = {
+  '@context'?: string;
+  id: string;
+  type: VerificationType.Multikey;
+  controller: string;
+  publicKeyMultibase?: string;
+};
+export type Bbs2023KeyPair = MultikeyKeyPair;
+export type EcdsaSd2023KeyPair = MultikeyKeyPair;
 
-export type PrivateKeyPair = BBSPrivateKeyPair | ECDSAPrivateKeyPair;
+export type PrivateKeyPair =
+  | BBSPrivateKeyPair
+  | ECDSAPrivateKeyPair
+  | Bbs2023PrivateKeyPair
+  | EcdsaSd2023PrivateKeyPair;
 export type BBSPrivateKeyPair = BBSKeyPair & {
   seedBase58?: string;
   privateKeyBase58?: string;
@@ -58,6 +71,13 @@ export type ECDSAPrivateKeyPair = ECDSAKeyPair & {
   privateKeyHex?: string;
   privateKeyMultibase?: string;
   mnemonics?: string;
+};
+export type Bbs2023PrivateKeyPair = Bbs2023KeyPair & {
+  seedBase58?: string;
+  secretKeyMultibase?: string;
+};
+export type EcdsaSd2023PrivateKeyPair = EcdsaSd2023KeyPair & {
+  secretKeyMultibase?: string;
 };
 
 export type DidWellKnownDocument = DIDDocument & {

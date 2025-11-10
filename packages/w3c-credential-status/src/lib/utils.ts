@@ -20,7 +20,24 @@ import {
  * @throws {Error} - Throws an error if the type is not supported.
  */
 export const assertCredentialStatusType = <T>(type: T): void => {
-  const supportedTypes: T[] = ['StatusList2021Entry', 'TransferableRecords'] as T[];
+  const supportedTypes: T[] = [
+    'StatusList2021Entry',
+    'BitstringStatusListEntry',
+    'TransferableRecords',
+  ] as T[];
+
+  if (!supportedTypes.includes(type)) {
+    throw new Error(`Unsupported type: ${type}`);
+  }
+};
+
+/**
+ * Asserts the type of the credential status statusList.
+ * @param type - The type of the credential status.
+ * @throws {Error} - Throws an error if the type is not supported.
+ */
+export const assertCredentialStatusStatusListType = <T>(type: T): void => {
+  const supportedTypes: T[] = ['StatusList2021Entry', 'BitstringStatusListEntry'] as T[];
 
   if (!supportedTypes.includes(type)) {
     throw new Error(`Unsupported type: ${type}`);
@@ -75,6 +92,9 @@ export const assertCredentialStatus = (credentialStatus: GeneralCredentialStatus
     case 'StatusList2021Entry':
       assertStatusList2021Entry(credentialStatus as BitstringStatusListCredentialStatus);
       break;
+    case 'BitstringStatusListEntry':
+      assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
+      break;
     default:
       throw new Error(`Unsupported type: ${credentialStatus.type}`);
   }
@@ -103,7 +123,7 @@ export function _validateUriId({ id, propertyName }: { id: string; propertyName:
   }
 }
 
-export const assertStatusList2021Entry = (
+const _assertStatusListCredentialStatus = (
   credentialStatus: BitstringStatusListCredentialStatus,
 ): void => {
   const { type, statusPurpose, statusListIndex, statusListCredential } = credentialStatus;
@@ -115,6 +135,9 @@ export const assertStatusList2021Entry = (
     propertyName: 'credentialStatus.statusListCredential',
   });
 };
+
+export const assertStatusList2021Entry = _assertStatusListCredentialStatus;
+export const assertBitstringStatusListEntry = _assertStatusListCredentialStatus;
 
 export const assertTransferableRecords = (
   credentialStatus: TransferableRecordsCredentialStatus,

@@ -1,4 +1,3 @@
-// @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { _checkCredentialStatus, _validateUriId } from '../../helper';
 import { CredentialStatus, VerifiableCredential } from '../../types';

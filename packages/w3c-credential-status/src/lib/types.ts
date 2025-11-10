@@ -44,7 +44,7 @@ export type RawCredentialStatusVC = {
   '@context': string | string[];
   type: string[];
   issuer: string | Record<string, any>;
-  issuanceDate: string;
+  issuanceDate?: string;
   validFrom?: string;
   validUntil?: string;
   expirationDate?: string;
@@ -60,3 +60,5 @@ export type SignedCredentialStatusVC = RawCredentialStatusVC & {
     proofValue: string;
   };
 };
+
+export type CryptoSuiteName = 'BbsBlsSignature2020' | 'bbs-2023' | 'ecdsa-sd-2023';

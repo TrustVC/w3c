@@ -1,5 +1,10 @@
 import { DidWebGenerateKeyPairOptions, DidWebGeneratedKeyPair } from './../did-web/keyPair/types';
 
+export enum CryptoSuite {
+  Bbs2023 = 'bbs-2023',
+  EcdsaSd2023 = 'ecdsa-sd-2023',
+}
+
 /**
  * https://www.w3.org/TR/did-spec-registries/#verification-method-types
  */
@@ -10,6 +15,7 @@ export enum VerificationType {
   Bls12381G1Key2020 = 'Bls12381G1Key2020',
   Bls12381G2Key2020 = 'Bls12381G2Key2020',
   EcdsaSecp256k1RecoveryMethod2020 = 'EcdsaSecp256k1RecoveryMethod2020',
+  Multikey = 'Multikey',
 }
 
 export const VerificationContext: { [key in VerificationType]: string } = {
@@ -23,10 +29,11 @@ export const VerificationContext: { [key in VerificationType]: string } = {
   [VerificationType.Bls12381G2Key2020]: 'https://w3id.org/security/suites/bls12381-2020/v1',
   [VerificationType.EcdsaSecp256k1RecoveryMethod2020]:
     'https://w3id.org/security/suites/secp256k1recovery-2020/v2',
+  [VerificationType.Multikey]: 'https://w3id.org/security/multikey/v1',
 };
 
 export type BaseKeyPair = {
-  type: VerificationType;
+  type: VerificationType | CryptoSuite;
 };
 
 export type GenerateKeyPairOptions = Required<BaseKeyPair> & Partial<DidWebGenerateKeyPairOptions>;

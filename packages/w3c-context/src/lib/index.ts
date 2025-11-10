@@ -9,26 +9,33 @@ import bolcContext from '../context/bill-of-lading-carrier.json';
 import cooContext from '../context/coo.json';
 import credentialsV1 from '../context/credentials-v1.json';
 import credentialsV2 from '../context/credentials-v2.json';
+import dataIntegrityV2 from '../context/data-integrity-v2.json';
 import didV1 from '../context/did-v1.json';
 import invoiceContext from '../context/invoice.json';
 import jwsV1 from '../context/jws-2020-v1.json';
+import multikeyV1 from '../context/multikey-v1.json';
 import promissoryNoteContext from '../context/promissory-note.json';
 import qrCodeContext from '../context/qrcode-context.json';
 import renderContext from '../context/render-method-context.json';
+import renderContextV2 from '../context/render-method-context-v2.json';
+import statusList2021V1 from '../context/status-list-2021-v1.json';
 import trContext from '../context/transferable-records-context.json';
 import warehouseReceiptContext from '../context/warehouse-receipt.json';
 import { Document } from './types';
 
+export const DATA_INTEGRITY_V2_URL = 'https://w3id.org/security/data-integrity/v2';
 export const DID_V1_URL = 'https://www.w3.org/ns/did/v1';
 export const VC_V1_URL = 'https://www.w3.org/2018/credentials/v1';
 export const VC_V2_URL = 'https://www.w3.org/ns/credentials/v2';
 export const BBS_V1_URL = 'https://w3id.org/security/bbs/v1';
 export const BLS12381_2020_V1_URL = 'https://w3id.org/security/suites/bls12381-2020/v1';
 export const JWS_V1_URL = 'https://w3id.org/security/suites/jws-2020/v1';
+export const MULTIKEY_V1_URL = 'https://w3id.org/security/multikey/v1';
 export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/2021/v1';
 
 export const TR_CONTEXT_URL = 'https://trustvc.io/context/transferable-records-context.json';
 export const RENDER_CONTEXT_URL = 'https://trustvc.io/context/render-method-context.json';
+export const RENDER_CONTEXT_V2_URL = 'https://trustvc.io/context/render-method-context-v2.json';
 export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-context.json';
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 
@@ -40,12 +47,15 @@ export const PROMISSORY_NOTE_CONTEXT_URL = 'https://trustvc.io/context/promissor
 export const WAREHOUSE_RECEIPT_CONTEXT_URL = 'https://trustvc.io/context/warehouse-receipt.json';
 
 export const contexts: { [key: string]: Document } = {
+  [DATA_INTEGRITY_V2_URL]: dataIntegrityV2,
   [DID_V1_URL]: didV1,
   [VC_V1_URL]: credentialsV1,
   [VC_V2_URL]: credentialsV2,
   [BBS_V1_URL]: bbsV1,
   [BLS12381_2020_V1_URL]: bbsV1,
   [JWS_V1_URL]: jwsV1,
+  [MULTIKEY_V1_URL]: multikeyV1,
+  [STATUS_LIST_2021_CREDENTIAL_URL]: statusList2021V1,
 };
 
 export const trContexts: { [key: string]: Document } = {
@@ -54,6 +64,10 @@ export const trContexts: { [key: string]: Document } = {
 
 export const renderContexts: { [key: string]: Document } = {
   [RENDER_CONTEXT_URL]: renderContext,
+};
+
+export const renderContextsV2: { [key: string]: Document } = {
+  [RENDER_CONTEXT_V2_URL]: renderContextV2,
 };
 
 export const attachmentsContexts: { [key: string]: Document } = {
@@ -96,6 +110,7 @@ export async function getDocumentLoader(
     contexts,
     trContexts,
     renderContexts,
+    renderContextsV2,
     attachmentsContexts,
     qrCodeContexts,
     templateContexts,
@@ -113,15 +128,38 @@ export async function getDocumentLoader(
 
   const resolveDid = async (did: string) => {
     const { wellKnownDid } = await queryDidDocument({ did });
-    const result: DocumentLoaderObject = {
-      contextUrl: null,
-      document: wellKnownDid,
-      documentUrl: did,
-    };
 
-    resultMap.set(did, result);
+    // Check if the DID includes a fragment (verification method ID)
+    if (did.includes('#')) {
+      // This is a verification method ID, find the specific verification method
+      const verificationMethod = wellKnownDid.verificationMethod?.find((vm) => vm.id === did);
 
-    return result;
+      if (!verificationMethod) {
+        throw new Error(`Verification method ${did} could not be found.`);
+      }
+
+      const result: DocumentLoaderObject = {
+        contextUrl: null,
+        document: {
+          '@context': wellKnownDid['@context'],
+          ...verificationMethod,
+        },
+        documentUrl: did,
+      };
+
+      resultMap.set(did, result);
+      return result;
+    } else {
+      // This is a DID document request, return the full document
+      const result: DocumentLoaderObject = {
+        contextUrl: null,
+        document: wellKnownDid,
+        documentUrl: did,
+      };
+
+      resultMap.set(did, result);
+      return result;
+    }
   };
 
   const customDocLoader = async (url: string) => {

@@ -1,14 +1,20 @@
 import { CredentialContextVersion } from '@trustvc/w3c-context';
 import {
+  assertBitstringStatusListEntry,
   assertCredentialStatusType,
   assertStatusList2021Entry,
   assertTransferableRecords,
   BitstringStatusListCredentialStatus,
   TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
-import { BBSPrivateKeyPair, PrivateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
+import {
+  Bbs2023PrivateKeyPair,
+  BBSPrivateKeyPair,
+  EcdsaSd2023PrivateKeyPair,
+  PrivateKeyPair,
+  VerificationType,
+} from '@trustvc/w3c-issuer';
 import { createHash } from 'crypto';
-// @ts-ignore: No types available for jsonld
 import * as jsonld from 'jsonld';
 import { v7 as uuidv7 } from 'uuid';
 import { assertCredentialStatuses } from '../sign/credentialStatus';
@@ -19,6 +25,7 @@ import {
   proofTypeMapping,
   RawVerifiableCredential,
   VerifiableCredential,
+  CredentialSchema,
 } from '../types';
 
 /**
@@ -35,12 +42,22 @@ export function _checkKeyPair(keyPair: PrivateKeyPair) {
   if (!keyPair.id) {
     throw new Error('"id" property in keyPair is required.');
   }
+
   if (keyPair.type === VerificationType.Bls12381G2Key2020) {
     if (!(keyPair as BBSPrivateKeyPair).privateKeyBase58) {
       throw new Error('"privateKeyBase58" property in keyPair is required.');
     }
     if (!(keyPair as BBSPrivateKeyPair).publicKeyBase58) {
       throw new Error('"publicKeyBase58" property in keyPair is required.');
+    }
+  } else if (keyPair.type === VerificationType.Multikey) {
+    // For Multikey types (BBS-2023 and ECDSA-SD-2023), check for multibase keys
+    const multikeyPair = keyPair as Bbs2023PrivateKeyPair | EcdsaSd2023PrivateKeyPair;
+    if (!multikeyPair.secretKeyMultibase) {
+      throw new Error('"secretKeyMultibase" property in keyPair is required.');
+    }
+    if (!multikeyPair.publicKeyMultibase) {
+      throw new Error('"publicKeyMultibase" property in keyPair is required.');
     }
   }
 }
@@ -66,7 +83,14 @@ function _getId<T extends { id?: string }>(obj: T | string): string | undefined 
 
 // These properties of a Verifiable Credential (VC) must be objects containing a type field
 // if they are present in the VC.
-const mustHaveType = ['proof', 'credentialStatus'];
+const mustHaveType = [
+  'proof',
+  'credentialStatus',
+  'credentialSchema',
+  'termsOfUse',
+  'refreshService',
+  'evidence',
+];
 
 // Regular expression to validate date-time format according to XML schema.
 // Z and T must be uppercase
@@ -102,6 +126,17 @@ function assertDateString({
 }
 
 /**
+ * Retrieves the first value from the `@context` property of a Verifiable Credential.
+ *
+ * @param {object} credential - The Verifiable Credential object from which to extract the context.
+ * @returns {string} The first context value as a string.
+ */
+export function getFirstContext(credential: VerifiableCredential): string {
+  const v = jsonld.getValues(credential, '@context');
+  return (Array.isArray(v) && v.length ? v[0] : credential['@context']) as string;
+}
+
+/**
  * Checks if the first element of the '@context' field in the credential is the expected value.
  * Returns true if the context is valid, otherwise false.
  *
@@ -109,8 +144,14 @@ function assertDateString({
  * @throws {Error} If the context is invalid.
  */
 function assertCredentialContext(credential: VerifiableCredential): void {
-  if (credential['@context'][0] !== CredentialContextVersion.v1) {
-    throw new Error(`The first element of '@context' must be '${CredentialContextVersion.v1}'`);
+  const firstContext = getFirstContext(credential);
+  if (
+    firstContext !== CredentialContextVersion.v1 &&
+    firstContext !== CredentialContextVersion.v2
+  ) {
+    throw new Error(
+      `The first element of '@context' must be either '${CredentialContextVersion.v1}' (v1.1) or '${CredentialContextVersion.v2}' (v2.0).`,
+    );
   }
 }
 
@@ -164,39 +205,91 @@ export function _checkCredential<T extends VerifiableCredential>(
     _validateUriId({ id: issuer, propertyName: 'issuer' });
   }
 
-  // Validate issuanceDate field
-  if (!credential.issuanceDate) {
-    throw new Error('"issuanceDate" property is required.');
-  }
-  assertDateString({ credential, prop: 'issuanceDate' });
+  // Validate date fields - support both v1.1 and v2.0 formats
+  const firstContext = getFirstContext(credential);
+  const isV2 = firstContext === CredentialContextVersion.v2;
 
-  // Ensure issuanceDate has only one value
-  if (jsonld.getValues(credential, 'issuanceDate').length > 1) {
-    throw new Error('"issuanceDate" property can only have one value.');
-  }
+  if (isV2) {
+    _checkCredentialSchemas(credential);
 
-  // Optionally validate expirationDate field if it exists
-  if ('expirationDate' in credential) {
-    assertDateString({ credential, prop: 'expirationDate' });
+    // v2.0 format: validFrom is optional, validUntil is optional
+    if ('validFrom' in credential) {
+      assertDateString({ credential, prop: 'validFrom' });
+      if (jsonld.getValues(credential, 'validFrom').length > 1) {
+        throw new Error('"validFrom" property can only have one value.');
+      }
+    }
+
+    if ('validUntil' in credential) {
+      assertDateString({ credential, prop: 'validUntil' });
+      if (jsonld.getValues(credential, 'validUntil').length > 1) {
+        throw new Error('"validUntil" property can only have one value.');
+      }
+
+      if (mode === 'verify') {
+        if (now > new Date(credential.validUntil)) {
+          console.warn('Credential has expired.');
+          // throw new Error('Credential has expired.');
+        }
+      }
+    }
+    // Validate temporal relationship between validFrom and validUntil
+    if ('validFrom' in credential && 'validUntil' in credential) {
+      const validFromDate = new Date(credential.validFrom);
+      const validUntilDate = new Date(credential.validUntil);
+
+      if (validFromDate > validUntilDate) {
+        throw new Error('validFrom must be temporally the same or earlier than validUntil');
+      }
+    }
+
+    // Check if the current date is before the validFrom date during verification
+    if (mode === 'verify' && credential.validFrom) {
+      const validFromDate = new Date(credential.validFrom);
+      if (now < validFromDate) {
+        throw new Error(
+          `The current date time (${now.toISOString()}) is before the ` +
+            `"validFrom" (${credential.validFrom}).`,
+        );
+      }
+    }
+  } else {
+    // v1.1 format: issuanceDate is required
+    if (!credential.issuanceDate) {
+      throw new Error('"issuanceDate" property is required.');
+    }
+    assertDateString({ credential, prop: 'issuanceDate' });
+
+    // Ensure issuanceDate has only one value
+    if (jsonld.getValues(credential, 'issuanceDate').length > 1) {
+      throw new Error('"issuanceDate" property can only have one value.');
+    }
+
+    // Optionally validate expirationDate field if it exists
+    if ('expirationDate' in credential) {
+      assertDateString({ credential, prop: 'expirationDate' });
+      if (mode === 'verify') {
+        if (now > new Date(credential.expirationDate)) {
+          console.warn('Credential has expired.');
+          // throw new Error('Credential has expired.');
+        }
+      }
+    }
+
+    // Check if the current date is before the issuance date during verification
     if (mode === 'verify') {
-      if (now > new Date(credential.expirationDate)) {
-        console.warn('Credential has expired.');
-        // throw new Error('Credential has expired.');
+      const issuanceDate = new Date(credential.issuanceDate);
+      if (now < issuanceDate) {
+        throw new Error(
+          `The current date time (${now.toISOString()}) is before the ` +
+            `"issuanceDate" (${credential.issuanceDate}).`,
+        );
       }
     }
   }
 
-  // Check if the current date is before the issuance date during verification
+  // Validate proof field for presence and type during verification
   if (mode === 'verify') {
-    const issuanceDate = new Date(credential.issuanceDate);
-    if (now < issuanceDate) {
-      throw new Error(
-        `The current date time (${now.toISOString()}) is before the ` +
-          `"issuanceDate" (${credential.issuanceDate}).`,
-      );
-    }
-
-    // Validate proof field for presence and type during verification
     if (!credential.proof) {
       throw new Error('"proof" property is required.');
     }
@@ -216,8 +309,12 @@ export function _checkCredential<T extends VerifiableCredential>(
       throw new Error('"proof" property is already there.');
     }
 
-    // The "id" is generated programmatically later on
-    if (credential.id) {
+    // The "id" is generated programmatically later on, except for status list credentials which require it
+    const isStatusListCredential = credential.type?.some(
+      (type: string) =>
+        type === 'BitstringStatusListCredential' || type === 'StatusList2021Credential',
+    );
+    if (credential.id && !isStatusListCredential) {
       throw new Error('"id" is a defined field and should not be set by the user.');
     }
   }
@@ -272,12 +369,12 @@ function _checkCredentialSubjects(credential: VerifiableCredential): void {
 
   if (Array.isArray(credential?.credentialSubject)) {
     credential?.credentialSubject.map((subject: CredentialSubject) =>
-      _checkCredentialSubject({ subject }),
+      _checkCredentialSubject(subject),
     );
     return;
   }
 
-  _checkCredentialSubject({ subject: credential?.credentialSubject });
+  _checkCredentialSubject(credential?.credentialSubject);
 }
 
 /**
@@ -300,6 +397,56 @@ function _checkCredentialSubject(subject: CredentialSubject): void {
       id: subject.id,
       propertyName: 'credentialSubject.id',
     });
+  }
+}
+/**
+ * Validates the credentialSchema field in a Verifiable Credential.
+ * Throws an error if the field is missing or invalid.
+ *
+ * @param {VerifiableCredential} credential - The Verifiable Credential object.
+ * @throws {Error} If the credentialSchema field is missing or invalid.
+ */
+function _checkCredentialSchemas(credential: VerifiableCredential): void {
+  if ('credentialSchema' in credential) {
+    const schemas = Array.isArray(credential.credentialSchema)
+      ? credential.credentialSchema
+      : [credential.credentialSchema];
+
+    for (const schema of schemas) {
+      _checkCredentialSchema(schema);
+    }
+  }
+}
+
+/**
+ * Validates a credential schema object to ensure it contains valid properties.
+ * Throws an error if the credential schema is not valid.
+ *
+ * @param {CredentialSchema} schema - The credential schema object to validate.
+ * @throws {Error} If the credential schema is invalid.
+ */
+function _checkCredentialSchema(schema: CredentialSchema): void {
+  // Validate credentialSchema if present
+
+  if (typeof schema !== 'object' || schema === null) {
+    throw new Error('credentialSchema must be an object');
+  }
+
+  if (!schema.id) {
+    throw new Error(
+      'credentialSchema objects must have an id property that is a URL identifying the schema file',
+    );
+  }
+
+  if (typeof schema.id !== 'string') {
+    throw new Error('credentialSchema id property must be a URL string');
+  }
+
+  // Basic URL validation for schema id
+  try {
+    new URL(schema.id);
+  } catch (e) {
+    throw new Error('credentialSchema id property must be a valid URL');
   }
 }
 
@@ -375,6 +522,8 @@ export const _checkCredentialStatus = (
 
   if (type === 'StatusList2021Entry') {
     assertStatusList2021Entry(credentialStatus as BitstringStatusListCredentialStatus);
+  } else if (type === 'BitstringStatusListEntry') {
+    assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
   } else if (type === 'TransferableRecords') {
     assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
   } else {
@@ -384,15 +533,33 @@ export const _checkCredentialStatus = (
 
 /**
  * Prefills the credential ID with a UUIDv7.
+ * Uses blank node format for BBS+ compatibility and proper URI format for ECDSA-SD-2023.
  * If the credentialStatus is present with type TransferableRecords, set the tokenId.
  *
  * @param {RawVerifiableCredential} credential
+ * @param {string} cryptoSuite - The cryptosuite being used for signing
  * @returns {RawVerifiableCredential}
  */
 export const prefilCredentialId = (
   credential: RawVerifiableCredential,
+  cryptoSuite?: string,
 ): RawVerifiableCredential => {
-  credential.id = `urn:bnid:_:${uuidv7()}`;
+  // Don't overwrite existing id for status list credentials types
+  const isStatusListCredential = credential.type?.some(
+    (type: string) =>
+      type === 'BitstringStatusListCredential' || type === 'StatusList2021Credential',
+  );
+  if (credential.id && isStatusListCredential) {
+    // Keep the existing id for status list credentials
+  } else {
+    // Use proper URI format for ECDSA-SD-2023 and BBS-2023
+    // Use blank node format for BBS+ (maintains backward compatibility)
+    if (cryptoSuite === 'ecdsa-sd-2023' || cryptoSuite === 'bbs-2023') {
+      credential.id = `urn:uuid:${uuidv7()}`;
+    } else {
+      credential.id = `urn:bnid:_:${uuidv7()}`;
+    }
+  }
 
   if (credential?.credentialStatus?.type === 'TransferableRecords') {
     credential.credentialStatus = {
