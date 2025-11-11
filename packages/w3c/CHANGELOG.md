@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.17...@trustvc/w3c@2.0.0) (2025-11-11)
+
+
+### Features
+
+* w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes ([#96](https://github.com/TrustVC/w3c/issues/96)) ([d075c4c](https://github.com/TrustVC/w3c/commit/d075c4c49b58a3f231f48985c2523fdcf8d3a6cc))
+
+
+### BREAKING CHANGES
+
+* w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes
+
 ## [1.2.17](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@1.2.16...@trustvc/w3c@1.2.17) (2025-06-13)
 
 
