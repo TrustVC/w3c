@@ -10,7 +10,7 @@ npm install @trustvc/w3c-issuer
 ```
 
 ## Features
-- Create private key pairs for specific [Signature Suites](https://w3c-ccg.github.io/ld-cryptosuite-registry/) used for signing Verifiable Credentials (e.g., BBS).
+- Create private key pairs for specific signature suites used for signing Verifiable Credentials: [ECDSA-SD-2023](https://w3c.github.io/vc-di-ecdsa/#ecdsa-sd-2023), [BBS-2023](https://w3c.github.io/vc-di-bbs/#bbs-2023), and [legacy suites](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 - Generate DID private key pairs and DID documents.
 
 <br>
@@ -23,26 +23,30 @@ ________________________________
 `generateKeyPair` function helps to generate a signature Key Pair.
 
 ```ts
-import { generateKeyPair, VerificationType } from '@trustvc/w3c-issuer';
+import { generateKeyPair, CryptoSuite } from '@trustvc/w3c-issuer';
 
 /**
  * Parameters:
  * - options (GenerateKeyPairOptions)
- * - options.type (VerificationType): Key Pair algo type for Signature
+ * - options.type (CryptoSuite | VerificationType): Key Pair algo type for Signature
  * - options.seedBase58? (string): 32 byte base58 encoded seed (e.g. FVj12jBiBUqYFaEUkTuwAD73p9Hx5NzCJBge74nTguQN) (optional)
  * - options.privateKeyBase58? (string): private key value (optional)
  * - options.publicKeyBase58? (string): public key value (optional)
+ * - options.secretKeyMultibase? (string): private key value in multibase format (optional)
+ * - options.publicKeyMultibase? (string): public key value in multibase format (optional)
  * 
  * Returns:
  * - A Promise that resolves to:
- *   - generatedKeyPair.type (VerificationType): Key Pair algo.
- *   - generatedKeyPair.seedBase58 (string): 32 byte base58 encoded seed
- *   - generatedKeyPair.privateKeyBase58 (string): Derieve private key from seed
- *   - generatedKeyPair.publicKeyBase58 (string): Detrieve public key from seed
+ *   - generatedKeyPair.type (CryptoSuite | VerificationType): Key Pair algo.
+ *   - generatedKeyPair.secretKeyMultibase (string): Private key in multibase format (for modern cryptosuites)
+ *   - generatedKeyPair.publicKeyMultibase (string): Public key in multibase format (for modern cryptosuites)
+ *   - generatedKeyPair.seedBase58 (string): 32 byte base58 encoded seed (for legacy types only)
+ *   - generatedKeyPair.privateKeyBase58 (string): Private key in base58 format (for legacy types only)
+ *   - generatedKeyPair.publicKeyBase58 (string): Public key in base58 format (for legacy types only)
  */ 
 
 const options = {
-  type: VerificationType.Bls12381G2Key2020,
+  type: CryptoSuite.EcdsaSd2023,
   seedBase58: undefined
 }
 
@@ -55,10 +59,9 @@ console.log('generatedKeyPair: ', generatedKeyPair)
 
   ```js
   generatedKeyPair: {
-    type: 'Bls12381G2Key2020',
-    seedBase58: '<seedBase58>',
-    privateKeyBase58: '<privateKeyBase58',
-    publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
+    type: 'ecdsa-sd-2023',
+    secretKeyMultibase: '<secretKeyMultibase>',
+    publicKeyMultibase: '<publicKeyMultibase>'
   }
   ```
 </details>
@@ -74,16 +77,18 @@ console.log('generatedKeyPair: ', generatedKeyPair)
 *Read [here]() for more signing instructions.*
 
 ```ts
-import { VerificationType, issueDID } from '@trustvc/w3c-issuer';
+import { CryptoSuite, issueDID } from '@trustvc/w3c-issuer';
 
 /**
  * Parameters:
  * - options (IssuedDIDOption)
  * - options.domain (string): URL where the DID Document will be located
- * - options.type (VerificationType): Key Pair algo.
- * - options.seedBase58? (string): 32 byte base58 encoded seed (optional)
- * - options.privateKeyBase58? (string): Derieved private key from seed (optional)
- * - options.publicKeyBase58? (string): Detrieved public key from seed (optional)
+ * - options.type (CryptoSuite | VerificationType): Key Pair algo.
+ * - options.secretKeyMultibase? (string): Private key in multibase format (optional, for modern cryptosuites)
+ * - options.publicKeyMultibase? (string): Public key in multibase format (optional, for modern cryptosuites)
+ * - options.seedBase58? (string): 32 byte base58 encoded seed (optional, for legacy types)
+ * - options.privateKeyBase58? (string): Private key in base58 format (optional, for legacy types)
+ * - options.publicKeyBase58? (string): Public key in base58 format (optional, for legacy types)
  *
  * Returns:
  * - A Promise that resolves to:
@@ -93,10 +98,9 @@ import { VerificationType, issueDID } from '@trustvc/w3c-issuer';
 
 const options = {
   domain: 'https://example.com/.well-known/did.json',
-  type: VerificationType.Bls12381G2Key2020,
-  seedBase58: '<seedBase58>',
-  privateKeyBase58: '<privateKeyBase58>',
-  publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
+  type: CryptoSuite.EcdsaSd2023,
+  secretKeyMultibase: '<secretKeyMultibase>',
+  publicKeyMultibase: '<publicKeyMultibase>'
 }
 
 const issuedDID = await issueDID(options);
@@ -113,28 +117,28 @@ console.log("didKeyPairs:", didKeyPairs)
     id: 'did:web:example.com',
     verificationMethod: [
       {
-        type: 'Bls12381G2Key2020',
-        id: 'did:web:example.com#keys-1',
+        type: 'Multikey',
+        id: 'did:web:example.com#multikey-1',
         controller: 'did:web:example.com',
-        publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
+        publicKeyMultibase: '<publicKeyMultibase>'
       }
     ],
     '@context': [
       'https://www.w3.org/ns/did/v1',
-      'https://w3id.org/security/suites/bls12381-2020/v1'
+      'https://w3id.org/security/multikey/v1'
     ],
-    authentication: [ 'did:web:example.com#keys-1' ],
-    assertionMethod: [ 'did:web:example.com#keys-1' ],
-    capabilityInvocation: [ 'did:web:example.com#keys-1' ],
-    capabilityDelegation: [ 'did:web:example.com#keys-1' ]
+    authentication: [ 'did:web:example.com#multikey-1' ],
+    assertionMethod: [ 'did:web:example.com#multikey-1' ],
+    capabilityInvocation: [ 'did:web:example.com#multikey-1' ],
+    capabilityDelegation: [ 'did:web:example.com#multikey-1' ]
   }
   didKeyPairs: {
-    id: 'did:web:example.com#keys-1',
-    type: 'Bls12381G2Key2020',
+    '@context': 'https://w3id.org/security/multikey/v1',
+    id: 'did:web:example.com#multikey-1',
+    type: 'Multikey',
     controller: 'did:web:example.com',
-    seedBase58: '<seedBase58>',
-    privateKeyBase58: '<privateKeyBase58>',
-    publicKeyBase58: 'oRfEeWFresvhRtXCkihZbxyoi2JER7gHTJ5psXhHsdCoU1MttRMi3Yp9b9fpjmKh7bMgfWKLESiK2YovRd8KGzJsGuamoAXfqDDVhckxuc9nmsJ84skCSTijKeU4pfAcxeJ'
+    secretKeyMultibase: '<secretKeyMultibase>',
+    publicKeyMultibase: '<publicKeyMultibase>'
   }
   ```
 </details>

@@ -1,4 +1,5 @@
 import { BbsBlsSignature2020, BbsBlsSignatureProof2020 } from '@mattrglobal/jsonld-signatures-bbs';
+import { DataIntegrityProof } from '@digitalbazaar/data-integrity';
 
 // Define the type for the signing result
 export interface SigningResult {
@@ -23,13 +24,42 @@ export type CredentialStatus = {
   type: string;
 } & Record<string, any>;
 export type CredentialStatuses = CredentialStatus | CredentialStatus[];
-
+export type CredentialSchema = {
+  id: string;
+  type: string;
+} & Record<string, any>;
+export type CredentialSchemas = CredentialSchema | CredentialSchema[];
 export type CredentialSubject = Record<string, any>;
 export type CredentialSubjects = CredentialSubject | CredentialSubject[];
 
+export type TermsOfUse = {
+  type: string;
+} & Record<string, any>;
+export type TermsOfUses = TermsOfUse | TermsOfUse[];
+
+type RelatedResource = {
+  id: string;
+  mediaType?: string;
+} & (
+  | { digestSRI: string; digestMultibase?: string }
+  | { digestSRI?: string; digestMultibase: string }
+) &
+  Record<string, any>;
+export type RelatedResources = RelatedResource | RelatedResource[];
+
+export type RefreshService = {
+  type: string;
+} & Record<string, any>;
+export type RefreshServices = RefreshService | RefreshService[];
+
+export type Evidence = {
+  type: string;
+} & Record<string, any>;
+export type Evidences = Evidence | Evidence[];
+
 export type Proof = {
   type: string;
-  created: string;
+  created?: string;
   proofPurpose: string;
   verificationMethod: string;
   proofValue: string;
@@ -43,12 +73,17 @@ export type SignedVerifiableCredential = {
   id: string;
   type: string | string[];
   issuer: string | Record<string, any>;
-  issuanceDate: string;
+  issuanceDate?: string;
   validFrom?: string;
   validUntil?: string;
   expirationDate?: string;
   credentialStatus?: CredentialStatuses;
   credentialSubject: CredentialSubjects;
+  credentialSchema?: CredentialSchemas;
+  termsOfUse?: TermsOfUses;
+  evidence?: Evidences;
+  relatedResource?: RelatedResources;
+  refreshService?: RefreshServices;
   renderMethod?: Record<string, any>;
   qrCode?: Record<string, any>;
   proof?: Proof;
@@ -56,12 +91,15 @@ export type SignedVerifiableCredential = {
 
 export type RawVerifiableCredential = Omit<SignedVerifiableCredential, 'proof'>;
 
-export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020';
+export type CryptoSuiteName = 'BbsBlsSignature2020' | 'bbs-2023' | 'ecdsa-sd-2023';
+
+export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020' | 'DataIntegrityProof';
 
 export const proofTypeMapping: Record<
   ProofType,
-  typeof BbsBlsSignature2020 | typeof BbsBlsSignatureProof2020
+  typeof BbsBlsSignature2020 | typeof BbsBlsSignatureProof2020 | typeof DataIntegrityProof
 > = {
   BbsBlsSignature2020: BbsBlsSignature2020,
   BbsBlsSignatureProof2020: BbsBlsSignatureProof2020,
+  DataIntegrityProof: DataIntegrityProof,
 };

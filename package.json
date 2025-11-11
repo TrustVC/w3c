@@ -114,7 +114,6 @@
     "express": "^4.19.2",
     "inquirer": "^10.1.2",
     "jsonld": "^6.0.0",
-    "jsonld-signatures": "7.0.0",
     "multiformats": "^9.9.0",
     "pako": "^2.1.0",
     "tslib": "^2.3.0",

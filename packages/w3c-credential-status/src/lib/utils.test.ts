@@ -89,7 +89,7 @@ describe('utils.ts', () => {
 
     it('should throw an error if the VC is not found', async () => {
       expect(
-        fetchCredentialStatusVC('https://trustvc.github.io/did/credentials/statuslist/2'),
+        fetchCredentialStatusVC('https://trustvc.github.io/did/credentials/statuslist/3'),
       ).rejects.toThrowError('Credential Status VC not found');
     });
 
