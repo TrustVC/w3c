@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@2.0.0...@trustvc/w3c-vc@2.0.1) (2025-12-26)
+
+
+### Bug Fixes
+
+* remove w3c cli tool mention ([#98](https://github.com/TrustVC/w3c/issues/98)) ([66072ee](https://github.com/TrustVC/w3c/commit/66072ee9b2a4add632892e8c85bc34ba0d355655))
+
 # [2.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@1.2.17...@trustvc/w3c-vc@2.0.0) (2025-11-11)
 
 
