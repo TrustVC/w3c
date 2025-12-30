@@ -30,7 +30,18 @@ export const issueDID = async (didInput: IssuedDIDOption): Promise<IssuedDID> =>
 
   const keyId = nextKeyId(wellKnownDid);
 
-  const generatedKeyPair = await generateKeyPair(didInput);
+  // Check if user provided public key data
+  const hasModernPublicKey = didInput.publicKeyMultibase;
+  const hasLegacyPublicKey = didInput.publicKeyBase58;
+  const userProvidedKeys = hasModernPublicKey || hasLegacyPublicKey;
+
+  // Validate that type is provided when keys are provided
+  if (userProvidedKeys && !didInput.type) {
+    throw new Error('Key pair type must be provided when supplying existing keys');
+  }
+
+  // Only generate if user didn't provide complete key pair
+  const generatedKeyPair = userProvidedKeys ? { ...didInput } : await generateKeyPair(didInput);
 
   let keyPairs: PrivateKeyPair;
 
