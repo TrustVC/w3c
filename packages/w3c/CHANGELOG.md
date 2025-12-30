@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@2.0.1...@trustvc/w3c@2.0.2) (2025-12-30)
+
+
+### Bug Fixes
+
+* enhance DID key handling and generation ([#99](https://github.com/TrustVC/w3c/issues/99)) ([7092c00](https://github.com/TrustVC/w3c/commit/7092c009f12d2f841691b844fb37daa6e09ccb13))
+
 ## [2.0.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@2.0.0...@trustvc/w3c@2.0.1) (2025-12-26)
 
 
