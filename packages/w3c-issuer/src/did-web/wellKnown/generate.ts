@@ -134,17 +134,20 @@ export const nextKeyId = (wellKnown: DidWellKnownDocument): number => {
   // Filter for all key id
   const keyIds = wellKnown?.verificationMethod?.map((s) => s?.id) ?? [];
 
-  // strip the key id to get the number
-  const keyIdNumbers = keyIds.map((s) => {
-    const parts = s?.split('#');
-    if (!parts) return 0;
-    return parts?.[parts.length - 1]?.split('keys-')?.[1];
-  });
+  // strip the key id to get the number (only for keys that follow 'keys-{number}' pattern)
+  const keyIdNumbers = keyIds
+    .map((s) => {
+      const parts = s?.split('#');
+      if (!parts || parts.length < 2) return null;
+      const fragment = parts[parts.length - 1];
+      // Only process if it follows the 'keys-' pattern
+      if (!fragment?.includes('keys-')) return null;
+      return fragment.split('keys-')[1];
+    })
+    .filter((s) => s !== null && s !== undefined); // Remove null/undefined values
 
-  // filter out the non-numeric values using Number and convert to number
-  const keyIdNumbersFiltered = keyIdNumbers
-    .filter((s) => !Number.isInteger(s))
-    .map((s) => Number(s));
+  // filter out the non-numeric values and convert to number
+  const keyIdNumbersFiltered = keyIdNumbers.filter((s) => !isNaN(Number(s))).map((s) => Number(s));
 
   // get the max number
   if (keyIdNumbersFiltered.length === 0) return 1;
