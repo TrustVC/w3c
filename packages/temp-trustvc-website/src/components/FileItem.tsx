@@ -10,7 +10,7 @@ interface FileItemProps {
 }
 
 export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
-  const { id, filename, status, progress, error } = item;
+  const { id, filename, status, progress, error, previewUrl } = item;
   const displayName = truncateFilename(filename, 36);
   const isUploading = status === "uploading" || status === "pending";
   const isError = status === "error";
@@ -24,8 +24,16 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
       )}
     >
       {/* Left: progress circle or preview placeholder */}
-      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-muted">
-        {isUploading ? (
+      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-muted overflow-hidden">
+        {isError ? (
+          <span className="text-destructive text-xs font-medium">!</span>
+        ) : previewUrl ? (
+          <img
+            src={previewUrl}
+            alt={filename}
+            className="w-full h-full object-cover rounded-full"
+          />
+        ) : isUploading ? (
           <div className="relative w-8 h-8">
             <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
               <circle
@@ -50,8 +58,6 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
               />
             </svg>
           </div>
-        ) : isError ? (
-          <span className="text-destructive text-xs font-medium">!</span>
         ) : (
           <span className="text-xs text-muted-foreground">Preview</span>
         )}

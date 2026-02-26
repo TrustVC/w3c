@@ -85,6 +85,7 @@ export const useContactForm = () => {
         filename: file.name,
         status: 'pending',
         progress: 0,
+        previewUrl: typeof URL !== 'undefined' ? URL.createObjectURL(file) : undefined,
       }));
       setAttachments((prev) => [...prev, ...items]);
       setSubmitError(null);
@@ -136,11 +137,24 @@ export const useContactForm = () => {
   );
 
   const removeAttachment = useCallback((id: string) => {
-    setAttachments((prev) => prev.filter((a) => a.id !== id));
+    setAttachments((prev) => {
+      const toRemove = prev.find((a) => a.id === id);
+      if (toRemove?.previewUrl && typeof URL !== 'undefined') {
+        URL.revokeObjectURL(toRemove.previewUrl);
+      }
+      return prev.filter((a) => a.id !== id);
+    });
   }, []);
 
   const clearAllAttachments = useCallback(() => {
-    setAttachments([]);
+    setAttachments((prev) => {
+      if (typeof URL !== 'undefined') {
+        prev.forEach((a) => {
+          if (a.previewUrl) URL.revokeObjectURL(a.previewUrl);
+        });
+      }
+      return [];
+    });
     setSubmitError(null);
   }, []);
 
