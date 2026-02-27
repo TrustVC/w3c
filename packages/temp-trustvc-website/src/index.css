@@ -67,6 +67,9 @@
     --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     
     --radius: 0.75rem;
+    --Neutral-100-30: #3D444D;
+    --text-secondary: #5B6571;
+    --primary-button-color: #5B5BB3;
   }
 
   .dark {
@@ -99,6 +102,8 @@
     /* Gradients - Dark */
     --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
     --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --Neutral-100-30: #A9B2BB;
+    --primary-button-color: #7D80D7;
   }
 }
 
@@ -189,7 +194,7 @@
   font-size: 18px;
   line-height: 136%;
   text-align: center;
-  color: #3d444d;
+  color: var(--Neutral-100-30);
 }
 .dark .contact-description {
   color: #ffffff;
@@ -203,7 +208,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 155%;
-  color: #3d444d;
+  color: var(--text-secondary);
 }
 .dark .encountering-issues-text {
   color: #a9b2bb;
@@ -271,7 +276,7 @@
   transition: border-color 0.2s;
 }
 .contact-input::placeholder {
-  color: #5b6571;
+  color: var(--text-secondary);
 }
 .dark .contact-input {
   background: transparent;
@@ -306,25 +311,73 @@
   min-height: 40px;
   padding: 0 36px 0 12px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: linear-gradient(0deg, #ffffff, #ffffff),
+    linear-gradient(0deg, rgba(222, 228, 233, 0.33), rgba(222, 228, 233, 0.33));
   font-size: 14px;
   font-weight: 500;
   outline: none;
   appearance: none;
   cursor: pointer;
   color: #1e2026;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .dark .contact-select {
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(0deg, #000000, #000000),
+    linear-gradient(0deg, rgba(30, 32, 38, 0.66), rgba(30, 32, 38, 0.66));
+  border-color: rgba(255, 255, 255, 0.16);
   color: #dee4e9;
 }
 .contact-select.border-destructive {
   border-color: rgb(239 68 68);
 }
+
+.contact-select-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 220px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.contact-select-option {
+  width: 100%;
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e2026;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.contact-select-option:hover {
+  background: rgba(104, 106, 210, 0.06);
+}
+
+.contact-select-option-active {
+  background: rgba(104, 106, 210, 0.08);
+  color: #686ad2;
+}
 .submit-button {
-  background: #7d80d7;
+  background: var(--primary-button-color);
   width: 383px;
   max-width: 100%;
   height: 40px;
@@ -343,7 +396,7 @@
 }
 .dark .submit-button {
   color: #000000;
-  background: #686ad2;
+  background: #7d80d7;
 }
 .submit-button:disabled {
   cursor: not-allowed;
@@ -398,12 +451,12 @@
 }
 .contact-browse-button {
   min-height: 32px;
-  padding: 2px 12px;
-  background: #5b5bb3;
+  padding: 2px 14px;
+  background: var(--primary-button-color);
   border-radius: 6px;
   color: white;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   border: none;
   cursor: pointer;
   display: inline-flex;
@@ -426,7 +479,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 165%;
-  color: #5b6571;
+  color: var(--text-secondary);
 }
 .dark .file-info-text {
   color: #808894;

@@ -24,14 +24,14 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
       )}
     >
       {/* Left: progress circle or preview placeholder */}
-      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-muted overflow-hidden">
+      <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-muted overflow-hidden">
         {isError ? (
           <span className="text-destructive text-xs font-medium">!</span>
         ) : previewUrl ? (
           <img
             src={previewUrl}
             alt={filename}
-            className="w-full h-full object-cover rounded-full"
+            className="w-full h-full object-cover rounded-lg"
           />
         ) : isUploading ? (
           <div className="relative w-8 h-8">
@@ -50,11 +50,11 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
                 cy="18"
                 r="16"
                 fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
+                stroke="#686AD2"
+                strokeWidth="4"
                 strokeDasharray={`${progress * 1.02} 100`}
                 strokeLinecap="round"
-                className="text-primary transition-all duration-300"
+                className="transition-all duration-300"
               />
             </svg>
           </div>

@@ -48,6 +48,17 @@ export const useContactForm = () => {
     () => attachments.some((a) => a.status === 'uploading' || a.status === 'pending'),
     [attachments],
   );
+  const isFormValid = useMemo(() => {
+    const emailTrimmed = email.trim();
+    const descriptionTrimmed = description.trim();
+    return (
+      !!emailTrimmed &&
+      !!typeOfEnquiry &&
+      !!descriptionTrimmed &&
+      !hasError &&
+      (attachments.length === 0 || allUploaded)
+    );
+  }, [email, typeOfEnquiry, description, hasError, attachments.length, allUploaded]);
 
   const setAttachmentStatus = useCallback(
     (
@@ -85,7 +96,6 @@ export const useContactForm = () => {
         filename: file.name,
         status: 'pending',
         progress: 0,
-        previewUrl: typeof URL !== 'undefined' ? URL.createObjectURL(file) : undefined,
       }));
       setAttachments((prev) => [...prev, ...items]);
       setSubmitError(null);
@@ -112,6 +122,8 @@ export const useContactForm = () => {
                     progress: 100,
                     key: p.key,
                     filename: p.filename,
+                    previewUrl:
+                      typeof URL !== 'undefined' ? URL.createObjectURL(item.file) : undefined,
                     error: undefined,
                   });
                 })
@@ -293,6 +305,7 @@ export const useContactForm = () => {
     totalBytes,
     allUploaded,
     isUploading,
+    isFormValid,
     handleDrag,
     handleDrop,
     handleFileInput,

@@ -1,4 +1,5 @@
 import { useTheme } from "@/components/ThemeProvider";
+import { useState } from "react";
 import { useContactForm } from "@/hooks/useContactForm";
 import AttachmentDropzone from "@/components/AttachmentDropzone";
 import { AttachmentFileList } from "@/components/AttachmentFileList";
@@ -6,6 +7,8 @@ import { AttachmentFileList } from "@/components/AttachmentFileList";
 const ContactForm = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const {
     email,
@@ -29,6 +32,7 @@ const ContactForm = () => {
     handleDrop,
     handleFileInput,
     onSubmit,
+    isFormValid,
   } = useContactForm();
 
   return (
@@ -101,30 +105,100 @@ const ContactForm = () => {
                     <label className="form-label" htmlFor="contact-enquiry">
                       Type of Enquiry *
                     </label>
-                    <select
-                      id="contact-enquiry"
-                      value={typeOfEnquiry}
-                      onChange={(e) =>
-                        setTypeOfEnquiry(
-                          e.target.value as
-                            | "General_Enquiry"
-                            | "OpenCerts"
-                            | "TradeTrust"
-                            | ""
-                        )
-                      }
-                      className={`contact-select ${
-                        fieldErrors.typeOfEnquiry ? "border-destructive" : ""
-                      }`}
-                      aria-invalid={!!fieldErrors.typeOfEnquiry}
+                    <div
+                      className="relative"
+                      tabIndex={-1}
+                      onBlur={(e) => {
+                        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                          setIsDropdownOpen(false);
+                        }
+                      }}
                     >
-                      <option value="" disabled>
-                        Select an option.
-                      </option>
-                      <option value="General_Enquiry">General Enquiry</option>
-                      <option value="OpenCerts">OpenCerts</option>
-                      <option value="TradeTrust">TradeTrust</option>
-                    </select>
+                      <button
+                        type="button"
+                        id="contact-enquiry"
+                        className={`contact-select flex items-center justify-between ${
+                          fieldErrors.typeOfEnquiry ? "border-destructive" : ""
+                        }`}
+                        aria-haspopup="listbox"
+                        aria-expanded={isDropdownOpen}
+                        onClick={() => setIsDropdownOpen((open) => !open)}
+                      >
+                        <span>
+                          {typeOfEnquiry === ""
+                            ? "Select an option."
+                            : typeOfEnquiry === "General_Enquiry"
+                              ? "General Enquiry"
+                              : typeOfEnquiry}
+                        </span>
+                        <span
+                          className={`inline-flex items-center absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-transform ${
+                            isDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        >
+                          <img
+                            src={
+                              isDarkMode
+                                ? "/icons/chevron-down-dark.svg"
+                                : "/icons/chevron-down.svg"
+                            }
+                            alt=""
+                            className="h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </button>
+                      {isDropdownOpen && (
+                        <div
+                          className="contact-select-menu"
+                          role="listbox"
+                          aria-labelledby="contact-enquiry"
+                        >
+                          <button
+                            type="button"
+                            className={`contact-select-option ${
+                              typeOfEnquiry === "General_Enquiry"
+                                ? "contact-select-option-active"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setTypeOfEnquiry("General_Enquiry");
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            General Enquiry
+                          </button>
+                          <button
+                            type="button"
+                            className={`contact-select-option ${
+                              typeOfEnquiry === "OpenCerts"
+                                ? "contact-select-option-active"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setTypeOfEnquiry("OpenCerts");
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            OpenCerts
+                          </button>
+                          <button
+                            type="button"
+                            className={`contact-select-option ${
+                              typeOfEnquiry === "TradeTrust"
+                                ? "contact-select-option-active"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setTypeOfEnquiry("TradeTrust");
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            TradeTrust
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     {fieldErrors.typeOfEnquiry && (
                       <p
                         className="text-xs font-medium text-red-500"
@@ -182,9 +256,9 @@ const ContactForm = () => {
                 <div className="pt-2 flex justify-center">
                   <button
                     type="submit"
-                    disabled={isSubmitting || isUploading || !allUploaded}
+                    disabled={isSubmitting || isUploading || !isFormValid}
                     className={`submit-button ${
-                      isSubmitting || isUploading
+                      isSubmitting || isUploading || !isFormValid
                         ? "opacity-60 cursor-not-allowed"
                         : ""
                     }`}

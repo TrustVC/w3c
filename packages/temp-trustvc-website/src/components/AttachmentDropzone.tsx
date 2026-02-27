@@ -43,9 +43,15 @@ const AttachmentDropzone = ({
         <div className="standard-button-primary">
           <label
             htmlFor="contact-file-upload"
-            className="contact-browse-button cursor-pointer inline-flex"
+            className="contact-browse-button cursor-pointer inline-flex items-center gap-1.5"
           >
-            Browse Files
+            <img
+              src={isDarkMode ? "/icons/upload-dark.svg" : "/icons/upload.svg"}
+              alt=""
+              className="upload-icon"
+              aria-hidden="true"
+            />
+            <span>Browse Files</span>
             <input
               id="contact-file-upload"
               type="file"
