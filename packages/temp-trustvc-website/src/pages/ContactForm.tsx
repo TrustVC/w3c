@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useContactForm } from "@/hooks/useContactForm";
 import AttachmentDropzone from "@/components/AttachmentDropzone";
 import { AttachmentFileList } from "@/components/AttachmentFileList";
+import { FieldError } from "@/components/FieldError";
 
 const ContactForm = () => {
   const { theme } = useTheme();
@@ -61,21 +62,29 @@ const ContactForm = () => {
                 </div>
               </div>
 
-              <div className="mt-5 contact-form-divider" />
-
-              <form className="mt-3 flex flex-col gap-5" onSubmit={onSubmit}>
-                <div className="contact-form-fields">
-                  {(submitError || submitSuccess) && (
-                    <div
-                      className={
-                        submitError ? "form-alert-error" : "form-alert-success"
-                      }
-                      role="alert"
-                    >
-                      {submitError ?? submitSuccess}
-                    </div>
+              {(submitError || submitSuccess) && (
+                <div
+                  className={
+                    submitError ? "form-alert-error" : "form-alert-success"
+                  }
+                  role="alert"
+                >
+                  {submitError && (
+                    <img
+                      src="/icons/attention.svg"
+                      alt=""
+                      className="form-alert-error-icon"
+                      aria-hidden="true"
+                    />
                   )}
+                  <span>{submitError ?? submitSuccess}</span>
+                </div>
+              )}
 
+              <div className="mt-3 contact-form-divider" />
+
+              <form className="mt-3 flex flex-col gap-5" onSubmit={onSubmit} noValidate>
+                <div className="contact-form-fields">
                   <div className="flex flex-col gap-2">
                     <label className="form-label" htmlFor="contact-email">
                       Email *
@@ -92,12 +101,10 @@ const ContactForm = () => {
                       aria-invalid={!!fieldErrors.email}
                     />
                     {fieldErrors.email && (
-                      <p
-                        className="text-xs font-medium text-red-500"
-                        role="alert"
-                      >
-                        {fieldErrors.email}
-                      </p>
+                      <FieldError
+                        message={fieldErrors.email}
+                        id="contact-email-error"
+                      />
                     )}
                   </div>
 
@@ -200,12 +207,10 @@ const ContactForm = () => {
                       )}
                     </div>
                     {fieldErrors.typeOfEnquiry && (
-                      <p
-                        className="text-xs font-medium text-red-500"
-                        role="alert"
-                      >
-                        {fieldErrors.typeOfEnquiry}
-                      </p>
+                      <FieldError
+                        message={fieldErrors.typeOfEnquiry}
+                        id="contact-enquiry-error"
+                      />
                     )}
                   </div>
 
@@ -225,25 +230,31 @@ const ContactForm = () => {
                       aria-invalid={!!fieldErrors.description}
                     />
                     {fieldErrors.description && (
-                      <p
-                        className="text-xs font-medium text-red-500"
-                        role="alert"
-                      >
-                        {fieldErrors.description}
-                      </p>
+                      <FieldError
+                        message={fieldErrors.description}
+                        id="contact-description-error"
+                      />
                     )}
                   </div>
 
-                  <AttachmentDropzone
-                    isDarkMode={isDarkMode}
-                    dragActive={dragActive}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                    onFileInput={handleFileInput}
-                    fileInfoText={fileInfoText}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <AttachmentDropzone
+                      isDarkMode={isDarkMode}
+                      dragActive={dragActive}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onFileInput={handleFileInput}
+                      fileInfoText={fileInfoText}
+                    />
+                    {fieldErrors.attachments && (
+                      <FieldError
+                        message={fieldErrors.attachments}
+                        id="contact-attachments-error"
+                      />
+                    )}
+                  </div>
                   <AttachmentFileList
                     attachments={attachments}
                     onRemove={removeAttachment}

@@ -14,6 +14,11 @@ import type { AttachmentItem } from '@/types/attachment';
 
 export type EnquiryType = '' | 'General_Enquiry' | 'OpenCerts' | 'TradeTrust';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function isValidEmail(value: string): boolean {
+  return EMAIL_REGEX.test(value.trim());
+}
+
 let idCounter = 0;
 function nextId() {
   return `att-${++idCounter}-${Date.now()}`;
@@ -32,6 +37,7 @@ export const useContactForm = () => {
     email?: string;
     typeOfEnquiry?: string;
     description?: string;
+    attachments?: string;
   }>({});
   const fileInfoText = useMemo(() => getFileConstraintText(), []);
 
@@ -75,18 +81,21 @@ export const useContactForm = () => {
       const valid = newFiles.filter(isValidFileType);
       const invalidCount = newFiles.length - valid.length;
       if (invalidCount > 0) {
-        setSubmitError('Some files were rejected. Only JPG, JPEG, and PNG files are allowed.');
+        const msg = 'Some files were rejected. Only JPG, JPEG, and PNG files are allowed.';
+        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
       }
       if (valid.length === 0) return;
 
       const currentTotal = attachments.reduce((s, a) => s + a.file.size, 0);
       const addedTotal = valid.reduce((s, f) => s + f.size, 0);
       if (currentTotal + addedTotal > MAX_TOTAL_UPLOAD_BYTES) {
-        setSubmitError('Attachments exceed 10 MB total size limit.');
+        const msg = 'Total file size exceeded 10 MB limit.';
+        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
         return;
       }
       if (attachments.length + valid.length > MAX_FILES) {
-        setSubmitError(`Maximum ${MAX_FILES} files allowed.`);
+        const msg = `Maximum ${MAX_FILES} files allowed.`;
+        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
         return;
       }
 
@@ -99,6 +108,7 @@ export const useContactForm = () => {
       }));
       setAttachments((prev) => [...prev, ...items]);
       setSubmitError(null);
+      setFieldErrors((prev) => ({ ...prev, attachments: undefined }));
 
       (async () => {
         try {
@@ -168,6 +178,7 @@ export const useContactForm = () => {
       return [];
     });
     setSubmitError(null);
+    setFieldErrors((prev) => (prev.attachments ? { ...prev, attachments: undefined } : prev));
   }, []);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -230,8 +241,14 @@ export const useContactForm = () => {
 
       const emailTrimmed = email.trim();
       const descriptionTrimmed = description.trim();
-      const errors: { email?: string; typeOfEnquiry?: string; description?: string } = {};
+      const errors: {
+        email?: string;
+        typeOfEnquiry?: string;
+        description?: string;
+        attachments?: string;
+      } = {};
       if (!emailTrimmed) errors.email = 'Please enter your email address before submitting.';
+      else if (!isValidEmail(emailTrimmed)) errors.email = 'Please enter a valid email address.';
       if (!typeOfEnquiry) errors.typeOfEnquiry = 'Please select an option before submitting.';
       if (!descriptionTrimmed) errors.description = 'Please enter a description before submitting.';
       if (Object.keys(errors).length > 0) {
@@ -240,11 +257,13 @@ export const useContactForm = () => {
       }
 
       if (attachments.length > 0 && !allUploaded) {
-        setSubmitError('Please wait for all files to finish uploading.');
+        const msg = 'Please wait for all files to finish uploading.';
+        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
         return;
       }
       if (hasError) {
-        setSubmitError('Please remove failed files or try again.');
+        const msg = 'Please remove failed files or try again.';
+        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
         return;
       }
 
