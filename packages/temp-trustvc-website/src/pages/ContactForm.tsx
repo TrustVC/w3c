@@ -32,6 +32,9 @@ const ContactForm = () => {
     handleDrag,
     handleDrop,
     handleFileInput,
+    validateEmail,
+    validateTypeOfEnquiry,
+    validateDescription,
     onSubmit,
     isFormValid,
   } = useContactForm();
@@ -95,6 +98,7 @@ const ContactForm = () => {
                       placeholder="your.name@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      onBlur={validateEmail}
                       className={`contact-input ${
                         fieldErrors.email ? "border-destructive" : ""
                       }`}
@@ -119,6 +123,7 @@ const ContactForm = () => {
                         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
                           setIsDropdownOpen(false);
                         }
+                        validateTypeOfEnquiry();
                       }}
                     >
                       <button
@@ -224,6 +229,7 @@ const ContactForm = () => {
                       rows={4}
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
+                      onBlur={validateDescription}
                       className={`contact-textarea ${
                         fieldErrors.description ? "border-destructive" : ""
                       }`}

@@ -221,6 +221,36 @@ export const useContactForm = () => {
     setFieldErrors((prev) => (prev.description ? { ...prev, description: undefined } : prev));
   }, []);
 
+  const validateEmail = useCallback(() => {
+    const emailTrimmed = email.trim();
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      if (!emailTrimmed) {
+        next.email = 'Please enter your email address before submitting.';
+      } else if (!isValidEmail(emailTrimmed)) {
+        next.email = 'Please enter a valid email address.';
+      } else {
+        next.email = undefined;
+      }
+      return next;
+    });
+  }, [email]);
+
+  const validateTypeOfEnquiry = useCallback(() => {
+    setFieldErrors((prev) => ({
+      ...prev,
+      typeOfEnquiry: typeOfEnquiry ? undefined : 'Please select an option before submitting.',
+    }));
+  }, [typeOfEnquiry]);
+
+  const validateDescription = useCallback(() => {
+    const descriptionTrimmed = description.trim();
+    setFieldErrors((prev) => ({
+      ...prev,
+      description: descriptionTrimmed ? undefined : 'Please enter a description before submitting.',
+    }));
+  }, [description]);
+
   const resetForm = useCallback(() => {
     setEmail('');
     setTypeOfEnquiry('');
@@ -328,6 +358,9 @@ export const useContactForm = () => {
     handleDrag,
     handleDrop,
     handleFileInput,
+    validateEmail,
+    validateTypeOfEnquiry,
+    validateDescription,
     onSubmit,
   };
 };
