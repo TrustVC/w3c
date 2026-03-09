@@ -3,7 +3,7 @@
     "@version": 1.1,
     "@protected": true,
     "OpenCertsCertificate": {
-      "@id": "https://example.com/terms#OpenCertsCertificate",
+      "@id": "https://trustvc.io/terms#OpenCertsCertificate",
       "@type": "@id",
       "@context": {
         "@protected": true,
@@ -17,61 +17,61 @@
           "@id": "https://schema.org/dateIssued"
         },
         "admissionDate": {
-          "@id": "https://example.com/terms#admissionDate"
+          "@id": "https://trustvc.io/terms#admissionDate"
         },
         "graduationDate": {
-          "@id": "https://example.com/terms#graduationDate"
+          "@id": "https://trustvc.io/terms#graduationDate"
         },
         "recipient": {
-          "@id": "https://example.com/terms#recipient"
+          "@id": "https://trustvc.io/terms#recipient"
         },
         "nric": {
-          "@id": "https://example.com/terms#nric"
+          "@id": "https://trustvc.io/terms#nric"
         },
         "course": {
           "@id": "https://schema.org/course"
         },
         "transcript": {
-          "@id": "https://example.com/terms#transcript"
+          "@id": "https://trustvc.io/terms#transcript"
         },
         "grade": {
-          "@id": "https://schema.org/grade"
+          "@id": "https://schema.org/gradeLevel"
         },
         "courseCredit": {
-          "@id": "https://example.com/terms#courseCredit"
+          "@id": "https://trustvc.io/terms#courseCredit"
         },
         "courseCode": {
-          "@id": "https://example.com/terms#courseCode"
+          "@id": "https://trustvc.io/terms#courseCode"
         },
         "examinationDate": {
-          "@id": "https://example.com/terms#examinationDate"
+          "@id": "https://trustvc.io/terms#examinationDate"
         },
         "semester": {
-          "@id": "https://example.com/terms#semester"
+          "@id": "https://trustvc.io/terms#semester"
         },
         "additionalData": {
-          "@id": "https://example.com/terms#additionalData"
+          "@id": "https://trustvc.io/terms#additionalData"
         },
         "merit": {
-          "@id": "https://example.com/terms#merit"
+          "@id": "https://trustvc.io/terms#merit"
         },
         "studentId": {
-          "@id": "https://example.com/terms#studentId"
+          "@id": "https://trustvc.io/terms#studentId"
         },
         "transcriptId": {
-          "@id": "https://example.com/terms#transcriptId"
+          "@id": "https://trustvc.io/terms#transcriptId"
         },
         "certSignatories": {
-          "@id": "https://example.com/terms#certSignatories"
+          "@id": "https://trustvc.io/terms#certSignatories"
         },
         "signature": {
-          "@id": "https://example.com/terms#signature"
+          "@id": "https://trustvc.io/terms#signature"
         },
         "position": {
           "@id": "https://schema.org/jobTitle"
         },
         "organisation": {
-          "@id": "https://schema.org/organization"
+          "@id": "https://schema.org/Organization"
         }
       }
     }
