@@ -3,7 +3,7 @@
     "@version": 1.1,
     "@protected": true,
     "OpenCertsCertificate": {
-      "@id": "https://schema.opencerts.io/#OpenCertsCertificate",
+      "@id": "https://example.com/terms#OpenCertsCertificate",
       "@type": "@id",
       "@context": {
         "@protected": true,
@@ -17,55 +17,55 @@
           "@id": "https://schema.org/dateIssued"
         },
         "admissionDate": {
-          "@id": "https://schema.opencerts.io/#admissionDate"
+          "@id": "https://example.com/terms#admissionDate"
         },
         "graduationDate": {
-          "@id": "https://schema.opencerts.io/#graduationDate"
+          "@id": "https://example.com/terms#graduationDate"
         },
         "recipient": {
-          "@id": "https://schema.opencerts.io/#recipient"
+          "@id": "https://example.com/terms#recipient"
         },
         "nric": {
-          "@id": "https://schema.opencerts.io/#nric"
+          "@id": "https://example.com/terms#nric"
         },
         "course": {
           "@id": "https://schema.org/course"
         },
         "transcript": {
-          "@id": "https://schema.opencerts.io/#transcript"
+          "@id": "https://example.com/terms#transcript"
         },
         "grade": {
           "@id": "https://schema.org/grade"
         },
         "courseCredit": {
-          "@id": "https://schema.opencerts.io/#courseCredit"
+          "@id": "https://example.com/terms#courseCredit"
         },
         "courseCode": {
-          "@id": "https://schema.opencerts.io/#courseCode"
+          "@id": "https://example.com/terms#courseCode"
         },
         "examinationDate": {
-          "@id": "https://schema.opencerts.io/#examinationDate"
+          "@id": "https://example.com/terms#examinationDate"
         },
         "semester": {
-          "@id": "https://schema.opencerts.io/#semester"
+          "@id": "https://example.com/terms#semester"
         },
         "additionalData": {
-          "@id": "https://schema.opencerts.io/#additionalData"
+          "@id": "https://example.com/terms#additionalData"
         },
         "merit": {
-          "@id": "https://schema.opencerts.io/#merit"
+          "@id": "https://example.com/terms#merit"
         },
         "studentId": {
-          "@id": "https://schema.opencerts.io/#studentId"
+          "@id": "https://example.com/terms#studentId"
         },
         "transcriptId": {
-          "@id": "https://schema.opencerts.io/#transcriptId"
+          "@id": "https://example.com/terms#transcriptId"
         },
         "certSignatories": {
-          "@id": "https://schema.opencerts.io/#certSignatories"
+          "@id": "https://example.com/terms#certSignatories"
         },
         "signature": {
-          "@id": "https://schema.opencerts.io/#signature"
+          "@id": "https://example.com/terms#signature"
         },
         "position": {
           "@id": "https://schema.org/jobTitle"
