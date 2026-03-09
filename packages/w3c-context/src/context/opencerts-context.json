@@ -1,0 +1,81 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "OpenCertsCertificate": {
+      "@id": "https://schema.opencerts.io/#OpenCertsCertificate",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://schema.org/name"
+        },
+        "description": {
+          "@id": "https://schema.org/description"
+        },
+        "issuedOn": {
+          "@id": "https://schema.org/dateIssued"
+        },
+        "admissionDate": {
+          "@id": "https://schema.opencerts.io/#admissionDate"
+        },
+        "graduationDate": {
+          "@id": "https://schema.opencerts.io/#graduationDate"
+        },
+        "recipient": {
+          "@id": "https://schema.opencerts.io/#recipient"
+        },
+        "nric": {
+          "@id": "https://schema.opencerts.io/#nric"
+        },
+        "course": {
+          "@id": "https://schema.org/course"
+        },
+        "transcript": {
+          "@id": "https://schema.opencerts.io/#transcript"
+        },
+        "grade": {
+          "@id": "https://schema.org/grade"
+        },
+        "courseCredit": {
+          "@id": "https://schema.opencerts.io/#courseCredit"
+        },
+        "courseCode": {
+          "@id": "https://schema.opencerts.io/#courseCode"
+        },
+        "examinationDate": {
+          "@id": "https://schema.opencerts.io/#examinationDate"
+        },
+        "semester": {
+          "@id": "https://schema.opencerts.io/#semester"
+        },
+        "additionalData": {
+          "@id": "https://schema.opencerts.io/#additionalData"
+        },
+        "merit": {
+          "@id": "https://schema.opencerts.io/#merit"
+        },
+        "studentId": {
+          "@id": "https://schema.opencerts.io/#studentId"
+        },
+        "transcriptId": {
+          "@id": "https://schema.opencerts.io/#transcriptId"
+        },
+        "certSignatories": {
+          "@id": "https://schema.opencerts.io/#certSignatories"
+        },
+        "signature": {
+          "@id": "https://schema.opencerts.io/#signature"
+        },
+        "position": {
+          "@id": "https://schema.org/jobTitle"
+        },
+        "organisation": {
+          "@id": "https://schema.org/organization"
+        }
+      }
+    }
+  }
+}
+
+
