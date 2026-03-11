@@ -2,80 +2,28 @@
   "@context": {
     "@version": 1.1,
     "@protected": true,
-    "OpenCertsCertificate": {
-      "@id": "https://trustvc.io/terms#OpenCertsCertificate",
-      "@type": "@id",
-      "@context": {
-        "@protected": true,
-        "name": {
-          "@id": "https://schema.org/name"
-        },
-        "description": {
-          "@id": "https://schema.org/description"
-        },
-        "issuedOn": {
-          "@id": "https://schema.org/dateIssued"
-        },
-        "admissionDate": {
-          "@id": "https://trustvc.io/terms#admissionDate"
-        },
-        "graduationDate": {
-          "@id": "https://trustvc.io/terms#graduationDate"
-        },
-        "recipient": {
-          "@id": "https://trustvc.io/terms#recipient"
-        },
-        "nric": {
-          "@id": "https://trustvc.io/terms#nric"
-        },
-        "course": {
-          "@id": "https://schema.org/course"
-        },
-        "transcript": {
-          "@id": "https://trustvc.io/terms#transcript"
-        },
-        "grade": {
-          "@id": "https://schema.org/gradeLevel"
-        },
-        "courseCredit": {
-          "@id": "https://trustvc.io/terms#courseCredit"
-        },
-        "courseCode": {
-          "@id": "https://trustvc.io/terms#courseCode"
-        },
-        "examinationDate": {
-          "@id": "https://trustvc.io/terms#examinationDate"
-        },
-        "semester": {
-          "@id": "https://trustvc.io/terms#semester"
-        },
-        "additionalData": {
-          "@id": "https://trustvc.io/terms#additionalData"
-        },
-        "merit": {
-          "@id": "https://trustvc.io/terms#merit"
-        },
-        "studentId": {
-          "@id": "https://trustvc.io/terms#studentId"
-        },
-        "transcriptId": {
-          "@id": "https://trustvc.io/terms#transcriptId"
-        },
-        "certSignatories": {
-          "@id": "https://trustvc.io/terms#certSignatories"
-        },
-        "signature": {
-          "@id": "https://trustvc.io/terms#signature"
-        },
-        "position": {
-          "@id": "https://schema.org/jobTitle"
-        },
-        "organisation": {
-          "@id": "https://schema.org/Organization"
-        }
-      }
-    }
+    "OpenCertsCertificate": "https://schema.opencerts.io/#OpenCertsCertificate",
+    "name": "https://schema.org/name",
+    "description": "https://schema.org/description",
+    "issuedOn": "https://schema.org/dateIssued",
+    "admissionDate": "https://schema.opencerts.io/#admissionDate",
+    "graduationDate": "https://schema.opencerts.io/#graduationDate",
+    "recipient": "https://schema.opencerts.io/#recipient",
+    "nric": "https://schema.opencerts.io/#nric",
+    "course": "https://schema.org/course",
+    "transcript": "https://schema.opencerts.io/#transcript",
+    "grade": "https://schema.org/grade",
+    "courseCredit": "https://schema.opencerts.io/#courseCredit",
+    "courseCode": "https://schema.opencerts.io/#courseCode",
+    "examinationDate": "https://schema.opencerts.io/#examinationDate",
+    "semester": "https://schema.opencerts.io/#semester",
+    "additionalData": "https://schema.opencerts.io/#additionalData",
+    "merit": "https://schema.opencerts.io/#merit",
+    "studentId": "https://schema.opencerts.io/#studentId",
+    "transcriptId": "https://schema.opencerts.io/#transcriptId",
+    "certSignatories": "https://schema.opencerts.io/#certSignatories",
+    "signature": "https://schema.opencerts.io/#signature",
+    "position": "https://schema.org/jobTitle",
+    "organisation": "https://schema.org/organization"
   }
 }
-
-
