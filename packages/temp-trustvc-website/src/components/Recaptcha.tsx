@@ -1,5 +1,5 @@
 import React, { useImperativeHandle, forwardRef } from 'react';
-import { useRecaptcha } from './useRecaptcha';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 declare global {
   interface Window {
