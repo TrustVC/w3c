@@ -149,7 +149,9 @@ export const useContactForm = (options: UseContactFormOptions) => {
         filename: file.name,
         status: 'pending',
         progress: 0,
-        previewUrl: typeof URL !== 'undefined' ? URL.createObjectURL(file) : undefined,
+        previewUrl: globalThis.URL?.createObjectURL
+          ? globalThis.URL.createObjectURL(file)
+          : undefined,
       }));
       setAttachments((prev) => [...prev, ...items]);
       setSubmitError(null);
@@ -161,8 +163,8 @@ export const useContactForm = (options: UseContactFormOptions) => {
   const removeAttachment = useCallback((id: string) => {
     setAttachments((prev) => {
       const toRemove = prev.find((a) => a.id === id);
-      if (toRemove?.previewUrl && typeof URL !== 'undefined') {
-        URL.revokeObjectURL(toRemove.previewUrl);
+      if (toRemove?.previewUrl && globalThis.URL?.revokeObjectURL) {
+        globalThis.URL.revokeObjectURL(toRemove.previewUrl);
       }
       return prev.filter((a) => a.id !== id);
     });
@@ -170,9 +172,9 @@ export const useContactForm = (options: UseContactFormOptions) => {
 
   const clearAllAttachments = useCallback(() => {
     setAttachments((prev) => {
-      if (typeof URL !== 'undefined') {
+      if (globalThis.URL?.revokeObjectURL) {
         prev.forEach((a) => {
-          if (a.previewUrl) URL.revokeObjectURL(a.previewUrl);
+          if (a.previewUrl) globalThis.URL!.revokeObjectURL(a.previewUrl);
         });
       }
       return [];
@@ -301,7 +303,7 @@ export const useContactForm = (options: UseContactFormOptions) => {
         return;
       }
 
-      const domain = typeof window !== 'undefined' ? window.location.hostname : 'trustvc.io';
+      const domain = globalThis.window?.location?.hostname ?? 'trustvc.io';
 
       try {
         setIsSubmitting(true);
