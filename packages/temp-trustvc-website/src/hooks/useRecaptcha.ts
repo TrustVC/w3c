@@ -21,11 +21,12 @@ export const useRecaptcha = ({ siteKey, onChange }: UseRecaptchaOptions) => {
 
     const ensureRendered = () => {
       if (!containerRef.current || widgetIdRef.current !== null) return;
-      if (!window.grecaptcha || typeof window.grecaptcha.render !== 'function') {
+      const grecaptcha = globalThis.window?.grecaptcha;
+      if (!grecaptcha || typeof grecaptcha.render !== 'function') {
         return;
       }
 
-      widgetIdRef.current = window.grecaptcha.render(containerRef.current, {
+      widgetIdRef.current = grecaptcha.render(containerRef.current, {
         sitekey: siteKeyRef.current,
         callback: (token: string) => {
           onChangeRef.current?.(token);
@@ -34,19 +35,21 @@ export const useRecaptcha = ({ siteKey, onChange }: UseRecaptchaOptions) => {
     };
 
     const loadScript = () => {
-      if (document.getElementById(SCRIPT_ID)) {
-        window.grecaptcha?.ready(ensureRendered);
+      const existingScript = globalThis.document?.getElementById(SCRIPT_ID);
+      if (existingScript) {
+        globalThis.window?.grecaptcha?.ready(ensureRendered);
         return;
       }
-      const script = document.createElement('script');
+      const script = globalThis.document?.createElement('script');
+      if (!script) return;
       script.id = SCRIPT_ID;
       script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
       script.async = true;
       script.defer = true;
       script.onload = () => {
-        window.grecaptcha?.ready(ensureRendered);
+        globalThis.window?.grecaptcha?.ready(ensureRendered);
       };
-      document.head.appendChild(script);
+      globalThis.document?.head.appendChild(script);
     };
 
     loadScript();
@@ -57,13 +60,15 @@ export const useRecaptcha = ({ siteKey, onChange }: UseRecaptchaOptions) => {
   }, []);
 
   const getToken = async (): Promise<string> => {
-    if (!window.grecaptcha || widgetIdRef.current === null) return '';
-    return window.grecaptcha.getResponse(widgetIdRef.current) || '';
+    const grecaptcha = globalThis.window?.grecaptcha;
+    if (!grecaptcha || widgetIdRef.current === null) return '';
+    return grecaptcha.getResponse(widgetIdRef.current) || '';
   };
 
   const reset = () => {
-    if (!window.grecaptcha || widgetIdRef.current === null) return;
-    window.grecaptcha.reset(widgetIdRef.current);
+    const grecaptcha = globalThis.window?.grecaptcha;
+    if (!grecaptcha || widgetIdRef.current === null) return;
+    grecaptcha.reset(widgetIdRef.current);
   };
 
   return { containerRef, getToken, reset };

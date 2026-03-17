@@ -15,6 +15,19 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
   const isUploading = status === "uploading";
   const isError = status === "error";
 
+  const getStatusLabel = () => {
+    if (isUploading) {
+      return `Uploading - ${progress}%`;
+    }
+    if (status === "uploaded") {
+      return "Uploaded";
+    }
+    if (status === "pending") {
+      return "";
+    }
+    return error || "Error";
+  };
+
   return (
     <div
       className={cn(
@@ -74,13 +87,7 @@ export function FileItem({ item, onRemove, isDarkMode }: FileItemProps) {
             isError ? "text-destructive" : "text-muted-foreground"
           )}
         >
-          {isUploading
-            ? `Uploading - ${progress}%`
-            : status === "uploaded"
-              ? "Uploaded"
-              : status === "pending"
-                ? ""
-                : error || "Error"}
+          {getStatusLabel()}
         </p>
       </div>
 

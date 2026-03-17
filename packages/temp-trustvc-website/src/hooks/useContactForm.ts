@@ -24,6 +24,37 @@ function nextId() {
   return `att-${++idCounter}-${Date.now()}`;
 }
 
+type FieldErrors = {
+  email?: string;
+  typeOfEnquiry?: string;
+  description?: string;
+  attachments?: string;
+};
+
+function buildFieldErrors(
+  emailValue: string,
+  descriptionValue: string,
+  typeOfEnquiry: EnquiryType,
+): FieldErrors {
+  const nextErrors: FieldErrors = {};
+
+  if (!emailValue) {
+    nextErrors.email = 'Please enter your email address before submitting.';
+  } else if (!isValidEmail(emailValue)) {
+    nextErrors.email = 'Please enter a valid email address.';
+  }
+
+  if (!typeOfEnquiry) {
+    nextErrors.typeOfEnquiry = 'Please select an option before submitting.';
+  }
+
+  if (!descriptionValue) {
+    nextErrors.description = 'Please enter a description before submitting.';
+  }
+
+  return nextErrors;
+}
+
 export type UseContactFormOptions = {
   getRecaptchaToken: () => string | Promise<string>;
   resetRecaptcha?: () => void;
@@ -241,16 +272,7 @@ export const useContactForm = (options: UseContactFormOptions) => {
 
       const emailTrimmed = email.trim();
       const descriptionTrimmed = description.trim();
-      const errors: {
-        email?: string;
-        typeOfEnquiry?: string;
-        description?: string;
-        attachments?: string;
-      } = {};
-      if (!emailTrimmed) errors.email = 'Please enter your email address before submitting.';
-      else if (!isValidEmail(emailTrimmed)) errors.email = 'Please enter a valid email address.';
-      if (!typeOfEnquiry) errors.typeOfEnquiry = 'Please select an option before submitting.';
-      if (!descriptionTrimmed) errors.description = 'Please enter a description before submitting.';
+      const errors = buildFieldErrors(emailTrimmed, descriptionTrimmed, typeOfEnquiry);
       if (Object.keys(errors).length > 0) {
         setFieldErrors(errors);
         return;
