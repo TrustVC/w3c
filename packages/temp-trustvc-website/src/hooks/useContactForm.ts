@@ -24,7 +24,15 @@ function nextId() {
   return `att-${++idCounter}-${Date.now()}`;
 }
 
-export const useContactForm = () => {
+export type UseContactFormOptions = {
+  getRecaptchaToken: () => string | Promise<string>;
+  resetRecaptcha?: () => void;
+  /** When true, submit is only enabled after the user completes reCAPTCHA */
+  recaptchaRequired?: boolean;
+};
+
+export const useContactForm = (options: UseContactFormOptions) => {
+  const { getRecaptchaToken, resetRecaptcha, recaptchaRequired = false } = options;
   const [email, setEmail] = useState('');
   const [typeOfEnquiry, setTypeOfEnquiry] = useState<EnquiryType>('');
   const [description, setDescription] = useState('');
@@ -33,11 +41,13 @@ export const useContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+  const [recaptchaCompleted, setRecaptchaCompleted] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{
     email?: string;
     typeOfEnquiry?: string;
     description?: string;
     attachments?: string;
+    recaptcha?: string;
   }>({});
   const fileInfoText = useMemo(() => getFileConstraintText(), []);
 
@@ -51,30 +61,33 @@ export const useContactForm = () => {
   );
   const hasError = useMemo(() => attachments.some((a) => a.status === 'error'), [attachments]);
   const isUploading = useMemo(
-    () => attachments.some((a) => a.status === 'uploading' || a.status === 'pending'),
+    () => attachments.some((a) => a.status === 'uploading'),
     [attachments],
   );
   const isFormValid = useMemo(() => {
     const emailTrimmed = email.trim();
     const descriptionTrimmed = description.trim();
-    return (
-      !!emailTrimmed &&
-      !!typeOfEnquiry &&
-      !!descriptionTrimmed &&
-      !hasError &&
-      (attachments.length === 0 || allUploaded)
-    );
-  }, [email, typeOfEnquiry, description, hasError, attachments.length, allUploaded]);
+    const requiredFilled = !!emailTrimmed && !!typeOfEnquiry && !!descriptionTrimmed && !hasError;
+    const captchaOk = !recaptchaRequired || recaptchaCompleted;
+    return requiredFilled && captchaOk;
+  }, [email, typeOfEnquiry, description, hasError, recaptchaRequired, recaptchaCompleted]);
 
   const setAttachmentStatus = useCallback(
     (
       id: string,
-      update: Partial<Pick<AttachmentItem, 'status' | 'progress' | 'error' | 'key' | 'filename'>>,
+      update: Partial<
+        Pick<AttachmentItem, 'status' | 'progress' | 'error' | 'key' | 'filename' | 'previewUrl'>
+      >,
     ) => {
       setAttachments((prev) => prev.map((a) => (a.id === id ? { ...a, ...update } : a)));
     },
     [],
   );
+
+  const clearRecaptchaError = useCallback(() => {
+    setFieldErrors((prev) => (prev.recaptcha ? { ...prev, recaptcha: undefined } : prev));
+    setRecaptchaCompleted(true);
+  }, []);
 
   const addFiles = useCallback(
     (newFiles: File[]) => {
@@ -105,57 +118,13 @@ export const useContactForm = () => {
         filename: file.name,
         status: 'pending',
         progress: 0,
+        previewUrl: typeof URL !== 'undefined' ? URL.createObjectURL(file) : undefined,
       }));
       setAttachments((prev) => [...prev, ...items]);
       setSubmitError(null);
       setFieldErrors((prev) => ({ ...prev, attachments: undefined }));
-
-      (async () => {
-        try {
-          const files = items.map((a) => ({
-            filename: a.file.name,
-            contentType: a.file.type || 'application/octet-stream',
-            size: a.file.size,
-          }));
-          const presigned = await getPresignedUrls(files);
-          await Promise.all(
-            items.map((item, i) => {
-              const p = presigned[i];
-              if (!p) return Promise.resolve();
-              setAttachmentStatus(item.id, { status: 'uploading', progress: 0 });
-              return uploadToPresignedUrl(p.uploadUrl, item.file, (percent) => {
-                setAttachmentStatus(item.id, { progress: percent });
-              })
-                .then(() => {
-                  setAttachmentStatus(item.id, {
-                    status: 'uploaded',
-                    progress: 100,
-                    key: p.key,
-                    filename: p.filename,
-                    previewUrl:
-                      typeof URL !== 'undefined' ? URL.createObjectURL(item.file) : undefined,
-                    error: undefined,
-                  });
-                })
-                .catch((err) => {
-                  setAttachmentStatus(item.id, {
-                    status: 'error',
-                    error: err instanceof Error ? err.message : 'Upload failed',
-                  });
-                });
-            }),
-          );
-        } catch (err) {
-          items.forEach((a) =>
-            setAttachmentStatus(a.id, {
-              status: 'error',
-              error: err instanceof Error ? err.message : 'Failed to get upload URL',
-            }),
-          );
-        }
-      })();
     },
-    [attachments, setAttachmentStatus],
+    [attachments],
   );
 
   const removeAttachment = useCallback((id: string) => {
@@ -260,6 +229,7 @@ export const useContactForm = () => {
     setFieldErrors({});
     setSubmitError(null);
     setSubmitSuccess(null);
+    setRecaptchaCompleted(false);
   }, []);
 
   const onSubmit = useCallback(
@@ -286,16 +256,22 @@ export const useContactForm = () => {
         return;
       }
 
-      if (attachments.length > 0 && !allUploaded) {
-        const msg = 'Please wait for all files to finish uploading.';
-        setFieldErrors((prev) => ({ ...prev, attachments: msg }));
-        return;
-      }
       if (hasError) {
         const msg = 'Please remove failed files or try again.';
         setFieldErrors((prev) => ({ ...prev, attachments: msg }));
         return;
       }
+
+      const recaptchaToken = await Promise.resolve(getRecaptchaToken());
+      if (!recaptchaToken) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          recaptcha: 'Please complete the reCAPTCHA verification.',
+        }));
+        return;
+      }
+      // clear any stale recaptcha error once we have a token
+      setFieldErrors((prev) => (prev.recaptcha ? { ...prev, recaptcha: undefined } : prev));
 
       const baseUrl = import.meta.env?.VITE_SUPPORT_API_BASE_URL as string | undefined;
       if (!baseUrl) {
@@ -308,21 +284,74 @@ export const useContactForm = () => {
           ? window.location.hostname
           : ((import.meta.env?.VITE_ENTRY_POINT as string) ?? 'trustvc.io');
 
-      const attachmentKeys = attachments
-        .filter((a) => a.status === 'uploaded' && a.key && a.filename)
-        .map((a) => ({ key: a.key!, filename: a.filename }));
-
       try {
         setIsSubmitting(true);
+
+        let attachmentKeys: { key: string; filename: string }[] = [];
+
+        if (attachments.length > 0) {
+          const pendingItems = attachments.filter((a) => a.status === 'pending');
+          const alreadyUploaded = attachments.filter(
+            (a) => a.status === 'uploaded' && a.key && a.filename,
+          );
+          attachmentKeys = alreadyUploaded.map((a) => ({
+            key: a.key!,
+            filename: a.filename,
+          }));
+
+          if (pendingItems.length > 0) {
+            const files = pendingItems.map((a) => ({
+              filename: a.file.name,
+              contentType: a.file.type || 'application/octet-stream',
+              size: a.file.size,
+            }));
+            const presigned = await getPresignedUrls(files);
+            await Promise.all(
+              pendingItems.map((item, i) => {
+                const p = presigned[i];
+                if (!p) return Promise.resolve();
+                setAttachmentStatus(item.id, { status: 'uploading', progress: 0 });
+                return uploadToPresignedUrl(p.uploadUrl, item.file, (percent) => {
+                  setAttachmentStatus(item.id, { progress: percent });
+                })
+                  .then(() => {
+                    setAttachmentStatus(item.id, {
+                      status: 'uploaded',
+                      progress: 100,
+                      key: p.key,
+                      filename: p.filename,
+                      previewUrl:
+                        typeof URL !== 'undefined' ? URL.createObjectURL(item.file) : undefined,
+                      error: undefined,
+                    });
+                  })
+                  .catch((err) => {
+                    setAttachmentStatus(item.id, {
+                      status: 'error',
+                      error: err instanceof Error ? err.message : 'Upload failed',
+                    });
+                    throw err;
+                  });
+              }),
+            );
+            attachmentKeys = [
+              ...attachmentKeys,
+              ...presigned.map((p) => ({ key: p.key, filename: p.filename })),
+            ];
+          }
+        }
+
         await createServiceRequestWithKeys({
           email: emailTrimmed,
           description: descriptionTrimmed,
           typeOfEnquiry,
           domain,
           attachmentKeys,
+          recaptchaToken,
         });
         setSubmitSuccess("Request submitted successfully. We'll get back to you soon.");
         resetForm();
+        resetRecaptcha?.();
       } catch (err) {
         const fallback =
           'Our support system is temporarily unavailable. Please try again in a few minutes.';
@@ -336,7 +365,17 @@ export const useContactForm = () => {
         setIsSubmitting(false);
       }
     },
-    [email, typeOfEnquiry, description, attachments, allUploaded, hasError, resetForm],
+    [
+      email,
+      typeOfEnquiry,
+      description,
+      attachments,
+      hasError,
+      resetForm,
+      getRecaptchaToken,
+      resetRecaptcha,
+      setAttachmentStatus,
+    ],
   );
 
   return {
@@ -366,6 +405,7 @@ export const useContactForm = () => {
     validateEmail,
     validateTypeOfEnquiry,
     validateDescription,
+    clearRecaptchaError,
     onSubmit,
   };
 };
