@@ -279,10 +279,7 @@ export const useContactForm = (options: UseContactFormOptions) => {
         return;
       }
 
-      const domain =
-        typeof window !== 'undefined'
-          ? window.location.hostname
-          : ((import.meta.env?.VITE_ENTRY_POINT as string) ?? 'trustvc.io');
+      const domain = typeof window !== 'undefined' ? window.location.hostname : 'trustvc.io';
 
       try {
         setIsSubmitting(true);
