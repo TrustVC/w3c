@@ -44,9 +44,9 @@ const ContactForm = () => {
     getRecaptchaToken: () =>
       RECAPTCHA_SITE_KEY
         ? (recaptchaRef.current?.getToken() ?? Promise.resolve(""))
-        : Promise.resolve("dev-skip"),
+        : Promise.resolve(""),
     resetRecaptcha: () => recaptchaRef.current?.reset(),
-    recaptchaRequired: !!RECAPTCHA_SITE_KEY,
+    recaptchaRequired: true,
   });
 
   return (
