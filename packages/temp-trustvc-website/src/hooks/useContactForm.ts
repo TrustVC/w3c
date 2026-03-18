@@ -163,7 +163,8 @@ export const useContactForm = (options: UseContactFormOptions) => {
   const removeAttachment = useCallback((id: string) => {
     setAttachments((prev) => {
       const toRemove = prev.find((a) => a.id === id);
-      if (toRemove?.previewUrl && globalThis.URL?.revokeObjectURL) {
+      const canRevoke = typeof globalThis.URL?.revokeObjectURL === 'function';
+      if (toRemove?.previewUrl && canRevoke) {
         globalThis.URL.revokeObjectURL(toRemove.previewUrl);
       }
       return prev.filter((a) => a.id !== id);
@@ -172,9 +173,10 @@ export const useContactForm = (options: UseContactFormOptions) => {
 
   const clearAllAttachments = useCallback(() => {
     setAttachments((prev) => {
-      if (globalThis.URL?.revokeObjectURL) {
+      const canRevoke = typeof globalThis.URL?.revokeObjectURL === 'function';
+      if (canRevoke) {
         prev.forEach((a) => {
-          if (a.previewUrl) globalThis.URL!.revokeObjectURL(a.previewUrl);
+          if (a.previewUrl) globalThis.URL.revokeObjectURL(a.previewUrl);
         });
       }
       return [];
@@ -257,13 +259,13 @@ export const useContactForm = (options: UseContactFormOptions) => {
     setEmail('');
     setTypeOfEnquiry('');
     setDescription('');
-    setAttachments([]);
+    clearAllAttachments();
     setDragActive(false);
     setFieldErrors({});
     setSubmitError(null);
     setSubmitSuccess(null);
     setRecaptchaCompleted(false);
-  }, []);
+  }, [clearAllAttachments]);
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {
