@@ -19,6 +19,7 @@ export type CreateServiceRequestWithKeysPayload = {
   typeOfEnquiry: string;
   domain: string;
   attachmentKeys: { key: string; filename: string }[];
+  recaptchaToken: string;
 };
 
 export type CreateServiceRequestResponse = {

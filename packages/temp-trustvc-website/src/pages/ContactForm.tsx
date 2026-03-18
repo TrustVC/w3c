@@ -1,15 +1,19 @@
 import { useTheme } from "@/components/ThemeProvider";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useContactForm } from "@/hooks/useContactForm";
 import AttachmentDropzone from "@/components/AttachmentDropzone";
 import { AttachmentFileList } from "@/components/AttachmentFileList";
 import { FieldError } from "@/components/FieldError";
+import { Recaptcha, type RecaptchaHandle } from "@/components/Recaptcha";
+
+const RECAPTCHA_SITE_KEY = import.meta.env?.VITE_RECAPTCHA_SITE_KEY as string | undefined;
 
 const ContactForm = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const recaptchaRef = useRef<RecaptchaHandle>(null);
 
   const {
     email,
@@ -27,8 +31,6 @@ const ContactForm = () => {
     submitSuccess,
     fieldErrors,
     fileInfoText,
-    allUploaded,
-    isUploading,
     handleDrag,
     handleDrop,
     handleFileInput,
@@ -36,8 +38,16 @@ const ContactForm = () => {
     validateTypeOfEnquiry,
     validateDescription,
     onSubmit,
+    clearRecaptchaError,
     isFormValid,
-  } = useContactForm();
+  } = useContactForm({
+    getRecaptchaToken: () =>
+      RECAPTCHA_SITE_KEY
+        ? (recaptchaRef.current?.getToken() ?? Promise.resolve(""))
+        : Promise.resolve(""),
+    resetRecaptcha: () => recaptchaRef.current?.reset(),
+    recaptchaRequired: true,
+  });
 
   return (
     <div className="w-full px-4 pt-[120px] pb-16 flex justify-center">
@@ -268,14 +278,30 @@ const ContactForm = () => {
                       id="contact-attachments-error"
                     />
                   )}
+                  {RECAPTCHA_SITE_KEY && (
+                    <>
+                      <Recaptcha
+                        ref={recaptchaRef}
+                        siteKey={RECAPTCHA_SITE_KEY}
+                        className="flex justify-center items-center"
+                        onChange={clearRecaptchaError}
+                      />
+                      {fieldErrors.recaptcha && (
+                        <FieldError
+                          message={fieldErrors.recaptcha}
+                          id="contact-recaptcha-error"
+                        />
+                      )}
+                    </>
+                  )}
                 </div>
 
                 <div className="pt-2 flex justify-center">
                   <button
                     type="submit"
-                    disabled={isSubmitting || isUploading || !isFormValid}
+                    disabled={isSubmitting || !isFormValid}
                     className={`submit-button ${
-                      isSubmitting || isUploading || !isFormValid
+                      isSubmitting || !isFormValid
                         ? "opacity-60 cursor-not-allowed"
                         : ""
                     }`}
