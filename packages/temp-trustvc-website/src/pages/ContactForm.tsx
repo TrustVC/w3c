@@ -39,7 +39,6 @@ const ContactForm = () => {
     validateDescription,
     onSubmit,
     clearRecaptchaError,
-    isFormValid,
   } = useContactForm({
     getRecaptchaToken: () =>
       RECAPTCHA_SITE_KEY
@@ -299,11 +298,9 @@ const ContactForm = () => {
                 <div className="pt-2 flex justify-center">
                   <button
                     type="submit"
-                    disabled={isSubmitting || !isFormValid}
+                    disabled={isSubmitting}
                     className={`submit-button ${
-                      isSubmitting || !isFormValid
-                        ? "opacity-60 cursor-not-allowed"
-                        : ""
+                      isSubmitting ? "opacity-60 cursor-not-allowed" : ""
                     }`}
                   >
                     {isSubmitting ? "Submitting…" : "Submit"}
