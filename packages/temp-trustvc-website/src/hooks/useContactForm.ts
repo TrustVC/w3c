@@ -263,7 +263,6 @@ export const useContactForm = (options: UseContactFormOptions) => {
     setDragActive(false);
     setFieldErrors({});
     setSubmitError(null);
-    setSubmitSuccess(null);
     setRecaptchaCompleted(false);
   }, [clearAllAttachments]);
 
