@@ -286,10 +286,12 @@ const ContactForm = () => {
                         onChange={clearRecaptchaError}
                       />
                       {fieldErrors.recaptcha && (
-                        <FieldError
-                          message={fieldErrors.recaptcha}
-                          id="contact-recaptcha-error"
-                        />
+                        <div className="flex justify-center">
+                          <FieldError
+                            message={fieldErrors.recaptcha}
+                            id="contact-recaptcha-error"
+                          />
+                        </div>
                       )}
                     </>
                   )}

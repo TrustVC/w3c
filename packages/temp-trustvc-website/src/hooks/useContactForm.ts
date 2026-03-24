@@ -29,12 +29,15 @@ type FieldErrors = {
   typeOfEnquiry?: string;
   description?: string;
   attachments?: string;
+  recaptcha?: string;
 };
 
 function buildFieldErrors(
   emailValue: string,
   descriptionValue: string,
   typeOfEnquiry: EnquiryType,
+  recaptchaRequired: boolean,
+  recaptchaCompleted: boolean,
 ): FieldErrors {
   const nextErrors: FieldErrors = {};
 
@@ -50,6 +53,10 @@ function buildFieldErrors(
 
   if (!descriptionValue) {
     nextErrors.description = 'Please enter a description before submitting.';
+  }
+
+  if (recaptchaRequired && !recaptchaCompleted) {
+    nextErrors.recaptcha = 'Please complete the reCAPTCHA verification.';
   }
 
   return nextErrors;
@@ -275,7 +282,13 @@ export const useContactForm = (options: UseContactFormOptions) => {
 
       const emailTrimmed = email.trim();
       const descriptionTrimmed = description.trim();
-      const errors = buildFieldErrors(emailTrimmed, descriptionTrimmed, typeOfEnquiry);
+      const errors = buildFieldErrors(
+        emailTrimmed,
+        descriptionTrimmed,
+        typeOfEnquiry,
+        recaptchaRequired,
+        recaptchaCompleted,
+      );
       if (Object.keys(errors).length > 0) {
         setFieldErrors(errors);
         return;
@@ -395,6 +408,8 @@ export const useContactForm = (options: UseContactFormOptions) => {
       getRecaptchaToken,
       resetRecaptcha,
       setAttachmentStatus,
+      recaptchaRequired,
+      recaptchaCompleted,
     ],
   );
 
