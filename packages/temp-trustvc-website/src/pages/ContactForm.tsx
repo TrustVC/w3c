@@ -95,7 +95,7 @@ const ContactForm = () => {
 
               <div className="mt-3 contact-form-divider" />
 
-              <form className="mt-3 flex flex-col gap-5" onSubmit={onSubmit} noValidate>
+              <form className="mt-3 flex flex-col gap-3" onSubmit={onSubmit} noValidate>
                 <div className="contact-form-fields">
                   <div className="flex flex-col gap-2">
                     <label className="form-label" htmlFor="contact-email">
@@ -297,7 +297,7 @@ const ContactForm = () => {
                   )}
                 </div>
 
-                <div className="pt-2 flex justify-center">
+                <div className="pt-0 flex justify-center">
                   <button
                     type="submit"
                     disabled={isSubmitting}
