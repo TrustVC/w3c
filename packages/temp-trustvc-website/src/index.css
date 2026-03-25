@@ -556,8 +556,8 @@
 }
 .dark .form-alert-success {
   border-color: rgba(11, 56, 79, 0.2);
-  background: #B3ECFF;
-  color: #0B384F;
+  background: #012436;
+  color: #DEE4E9;
 }
 
 /* Field error text (email, enquiry, description, attachments) */
