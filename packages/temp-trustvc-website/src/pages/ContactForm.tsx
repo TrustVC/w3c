@@ -81,14 +81,20 @@ const ContactForm = () => {
                   }
                   role="alert"
                 >
-                  {submitError && (
-                    <img
-                      src="/icons/attention.svg"
-                      alt=""
-                      className="form-alert-error-icon"
-                      aria-hidden="true"
-                    />
-                  )}
+                  <img
+                    src={
+                      submitError
+                        ? "/icons/attention.svg"
+                        : "/icons/circle-check.svg"
+                    }
+                    alt=""
+                    className={
+                      submitError
+                        ? "form-alert-error-icon"
+                        : "form-alert-success-icon"
+                    }
+                    aria-hidden="true"
+                  />
                   <span>{submitError ?? submitSuccess}</span>
                 </div>
               )}
