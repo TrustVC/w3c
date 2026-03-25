@@ -85,7 +85,9 @@ const ContactForm = () => {
                     src={
                       submitError
                         ? "/icons/attention.svg"
-                        : "/icons/circle-check.svg"
+                        : isDarkMode
+                          ? "/icons/circle-check-dark.svg"
+                          : "/icons/circle-check.svg"
                     }
                     alt=""
                     className={
