@@ -16,7 +16,7 @@ import jwsV1 from '../context/jws-2020-v1.json';
 import multikeyV1 from '../context/multikey-v1.json';
 import promissoryNoteContext from '../context/promissory-note.json';
 import qrCodeContext from '../context/qrcode-context.json';
-import opencertsContext from '../context/opencerts-context.json';
+import opencertsContext from '../context/opencerts-demo-context.json';
 import renderContext from '../context/render-method-context.json';
 import renderContextV2 from '../context/render-method-context-v2.json';
 import statusList2021V1 from '../context/status-list-2021-v1.json';
