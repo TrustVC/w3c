@@ -98,13 +98,7 @@ const Navigation = () => {
 
             {/* Contact CTA */}
             <Button asChild variant="default" className="bg-gradient-trust hover:opacity-90">
-              <a
-                href="https://go.gov.sg/trustvc-reach-us"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Contact Us
-              </a>
+              <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
         </div>

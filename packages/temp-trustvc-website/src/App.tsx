@@ -12,6 +12,7 @@ import News from './pages/News';
 import Contact from './pages/Contact';
 import TradeTrust from './pages/TradeTrust';
 import OpenCerts from './pages/OpenCerts';
+import ContactForm from './pages/ContactForm';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -26,7 +27,8 @@ const App = () => (
           <Navigation />
           <Routes>
             <Route path="/" element={<Index />} />
-            {/* <Route path="/contact" element={<Contact />} /> */}
+            <Route path="/contact" element={<ContactForm />} />
+            <Route path="/get-in-touch" element={<Contact />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
