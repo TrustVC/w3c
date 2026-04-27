@@ -1,0 +1,29 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "OpenCertsCertificate": "https://example.com/#OpenCertsCertificate",
+    "name": "https://schema.org/name",
+    "description": "https://schema.org/description",
+    "issuedOn": "https://schema.org/dateIssued",
+    "admissionDate": "https://example.com/#admissionDate",
+    "graduationDate": "https://example.com/#graduationDate",
+    "recipient": "https://example.com/#recipient",
+    "nric": "https://example.com/#nric",
+    "course": "https://schema.org/course",
+    "transcript": "https://example.com/#transcript",
+    "grade": "https://example.com/#grade",
+    "courseCredit": "https://example.com/#courseCredit",
+    "courseCode": "https://example.com/#courseCode",
+    "examinationDate": "https://example.com/#examinationDate",
+    "semester": "https://example.com/#semester",
+    "additionalData": "https://example.com/#additionalData",
+    "merit": "https://example.com/#merit",
+    "studentId": "https://example.com/#studentId",
+    "transcriptId": "https://example.com/#transcriptId",
+    "certSignatories": "https://example.com/#certSignatories",
+    "signature": "https://example.com/#signature",
+    "position": "https://schema.org/jobTitle",
+    "organisation": "https://example.com/#organisation"
+  }
+}

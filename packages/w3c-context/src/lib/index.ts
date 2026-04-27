@@ -16,6 +16,7 @@ import jwsV1 from '../context/jws-2020-v1.json';
 import multikeyV1 from '../context/multikey-v1.json';
 import promissoryNoteContext from '../context/promissory-note.json';
 import qrCodeContext from '../context/qrcode-context.json';
+import opencertsContext from '../context/opencerts-demo-context.json';
 import renderContext from '../context/render-method-context.json';
 import renderContextV2 from '../context/render-method-context-v2.json';
 import statusList2021V1 from '../context/status-list-2021-v1.json';
@@ -38,6 +39,7 @@ export const RENDER_CONTEXT_URL = 'https://trustvc.io/context/render-method-cont
 export const RENDER_CONTEXT_V2_URL = 'https://trustvc.io/context/render-method-context-v2.json';
 export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-context.json';
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
+export const OPENCERTS_CONTEXT_URL = 'https://trustvc.io/context/opencerts-context.json';
 
 export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
 export const BOLC_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading-carrier.json';
@@ -85,6 +87,7 @@ export const templateContexts: { [key: string]: Document } = {
   [INVOICE_CONTEXT_URL]: invoiceContext,
   [PROMISSORY_NOTE_CONTEXT_URL]: promissoryNoteContext,
   [WAREHOUSE_RECEIPT_CONTEXT_URL]: warehouseReceiptContext,
+  [OPENCERTS_CONTEXT_URL]: opencertsContext,
 };
 
 export const CredentialContextVersion = {
