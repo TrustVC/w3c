@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@2.0.2...@trustvc/w3c-context@2.1.0) (2026-04-27)
+
+
+### Features
+
+* w3c vc context for opencert certificate ([#101](https://github.com/TrustVC/w3c/issues/101)) ([0e45032](https://github.com/TrustVC/w3c/commit/0e450327713c2d5538895aee29baa2808ecd72f1))
+
 ## [2.0.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-context@2.0.1...@trustvc/w3c-context@2.0.2) (2025-12-30)
 
 
