@@ -1,5 +1,13 @@
 import { CryptoSuiteName, SignedVerifiableCredential, VerifiableCredential } from '../types';
-import { bbs2020KeyPair, bbs2023KeyPair, ecdsa2023KeyPair } from './key-pairs';
+import {
+  BBS_DID_KEY_ISSUER,
+  bbs2020KeyPair,
+  bbs2023DidKeyPair,
+  bbs2023KeyPair,
+  ECDSA_DID_KEY_ISSUER,
+  ecdsa2023DidKeyPair,
+  ecdsa2023KeyPair,
+} from './key-pairs';
 import { modernCredentialV1_1, modernCredentialV2_0 } from './modern-credentials';
 import {
   bbs2020CredentialV1_1,
@@ -79,6 +87,39 @@ export const modernCryptosuiteTestScenarios: ModernCryptosuiteTestScenario[] = [
     keyPair: bbs2023KeyPair,
     version: 'v2.0',
     credential: modernCredentialV2_0,
+    dateField: 'validFrom',
+    dateValue: '2024-04-01T12:19:52Z',
+  },
+  // did:key variants — same cryptosuites, but issuer is a self-certifying did:key DID.
+  {
+    cryptosuite: 'ecdsa-sd-2023' as CryptoSuiteName,
+    keyPair: ecdsa2023DidKeyPair,
+    version: 'v1.1 (did:key)',
+    credential: { ...modernCredentialV1_1, issuer: ECDSA_DID_KEY_ISSUER },
+    dateField: 'issuanceDate',
+    dateValue: '2024-04-01T12:19:52Z',
+  },
+  {
+    cryptosuite: 'ecdsa-sd-2023' as CryptoSuiteName,
+    keyPair: ecdsa2023DidKeyPair,
+    version: 'v2.0 (did:key)',
+    credential: { ...modernCredentialV2_0, issuer: ECDSA_DID_KEY_ISSUER },
+    dateField: 'validFrom',
+    dateValue: '2024-04-01T12:19:52Z',
+  },
+  {
+    cryptosuite: 'bbs-2023' as CryptoSuiteName,
+    keyPair: bbs2023DidKeyPair,
+    version: 'v1.1 (did:key)',
+    credential: { ...modernCredentialV1_1, issuer: BBS_DID_KEY_ISSUER },
+    dateField: 'issuanceDate',
+    dateValue: '2024-04-01T12:19:52Z',
+  },
+  {
+    cryptosuite: 'bbs-2023' as CryptoSuiteName,
+    keyPair: bbs2023DidKeyPair,
+    version: 'v2.0 (did:key)',
+    credential: { ...modernCredentialV2_0, issuer: BBS_DID_KEY_ISSUER },
     dateField: 'validFrom',
     dateValue: '2024-04-01T12:19:52Z',
   },

@@ -1,6 +1,7 @@
 import { Resolver, DIDResolutionResult, DIDResolutionOptions } from 'did-resolver';
 import { getResolver as webGetResolver } from 'web-did-resolver';
 import { getDomain } from '../../lib';
+import { buildDidKeyDocument, isDidKey, parseDidKey } from '../../did-key';
 import { DidWellKnownDocument, QueryDidDocument, QueryDidDocumentOption } from './types';
 
 const SUPPORTED_CONTENT_TYPES = ['application/did+json', 'application/did+ld+json'];
@@ -23,6 +24,15 @@ export const queryDidDocument = async ({
 }: QueryDidDocumentOption): Promise<QueryDidDocument> => {
   if (!did && !domain) {
     throw new Error('Missing domain');
+  }
+
+  if (did && isDidKey(did)) {
+    // did:key is self-certifying: the DID document is derived from the identifier itself.
+    const info = parseDidKey(did);
+    return {
+      did: info.did,
+      wellKnownDid: buildDidKeyDocument(info),
+    };
   }
 
   if (!did && domain) {

@@ -32,3 +32,33 @@ export const bbs2023KeyPair: Bbs2023PrivateKeyPair = {
     'zUC7HnpncVAkTjtL6B8prX6bQM2WA5sJ7rXFeCqyrvPnrzoFBjYsVUTNwzhhPUazja73tWwPeEBWCUgq5qBSrtrXiYhVvBCgZPTCiWANj7TSiZJ6SnyC3pkt94GiuChhAvmRRbt',
   secretKeyMultibase: 'z488ur1KSFDd3Y1L6pXcPrZRjE18PNBhgzwJvMeoSxKPNysj',
 };
+
+// did:key variants: same key material, but the DID and controller are derived
+// from publicKeyMultibase (the multibase IS the DID after `did:key:`).
+const ECDSA_PK_MULTIBASE = 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc';
+const ECDSA_DID_KEY = `did:key:${ECDSA_PK_MULTIBASE}`;
+
+const BBS_PK_MULTIBASE =
+  'zUC7HnpncVAkTjtL6B8prX6bQM2WA5sJ7rXFeCqyrvPnrzoFBjYsVUTNwzhhPUazja73tWwPeEBWCUgq5qBSrtrXiYhVvBCgZPTCiWANj7TSiZJ6SnyC3pkt94GiuChhAvmRRbt';
+const BBS_DID_KEY = `did:key:${BBS_PK_MULTIBASE}`;
+
+export const ecdsa2023DidKeyPair: EcdsaSd2023PrivateKeyPair = {
+  '@context': 'https://w3id.org/security/multikey/v1',
+  id: `${ECDSA_DID_KEY}#${ECDSA_PK_MULTIBASE}`,
+  type: VerificationType.Multikey,
+  controller: ECDSA_DID_KEY,
+  publicKeyMultibase: ECDSA_PK_MULTIBASE,
+  secretKeyMultibase: 'z42tmUXTVn3n9BihE6NhdMpvVBTnFTgmb6fw18o5Ud6puhRW',
+};
+
+export const bbs2023DidKeyPair: Bbs2023PrivateKeyPair = {
+  '@context': 'https://w3id.org/security/multikey/v1',
+  id: `${BBS_DID_KEY}#${BBS_PK_MULTIBASE}`,
+  type: VerificationType.Multikey,
+  controller: BBS_DID_KEY,
+  publicKeyMultibase: BBS_PK_MULTIBASE,
+  secretKeyMultibase: 'z488ur1KSFDd3Y1L6pXcPrZRjE18PNBhgzwJvMeoSxKPNysj',
+};
+
+export const ECDSA_DID_KEY_ISSUER = ECDSA_DID_KEY;
+export const BBS_DID_KEY_ISSUER = BBS_DID_KEY;
