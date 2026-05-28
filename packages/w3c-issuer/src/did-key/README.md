@@ -28,7 +28,7 @@ This guide explains how to issue and use a Decentralized Identifier (DID) with t
 
 Example identifiers:
 
-```
+```text
 did:web:trustvc.github.io:did:1                          ← did:web (resolves via HTTPS)
 did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc ← did:key (resolves locally)
 ```
@@ -116,13 +116,13 @@ const result = await verifyCredential(derived);
 
 A `did:key` DID is constructed as:
 
-```
+```text
 did:key: + z + base58btc( <multicodec varint> || <public key bytes> )
 ```
 
 Worked example for the P-256 key `zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc`:
 
-```
+```text
 did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc
         │
         └── z = base58btc multibase prefix

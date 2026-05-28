@@ -156,7 +156,11 @@ describe('W3C Verifiable Credentials', () => {
         };
 
         // Sign with the freshly-generated keypair.
-        const signed = await signCredential(credential, didKeyPairs, cryptosuite as CryptoSuiteName);
+        const signed = await signCredential(
+          credential,
+          didKeyPairs,
+          cryptosuite as CryptoSuiteName,
+        );
         expect(signed.error).toBeUndefined();
         expect(signed.signed).toBeDefined();
         expect(signed.signed?.proof?.verificationMethod).toBe(didKeyPairs.id);

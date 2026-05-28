@@ -149,7 +149,7 @@ console.log("didKeyPairs:", didKeyPairs)
 `generateDidKeyPair` issues a self-certifying [`did:key`](https://w3c-ccg.github.io/did-key-spec/) DID together with the matching Multikey private key pair. Unlike `did:web`, there is no DID document to host — the public key is encoded directly into the DID, so the DID document is reconstructed deterministically by any verifier from the identifier alone.
 
 > __DID Private Key Pair__ needs to be kept securely. Required for signing Verifiable Credentials. \
-> __Issuer identity__ is not bound to any domain. If you need to bind a `did:key` to a real-world entity, use an out-of-band mechanism (trust registry, delegation credential, etc.). See [`./src/did-key/README.md`](./src/did-key/README.md) for the trust-model discussion.
+> __Issuer identity__ is not bound to any domain. If you need to bind a `did:key` to a real-world entity, use an out-of-band mechanism (trust registry, delegation credential, etc.). See the [`did:key` guide](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer/src/did-key#trust-model) for the trust-model discussion.
 
 ```ts
 import { CryptoSuite, generateDidKeyPair, parseDidKey } from '@trustvc/w3c-issuer';

@@ -10,6 +10,12 @@ import { decodeVarint, encodeVarint } from './varint';
 const MULTICODEC_BLS12381_G2_PUB = 0xeb;
 const MULTICODEC_P256_PUB = 0x1200;
 
+// Canonical raw public-key byte lengths.
+// P-256 compressed SEC1 point: 1 byte tag + 32 byte x = 33 bytes.
+// BLS12-381 G2 compressed: 96 bytes.
+const P256_PUBLIC_KEY_LENGTH = 33;
+const BLS12381_G2_PUBLIC_KEY_LENGTH = 96;
+
 /**
  * Returns true when the given URI is a `did:key:` DID (possibly with fragment).
  * @param {string} uri - The URI to check.
@@ -38,12 +44,21 @@ export const parseDidKey = (didKey: string): DidKeyInfo => {
   const publicKey = decoded.slice(bytesRead);
 
   let keyType: DidKeyType;
+  let expectedLength: number;
   if (codec === MULTICODEC_BLS12381_G2_PUB) {
     keyType = 'Bls12381G2';
+    expectedLength = BLS12381_G2_PUBLIC_KEY_LENGTH;
   } else if (codec === MULTICODEC_P256_PUB) {
     keyType = 'P-256';
+    expectedLength = P256_PUBLIC_KEY_LENGTH;
   } else {
     throw new Error(`Unsupported did:key multicodec: 0x${codec.toString(16)}`);
+  }
+
+  if (publicKey.length !== expectedLength) {
+    throw new Error(
+      `Invalid ${keyType} public key length: expected ${expectedLength} bytes, got ${publicKey.length}`,
+    );
   }
 
   return {

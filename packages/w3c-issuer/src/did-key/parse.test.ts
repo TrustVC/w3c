@@ -1,3 +1,4 @@
+import { base58btc } from 'multiformats/bases/base58';
 import { describe, expect, it } from 'vitest';
 import { VerificationType } from '../lib/types';
 import {
@@ -7,6 +8,15 @@ import {
   parseDidKey,
   publicKeyToDidKey,
 } from './parse';
+import { encodeVarint } from './varint';
+
+const encodeDidKey = (codec: number, keyBytes: Uint8Array): string => {
+  const prefix = encodeVarint(codec);
+  const combined = new Uint8Array(prefix.length + keyBytes.length);
+  combined.set(prefix, 0);
+  combined.set(keyBytes, prefix.length);
+  return `did:key:${base58btc.encode(combined)}`;
+};
 
 const P256_PUBLIC_KEY_MULTIBASE = 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc';
 const BLS_PUBLIC_KEY_MULTIBASE =
@@ -65,6 +75,28 @@ describe('did:key parse', () => {
       expect(() => parseDidKey('did:key:z6MkpTHR8VNsBxYAAWHut2Geo2LdLLChG4Wkw5kJp9TQq7Pe')).toThrow(
         /Unsupported did:key multicodec/,
       );
+    });
+
+    it('rejects a P-256 did:key with wrong public key length', () => {
+      // 32 bytes instead of the canonical 33 (missing the compressed-point tag byte).
+      const tampered = encodeDidKey(0x1200, new Uint8Array(32));
+      expect(() => parseDidKey(tampered)).toThrow(/Invalid P-256 public key length/);
+    });
+
+    it('rejects a BLS12-381 G2 did:key with wrong public key length', () => {
+      // 95 bytes instead of the canonical 96.
+      const tampered = encodeDidKey(0xeb, new Uint8Array(95));
+      expect(() => parseDidKey(tampered)).toThrow(/Invalid Bls12381G2 public key length/);
+    });
+
+    it('rejects an over-long varint prefix that would collide via 32-bit truncation', () => {
+      // 5-byte varint encoding a value > 2^32 whose low 32 bits equal 0xeb.
+      // Without the prefix-length cap this could be misread as the BLS12-381 G2 codec.
+      const overlong = new Uint8Array([0xeb, 0x80, 0x80, 0x80, 0x10]);
+      const combined = new Uint8Array(overlong.length + 96);
+      combined.set(overlong, 0);
+      const tampered = `did:key:${base58btc.encode(combined)}`;
+      expect(() => parseDidKey(tampered)).toThrow(/Varint exceeds maximum length/);
     });
   });
 
