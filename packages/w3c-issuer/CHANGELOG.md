@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@2.1.0...@trustvc/w3c-issuer@2.2.0) (2026-06-02)
+
+
+### Features
+
+* add did:key support ([#103](https://github.com/TrustVC/w3c/issues/103)) ([67dbb86](https://github.com/TrustVC/w3c/commit/67dbb867d23384d31bd6b14f379d9ae34fb3850a))
+
 # [2.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-issuer@2.0.2...@trustvc/w3c-issuer@2.1.0) (2026-04-27)
 
 
