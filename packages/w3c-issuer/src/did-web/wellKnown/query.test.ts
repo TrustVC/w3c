@@ -75,6 +75,28 @@ describe('query', () => {
       `);
       expect(did).toBe('did:web:trustvc.github.io:did:1');
     });
+
+    it('should resolve a did:key bare DID without network access', async () => {
+      const didKey = 'did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc';
+      const { did, wellKnownDid } = await queryDidDocument({ did: didKey });
+      expect(did).toBe(didKey);
+      expect(wellKnownDid?.id).toBe(didKey);
+      expect(wellKnownDid?.verificationMethod?.[0]).toMatchObject({
+        id: `${didKey}#zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc`,
+        type: 'Multikey',
+        controller: didKey,
+        publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+      });
+    });
+
+    it('should resolve a did:key DID URL with fragment', async () => {
+      const didKey = 'did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc';
+      const vmUrl = `${didKey}#zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc`;
+      const { did, wellKnownDid } = await queryDidDocument({ did: vmUrl });
+      // queryDidDocument strips the fragment from `did` for did:key (matches did:web behaviour).
+      expect(did).toBe(didKey);
+      expect(wellKnownDid?.verificationMethod?.find((vm) => vm.id === vmUrl)).toBeDefined();
+    });
   });
 
   describe('resolve', () => {

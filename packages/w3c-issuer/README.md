@@ -1,6 +1,6 @@
 # TrustVC W3C Issuer
 
-A library to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) DIDs v1, specifically [`did:web`](https://w3c-ccg.github.io/did-method-web/), for the signing of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) v1.1.
+A library to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) DIDs v1, supporting both [`did:web`](https://w3c-ccg.github.io/did-method-web/) (host a DID document) and [`did:key`](https://w3c-ccg.github.io/did-key-spec/) (self-certifying, no hosting required), for the signing of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) v1.1 and [v2.0](https://www.w3.org/TR/vc-data-model-2.0/).
 
 ## Installation
 To install the package, use:
@@ -12,6 +12,7 @@ npm install @trustvc/w3c-issuer
 ## Features
 - Create private key pairs for specific signature suites used for signing Verifiable Credentials: [ECDSA-SD-2023](https://w3c.github.io/vc-di-ecdsa/#ecdsa-sd-2023), [BBS-2023](https://w3c.github.io/vc-di-bbs/#bbs-2023), and [legacy suites](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 - Generate DID private key pairs and DID documents.
+- Issue self-certifying `did:key` DIDs (P-256 for ECDSA-SD-2023, BLS12-381 G2 for BBS-2023) — no hosting required.
 
 <br>
 
@@ -142,3 +143,56 @@ console.log("didKeyPairs:", didKeyPairs)
   }
   ```
 </details>
+
+### 3. Generate a `did:key` Key Pair
+
+`generateDidKeyPair` issues a self-certifying [`did:key`](https://w3c-ccg.github.io/did-key-spec/) DID together with the matching Multikey private key pair. Unlike `did:web`, there is no DID document to host — the public key is encoded directly into the DID, so the DID document is reconstructed deterministically by any verifier from the identifier alone.
+
+> __DID Private Key Pair__ needs to be kept securely. Required for signing Verifiable Credentials. \
+> __Issuer identity__ is not bound to any domain. If you need to bind a `did:key` to a real-world entity, use an out-of-band mechanism (trust registry, delegation credential, etc.). See the [`did:key` guide](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer/src/did-key#trust-model) for the trust-model discussion.
+
+```ts
+import { CryptoSuite, generateDidKeyPair, parseDidKey } from '@trustvc/w3c-issuer';
+
+/**
+ * Parameters:
+ * - cryptosuite (CryptoSuite): Either CryptoSuite.EcdsaSd2023 (P-256) or CryptoSuite.Bbs2023 (BLS12-381 G2)
+ * - options.seedBase58? (string): 32 byte base58 encoded seed for deterministic BBS-2023 generation (optional, ignored for ECDSA-SD-2023)
+ *
+ * Returns:
+ * - A Promise that resolves to:
+ *   - did (string): The resulting did:key DID
+ *   - didKeyPairs (PrivateKeyPair): Multikey private key pair scoped to the new DID
+ */
+
+const { did, didKeyPairs } = await generateDidKeyPair(CryptoSuite.EcdsaSd2023);
+console.log('did:', did);
+console.log('didKeyPairs:', didKeyPairs);
+```
+
+<details>
+  <summary>generateDidKeyPair Result</summary>
+
+  ```js
+  did: 'did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc'
+  didKeyPairs: {
+    '@context': 'https://w3id.org/security/multikey/v1',
+    id: 'did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc#zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+    type: 'Multikey',
+    controller: 'did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+    publicKeyMultibase: 'zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc',
+    secretKeyMultibase: '<secretKeyMultibase>'
+  }
+  ```
+</details>
+
+`parseDidKey` decodes a `did:key` identifier back into its key type and raw public key bytes — useful if you receive a `did:key` from elsewhere and need to inspect it:
+
+```ts
+const info = parseDidKey('did:key:zDnaemDNwi4G5eTzGfRooFFu5Kns3be6yfyVNtiaMhWkZbwtc');
+// info.keyType === 'P-256'
+// info.publicKey is a Uint8Array of the compressed 33-byte P-256 public key
+// info.verificationMethodId === 'did:key:zDna...#zDna...'
+```
+
+**Supported key types:** `P-256` (for `ecdsa-sd-2023`) and `BLS12-381 G2` (for `bbs-2023`). Other `did:key` types defined in the spec (Ed25519, secp256k1, P-384, etc.) are rejected at parse time because no matching cryptosuite is wired up in `@trustvc/w3c-vc`.

@@ -26,6 +26,7 @@ npm install @trustvc/w3c-vc
 ## Features
 - **Modern Cryptosuites**: ECDSA-SD-2023 (default) and BBS-2023 with selective disclosure
 - **W3C Compliance**: Support for both W3C VC Data Model v1.1 and v2.0
+- **DID Method Agnostic**: Sign and verify with `did:web` issuers (hosted DID document) or `did:key` issuers (self-certifying, no hosting). See [`@trustvc/w3c-issuer`](../w3c-issuer/README.md) for issuance.
 - **Selective Disclosure**: Derive credentials with selective field revelation
 - **Legacy Support**: Deprecated BbsBlsSignature2020 signature support (verification only)
 - **Schema Validation**: Checks if payload matches W3C VC schema
@@ -40,6 +41,8 @@ npm install @trustvc/w3c-vc
 | `BbsBlsSignature2020` | ⚠️ Deprecated | ❌ | ✅ | ❌ | Legacy support only |
 
 ## Usage
+
+> **A note on issuer DIDs**: the examples below use `did:web` issuers, but the same `signCredential` / `verifyCredential` / `deriveCredential` calls work unchanged for `did:key` issuers — just replace the keyPair's `id` / `controller` and the credential's `issuer` with the `did:key:zXxx#zXxx` / `did:key:zXxx` form. The default document loader from [`@trustvc/w3c-context`](../w3c-context/README.md) resolves `did:key` URIs in-memory (no network call), so verification works out of the box. See [`@trustvc/w3c-issuer`'s did:key guide](../w3c-issuer/src/did-key/README.md) for the full flow.
 
 ### 1. Signing a Credential
 

@@ -2,7 +2,7 @@
 
 ## About
 
-A wrapper lib build for TrustVC to work with W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs) Data Model v1.1. Provides packages to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) (DIDs) v1, specifically [`did:web`](https://w3c-ccg.github.io/did-method-web/), and [Verifiable Credentials Status](https://www.w3.org/TR/2023/WD-vc-status-list-20230427/) Status List v2021.
+A wrapper library built for TrustVC to work with W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs) Data Model v1.1 and [v2.0](https://www.w3.org/TR/vc-data-model-2.0/). Provides packages to facilitate the creation of [Decentralized Identifiers](https://www.w3.org/TR/did-core/) (DIDs) v1, supporting both [`did:web`](https://w3c-ccg.github.io/did-method-web/) (host a DID document) and [`did:key`](https://w3c-ccg.github.io/did-key-spec/) (self-certifying, no hosting required), and Verifiable Credentials Status — both [Status List 2021](https://www.w3.org/TR/2023/WD-vc-status-list-20230427/) and the latest [Bitstring Status List](https://www.w3.org/TR/vc-bitstring-status-list/).
 
 ## Packages
 
@@ -21,7 +21,9 @@ For more details on each packages, refer to the individual README doc.
 1. **Pre Requisite**
 
    1. Generate a signature specific key pair. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#1-create-private-key)
-   2. Generate and host a DID web identity. [link](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#2-generate-did-key-pair-and-did-document)
+   2. Choose a DID method:
+      - `did:web` — generate a DID document and host it on a domain you control. [did:web setup guide](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#2-generate-did-key-pair-and-did-document)
+      - `did:key` — generate a self-certifying DID key pair (no hosting required). [did:key setup guide](https://github.com/TrustVC/w3c/tree/main/packages/w3c-issuer#3-generate-a-didkey-key-pair)
 
 2. **Sign and Verify VC**
 

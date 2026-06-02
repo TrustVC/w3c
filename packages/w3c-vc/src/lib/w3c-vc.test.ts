@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import { CryptoSuite, generateDidKeyPair, parseDidKey } from '@trustvc/w3c-issuer';
 import { deriveCredential, signCredential, verifyCredential } from './w3c-vc';
+import { CryptoSuiteName } from './types';
 import {
   modernCryptosuiteTestScenarios,
   bbs2020TestScenarios,
 } from './__fixtures__/test-scenarios';
+import { modernCredentialV2_0 } from './__fixtures__/modern-credentials';
 
 /**
  * W3C Verifiable Credentials Test Suite
@@ -115,6 +118,72 @@ describe('W3C Verifiable Credentials', () => {
           expect(derivedProofVerificationResult.verified).toBe(false);
           expect(derivedProofVerificationResult.error).toBeDefined();
         });
+      },
+    );
+  });
+
+  describe('Freshly-generated did:key end-to-end', () => {
+    const cases: Array<{ name: string; cryptosuite: CryptoSuite; expectedKeyType: string }> = [
+      {
+        name: 'ECDSA-SD-2023 (P-256)',
+        cryptosuite: CryptoSuite.EcdsaSd2023,
+        expectedKeyType: 'P-256',
+      },
+      {
+        name: 'BBS-2023 (BLS12-381 G2)',
+        cryptosuite: CryptoSuite.Bbs2023,
+        expectedKeyType: 'Bls12381G2',
+      },
+    ];
+
+    it.each(cases)(
+      'generateDidKeyPair → sign → derive → verify round-trip for $name',
+      async ({ cryptosuite, expectedKeyType }) => {
+        const { did, didKeyPairs } = await generateDidKeyPair(cryptosuite);
+
+        // Sanity: the generated DID actually parses to the expected key type
+        // and its verification method id matches the keypair id.
+        const parsed = parseDidKey(did);
+        expect(parsed.keyType).toBe(expectedKeyType);
+        expect(didKeyPairs.id).toBe(parsed.verificationMethodId);
+        expect(didKeyPairs.controller).toBe(did);
+
+        // Build a credential issued by the new did:key.
+        const credential = {
+          ...modernCredentialV2_0,
+          issuer: did,
+          validFrom: '2024-04-01T12:19:52Z',
+        };
+
+        // Sign with the freshly-generated keypair.
+        const signed = await signCredential(
+          credential,
+          didKeyPairs,
+          cryptosuite as CryptoSuiteName,
+        );
+        expect(signed.error).toBeUndefined();
+        expect(signed.signed).toBeDefined();
+        expect(signed.signed?.proof?.verificationMethod).toBe(didKeyPairs.id);
+
+        // Derive (required before verifying base credentials for these cryptosuites).
+        const derived = await deriveCredential(signed.signed, [
+          '/credentialSubject/billOfLadingName',
+        ]);
+        expect(derived.error).toBeUndefined();
+        expect(derived.derived).toBeDefined();
+
+        // Verify — this exercises the did:key dispatch inside queryDidDocument:
+        // the document loader receives `did:key:zXxx#zXxx`, queryDidDocument
+        // synthesises the DID document in memory, and jsonld-signatures extracts
+        // publicKeyMultibase to verify the proof. No network call required.
+        const verification = await verifyCredential(derived.derived);
+        expect(verification.error).toBeUndefined();
+        expect(verification.verified).toBe(true);
+
+        // Negative case: tampering after verification still trips.
+        const tampered = { ...derived.derived, validFrom: new Date().toISOString() };
+        const tamperedResult = await verifyCredential(tampered);
+        expect(tamperedResult.verified).toBe(false);
       },
     );
   });

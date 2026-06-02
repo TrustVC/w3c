@@ -32,3 +32,27 @@ export const bbs2023KeyPair: Bbs2023PrivateKeyPair = {
     'zUC7HnpncVAkTjtL6B8prX6bQM2WA5sJ7rXFeCqyrvPnrzoFBjYsVUTNwzhhPUazja73tWwPeEBWCUgq5qBSrtrXiYhVvBCgZPTCiWANj7TSiZJ6SnyC3pkt94GiuChhAvmRRbt',
   secretKeyMultibase: 'z488ur1KSFDd3Y1L6pXcPrZRjE18PNBhgzwJvMeoSxKPNysj',
 };
+
+// did:key variants reuse the same key material as the did:web fixtures above —
+// only the DID, controller, and verification-method id differ (the multibase
+// public key IS the DID after `did:key:`).
+export const ECDSA_DID_KEY_ISSUER = `did:key:${ecdsa2023KeyPair.publicKeyMultibase}`;
+export const BBS_DID_KEY_ISSUER = `did:key:${bbs2023KeyPair.publicKeyMultibase}`;
+
+export const ecdsa2023DidKeyPair: EcdsaSd2023PrivateKeyPair = {
+  '@context': 'https://w3id.org/security/multikey/v1',
+  id: `${ECDSA_DID_KEY_ISSUER}#${ecdsa2023KeyPair.publicKeyMultibase}`,
+  type: VerificationType.Multikey,
+  controller: ECDSA_DID_KEY_ISSUER,
+  publicKeyMultibase: ecdsa2023KeyPair.publicKeyMultibase,
+  secretKeyMultibase: ecdsa2023KeyPair.secretKeyMultibase,
+};
+
+export const bbs2023DidKeyPair: Bbs2023PrivateKeyPair = {
+  '@context': 'https://w3id.org/security/multikey/v1',
+  id: `${BBS_DID_KEY_ISSUER}#${bbs2023KeyPair.publicKeyMultibase}`,
+  type: VerificationType.Multikey,
+  controller: BBS_DID_KEY_ISSUER,
+  publicKeyMultibase: bbs2023KeyPair.publicKeyMultibase,
+  secretKeyMultibase: bbs2023KeyPair.secretKeyMultibase,
+};
