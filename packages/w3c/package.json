@@ -1,6 +1,6 @@
 {
   "name": "@trustvc/w3c",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -32,10 +32,10 @@
     }
   },
   "dependencies": {
-    "@trustvc/w3c-context": "^2.1.0",
-    "@trustvc/w3c-credential-status": "^2.1.0",
-    "@trustvc/w3c-issuer": "^2.1.0",
-    "@trustvc/w3c-vc": "^2.1.0"
+    "@trustvc/w3c-context": "^2.2.0",
+    "@trustvc/w3c-credential-status": "^2.2.0",
+    "@trustvc/w3c-issuer": "^2.2.0",
+    "@trustvc/w3c-vc": "^2.2.0"
   },
   "repository": {
     "type": "git",
