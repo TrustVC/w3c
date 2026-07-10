@@ -1,0 +1,100 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "BillOfExchange": {
+      "@id": "https://example.com/terms#BillOfExchange",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "logo": {
+          "@id": "https://example.com/terms#logo"
+        },
+        "backgroundImage": {
+          "@id": "https://example.com/terms#backgroundImage"
+        },
+        "boeNumber": {
+          "@id": "https://example.com/terms#boeNumber"
+        },
+        "placeOfIssue": {
+          "@id": "https://example.com/terms#placeOfIssue"
+        },
+        "dateOfIssue": {
+          "@id": "https://example.com/terms#dateOfIssue"
+        },
+        "tenor": {
+          "@id": "https://example.com/terms#tenor"
+        },
+        "drawerCompanyName": {
+          "@id": "https://example.com/terms#drawerCompanyName"
+        },
+        "drawerCompanyNo": {
+          "@id": "https://example.com/terms#drawerCompanyNo"
+        },
+        "drawerJurisdiction": {
+          "@id": "https://example.com/terms#drawerJurisdiction"
+        },
+        "drawerAddress": {
+          "@id": "https://example.com/terms#drawerAddress"
+        },
+        "drawerEmail": {
+          "@id": "https://example.com/terms#drawerEmail"
+        },
+        "drawerWalletAddress": {
+          "@id": "https://example.com/terms#drawerWalletAddress"
+        },
+        "draweeCompanyName": {
+          "@id": "https://example.com/terms#draweeCompanyName"
+        },
+        "draweeCompanyNo": {
+          "@id": "https://example.com/terms#draweeCompanyNo"
+        },
+        "draweeJurisdiction": {
+          "@id": "https://example.com/terms#draweeJurisdiction"
+        },
+        "draweeAddress": {
+          "@id": "https://example.com/terms#draweeAddress"
+        },
+        "draweeEmail": {
+          "@id": "https://example.com/terms#draweeEmail"
+        },
+        "draweeWalletAddress": {
+          "@id": "https://example.com/terms#draweeWalletAddress"
+        },
+        "payeeCompanyName": {
+          "@id": "https://example.com/terms#payeeCompanyName"
+        },
+        "payeeWalletAddress": {
+          "@id": "https://example.com/terms#payeeWalletAddress"
+        },
+        "dueDate": {
+          "@id": "https://example.com/terms#dueDate"
+        },
+        "currency": {
+          "@id": "https://example.com/terms#currency"
+        },
+        "amount": {
+          "@id": "https://example.com/terms#amount"
+        },
+        "amountInWords": {
+          "@id": "https://example.com/terms#amountInWords"
+        },
+        "clause": {
+          "@id": "https://example.com/terms#clause"
+        },
+        "signerName": {
+          "@id": "https://example.com/terms#signerName"
+        },
+        "signerPosition": {
+          "@id": "https://example.com/terms#signerPosition"
+        },
+        "signerEmail": {
+          "@id": "https://example.com/terms#signerEmail"
+        },
+        "signerTimeStamp": {
+          "@id": "https://example.com/terms#signerTimeStamp"
+        }
+      }
+    }
+  }
+}

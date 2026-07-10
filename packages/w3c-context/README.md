@@ -73,6 +73,7 @@ The package includes the following pre-cached contexts:
 - `https://trustvc.io/context/attachments-context.json` - Attachments
 - `https://trustvc.io/context/qrcode-context.json` - QR Code
 - `https://trustvc.io/context/opencerts-context.json` - OpenCerts Certificate
+- `https://trustvc.io/context/bill-of-exchange.json` - Bill of Exchange
 - `https://trustvc.io/context/bill-of-lading.json` - Bill of Lading
 - `https://trustvc.io/context/bill-of-lading-carrier.json` - Bill of Lading Carrier
 - `https://trustvc.io/context/coo.json` - Certificate of Origin
