@@ -4,6 +4,7 @@ import { DocumentLoader, DocumentLoaderObject } from './types';
 import jsonldSignatures from 'jsonld-signatures';
 import attachmentsContext from '../context/attachments-context.json';
 import bbsV1 from '../context/bbs-v1.json';
+import boeContext from '../context/bill-of-exchange.json';
 import bolContext from '../context/bill-of-lading.json';
 import bolcContext from '../context/bill-of-lading-carrier.json';
 import cooContext from '../context/coo.json';
@@ -21,6 +22,7 @@ import renderContext from '../context/render-method-context.json';
 import renderContextV2 from '../context/render-method-context-v2.json';
 import statusList2021V1 from '../context/status-list-2021-v1.json';
 import trContext from '../context/transferable-records-context.json';
+import obligationRecordsContext from '../context/obligation-records-context.json';
 import warehouseReceiptContext from '../context/warehouse-receipt.json';
 import { Document } from './types';
 
@@ -35,12 +37,15 @@ export const MULTIKEY_V1_URL = 'https://w3id.org/security/multikey/v1';
 export const STATUS_LIST_2021_CREDENTIAL_URL = 'https://w3id.org/vc/status-list/2021/v1';
 
 export const TR_CONTEXT_URL = 'https://trustvc.io/context/transferable-records-context.json';
+export const OBLIGATION_RECORDS_CONTEXT_URL =
+  'https://trustvc.io/context/obligation-records-context.json';
 export const RENDER_CONTEXT_URL = 'https://trustvc.io/context/render-method-context.json';
 export const RENDER_CONTEXT_V2_URL = 'https://trustvc.io/context/render-method-context-v2.json';
 export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-context.json';
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 export const OPENCERTS_CONTEXT_URL = 'https://trustvc.io/context/opencerts-context.json';
 
+export const BOE_CONTEXT_URL = 'https://trustvc.io/context/bill-of-exchange.json';
 export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
 export const BOLC_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading-carrier.json';
 export const COO_CONTEXT_URL = 'https://trustvc.io/context/coo.json';
@@ -64,6 +69,10 @@ export const trContexts: { [key: string]: Document } = {
   [TR_CONTEXT_URL]: trContext,
 };
 
+export const obligationRecordsContexts: { [key: string]: Document } = {
+  [OBLIGATION_RECORDS_CONTEXT_URL]: obligationRecordsContext,
+};
+
 export const renderContexts: { [key: string]: Document } = {
   [RENDER_CONTEXT_URL]: renderContext,
 };
@@ -81,6 +90,7 @@ export const qrCodeContexts: { [key: string]: Document } = {
 };
 
 export const templateContexts: { [key: string]: Document } = {
+  [BOE_CONTEXT_URL]: boeContext,
   [BOL_CONTEXT_URL]: bolContext,
   [BOLC_CONTEXT_URL]: bolcContext,
   [COO_CONTEXT_URL]: cooContext,
@@ -112,6 +122,7 @@ export async function getDocumentLoader(
   [
     contexts,
     trContexts,
+    obligationRecordsContexts,
     renderContexts,
     renderContextsV2,
     attachmentsContexts,

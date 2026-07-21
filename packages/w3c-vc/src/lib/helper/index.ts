@@ -2,9 +2,11 @@ import { CredentialContextVersion } from '@trustvc/w3c-context';
 import {
   assertBitstringStatusListEntry,
   assertCredentialStatusType,
+  assertObligationRecords,
   assertStatusList2021Entry,
   assertTransferableRecords,
   BitstringStatusListCredentialStatus,
+  ObligationRecordsCredentialStatus,
   TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
 import {
@@ -525,7 +527,13 @@ export const _checkCredentialStatus = (
   } else if (type === 'BitstringStatusListEntry') {
     assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
   } else if (type === 'TransferableRecords') {
-    assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
+    if (
+      typeof (credentialStatus as { obligationRegistry?: string }).obligationRegistry === 'string'
+    ) {
+      assertObligationRecords(credentialStatus as ObligationRecordsCredentialStatus, mode);
+    } else {
+      assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
+    }
   } else {
     assertCredentialStatusType(type);
   }

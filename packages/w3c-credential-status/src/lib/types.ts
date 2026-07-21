@@ -40,6 +40,20 @@ export type TransferableRecordsCredentialStatus = Omit<GeneralCredentialStatus, 
   tokenRegistry: string;
 };
 
+/**
+ * Obligation Records (BoE) credential status. Same TransferableRecords type string,
+ * but keyed by obligationRegistry instead of tokenRegistry.
+ */
+export type ObligationRecordsCredentialStatus = Omit<GeneralCredentialStatus, 'type'> & {
+  type: 'TransferableRecords';
+  tokenId: string;
+  tokenNetwork: {
+    chain: string;
+    chainId: string | number;
+  };
+  obligationRegistry: string;
+};
+
 export type RawCredentialStatusVC = {
   '@context': string | string[];
   type: string[];
