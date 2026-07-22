@@ -1,0 +1,87 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "boeNumber": {
+      "@id": "https://trustvc.io/context/terms#boeNumber"
+    },
+    "placeOfIssue": {
+      "@id": "https://trustvc.io/context/terms#placeOfIssue"
+    },
+    "dateOfIssue": {
+      "@id": "https://trustvc.io/context/terms#dateOfIssue"
+    },
+    "tenor": {
+      "@id": "https://trustvc.io/context/terms#tenor"
+    },
+    "drawerCompanyName": {
+      "@id": "https://trustvc.io/context/terms#drawerCompanyName"
+    },
+    "drawerCompanyNo": {
+      "@id": "https://trustvc.io/context/terms#drawerCompanyNo"
+    },
+    "drawerJurisdiction": {
+      "@id": "https://trustvc.io/context/terms#drawerJurisdiction"
+    },
+    "drawerAddress": {
+      "@id": "https://trustvc.io/context/terms#drawerAddress"
+    },
+    "drawerEmail": {
+      "@id": "https://trustvc.io/context/terms#drawerEmail"
+    },
+    "drawerWalletAddress": {
+      "@id": "https://trustvc.io/context/terms#drawerWalletAddress"
+    },
+    "draweeCompanyName": {
+      "@id": "https://trustvc.io/context/terms#draweeCompanyName"
+    },
+    "draweeCompanyNo": {
+      "@id": "https://trustvc.io/context/terms#draweeCompanyNo"
+    },
+    "draweeJurisdiction": {
+      "@id": "https://trustvc.io/context/terms#draweeJurisdiction"
+    },
+    "draweeAddress": {
+      "@id": "https://trustvc.io/context/terms#draweeAddress"
+    },
+    "draweeEmail": {
+      "@id": "https://trustvc.io/context/terms#draweeEmail"
+    },
+    "draweeWalletAddress": {
+      "@id": "https://trustvc.io/context/terms#draweeWalletAddress"
+    },
+    "payeeCompanyName": {
+      "@id": "https://trustvc.io/context/terms#payeeCompanyName"
+    },
+    "payeeWalletAddress": {
+      "@id": "https://trustvc.io/context/terms#payeeWalletAddress"
+    },
+    "dueDate": {
+      "@id": "https://trustvc.io/context/terms#dueDate"
+    },
+    "currency": {
+      "@id": "https://trustvc.io/context/terms#currency"
+    },
+    "amount": {
+      "@id": "https://trustvc.io/context/terms#amount"
+    },
+    "amountInWords": {
+      "@id": "https://trustvc.io/context/terms#amountInWords"
+    },
+    "clause": {
+      "@id": "https://trustvc.io/context/terms#clause"
+    },
+    "signerName": {
+      "@id": "https://trustvc.io/context/terms#signerName"
+    },
+    "signerPosition": {
+      "@id": "https://trustvc.io/context/terms#signerPosition"
+    },
+    "signerEmail": {
+      "@id": "https://trustvc.io/context/terms#signerEmail"
+    },
+    "signerTimeStamp": {
+      "@id": "https://trustvc.io/context/terms#signerTimeStamp"
+    }
+  }
+}
