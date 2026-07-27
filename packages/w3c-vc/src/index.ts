@@ -11,14 +11,15 @@ import {
   isSignedDocumentV2_0,
   isDerived,
 } from './lib/w3c-vc';
-import {
+import { getDocumentLoader } from '@trustvc/w3c-context';
+
+export {
   createPresentation,
-  isRawPresentation,
-  isSignedPresentation,
   signPresentation,
   verifyPresentation,
+  isRawPresentation,
+  isSignedPresentation,
 } from './lib/presentation';
-import { getDocumentLoader } from '@trustvc/w3c-context';
 
 export * from './lib/types';
 export type * from './lib/types';
@@ -42,9 +43,4 @@ export {
   isSignedDocumentV1_1,
   isSignedDocumentV2_0,
   isDerived,
-  createPresentation,
-  signPresentation,
-  verifyPresentation,
-  isRawPresentation,
-  isSignedPresentation,
 };

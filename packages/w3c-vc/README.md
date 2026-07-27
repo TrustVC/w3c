@@ -542,7 +542,7 @@ console.log(result.credentialResults);  // per-credential outcomes (with credent
 > fresh nonce and track/consume it. Omit it (Route 2) for a signed-but-replayable proof.
 > `verifyPresentation` requires you to pass the `challenge` **it** issued — the value in the
 > proof is never trusted (that would allow replay).
-
+>
 > **Stateless alternative for frontends.** If you have no backend to track challenges, rely
 > on the **VP expiry** instead: a short-lived signed VP + `maxLifetimeSeconds` on verify
 > gives time-boxed replay mitigation with no server state.

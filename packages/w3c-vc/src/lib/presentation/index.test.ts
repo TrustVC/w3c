@@ -102,6 +102,22 @@ describe('Verifiable Presentation', () => {
       expect(vp.validUntil).toBe('2026-01-01T00:10:00.000Z');
     });
 
+    it('rejects a malformed validFrom', async () => {
+      await expect(
+        createPresentation(ecdsaV2Vc, { holder: ECDSA_DID_KEY_ISSUER, validFrom: 'not-a-date' }),
+      ).rejects.toThrow(/"validFrom" is not a valid ISO date-time/);
+    });
+
+    it('rejects a validUntil that is not after validFrom (born-expired VP)', async () => {
+      await expect(
+        createPresentation(ecdsaV2Vc, {
+          holder: ECDSA_DID_KEY_ISSUER,
+          validFrom: '2026-01-01T00:00:00Z',
+          validUntil: '2025-01-01T00:00:00Z',
+        }),
+      ).rejects.toThrow(/must be a valid time after "validFrom"/);
+    });
+
     it('wraps multiple credentials of different suites/versions', async () => {
       const vp = await createPresentation([ecdsaV2Vc, bbsV1Vc]);
       expect(vp.verifiableCredential).toHaveLength(2);
@@ -174,8 +190,25 @@ describe('Verifiable Presentation', () => {
   });
 
   describe('signPresentation — checkHolderBinding (correct signing key)', () => {
-    it('signs when the key DID matches the holder', async () => {
-      const vp = await createPresentation(ecdsaV2Vc, { holder: ECDSA_DID_KEY_ISSUER });
+    // A credential actually bound to the ECDSA did:key holder (subject id set).
+    const boundVc = () =>
+      makeDerivedCredential(
+        {
+          ...modernCredentialV2_0,
+          issuer: ECDSA_DID_KEY_ISSUER,
+          validFrom: '2024-04-01T12:19:52Z',
+          credentialSubject: {
+            ...(modernCredentialV2_0.credentialSubject as object),
+            id: ECDSA_DID_KEY_ISSUER,
+          },
+        },
+        ecdsa2023DidKeyPair,
+        'ecdsa-sd-2023',
+      );
+
+    it('signs when the key DID matches the holder and subject', async () => {
+      const vc = await boundVc();
+      const vp = await createPresentation(vc, { holder: ECDSA_DID_KEY_ISSUER });
       const { signed, error } = await signPresentation(vp, ecdsa2023DidKeyPair, {
         challenge: CHALLENGE,
         checkHolderBinding: true,
@@ -193,6 +226,17 @@ describe('Verifiable Presentation', () => {
       });
       expect(signed).toBeUndefined();
       expect(error).toMatch(/does not match the presentation holder/);
+    });
+
+    it('refuses to sign (does not silently pass) when a credential has no subject id', async () => {
+      // ecdsaV2Vc has no credentialSubject.id — holder binding cannot be established.
+      const vp = await createPresentation(ecdsaV2Vc, { holder: ECDSA_DID_KEY_ISSUER });
+      const { signed, error } = await signPresentation(vp, ecdsa2023DidKeyPair, {
+        challenge: CHALLENGE,
+        checkHolderBinding: true,
+      });
+      expect(signed).toBeUndefined();
+      expect(error).toMatch(/no "credentialSubject.id"/);
     });
   });
 

@@ -44,7 +44,7 @@ const PRESENTATION_PROOF_CRYPTOSUITE = 'ecdsa-rdfc-2019';
 // with them either throws or silently drops the credentials from the signed
 // payload, so the holder proof would not cover the credentials being presented.
 // (Embedded credentials may still use these suites.)
-const UNSUPPORTED_PROOF_SUITES = ['ecdsa-sd-2023', 'bbs-2023', 'BbsBlsSignature2020'];
+const UNSUPPORTED_PROOF_SUITES = new Set(['ecdsa-sd-2023', 'bbs-2023', 'BbsBlsSignature2020']);
 
 /**
  * Normalises the `verifiableCredential` field into an array of credentials.
@@ -492,14 +492,26 @@ export const createPresentation = async (
     }
   }
 
-  // Mandatory expiry stamp.
+  // Mandatory expiry stamp. Validate any caller-supplied bounds so a malformed date
+  // cannot throw a raw RangeError and a born-expired VP is rejected up front.
   const validFrom = options?.validFrom ?? now.toISOString();
+  if (Number.isNaN(new Date(validFrom).getTime())) {
+    throw new Error(`"validFrom" is not a valid ISO date-time: "${validFrom}".`);
+  }
   const validUntil =
     options?.validUntil ??
     new Date(
       new Date(validFrom).getTime() +
         (options?.expiresInSeconds ?? DEFAULT_VP_LIFETIME_SECONDS) * 1000,
     ).toISOString();
+  if (
+    Number.isNaN(new Date(validUntil).getTime()) ||
+    new Date(validUntil).getTime() <= new Date(validFrom).getTime()
+  ) {
+    throw new Error(
+      `"validUntil" (${validUntil}) must be a valid time after "validFrom" (${validFrom}).`,
+    );
+  }
 
   const presentation: RawVerifiablePresentation = {
     '@context': context,
@@ -572,7 +584,7 @@ export const signPresentation = async (
   try {
     const cryptoSuite = options?.cryptoSuite ?? PRESENTATION_PROOF_CRYPTOSUITE;
 
-    if (UNSUPPORTED_PROOF_SUITES.includes(cryptoSuite)) {
+    if (UNSUPPORTED_PROOF_SUITES.has(cryptoSuite)) {
       return {
         error:
           `"${cryptoSuite}" cannot sign a Verifiable Presentation. Selective-disclosure ` +
@@ -611,7 +623,15 @@ export const signPresentation = async (
     if (options?.checkHolderBinding) {
       const signerDid = keyPair.controller ?? getDidFromId(keyPair.id);
       const holder = readId(presentation.holder);
-      if (holder && signerDid && holder !== signerDid) {
+      // A missing DID must FAIL, not silently pass — otherwise the opt-in check no-ops
+      // in exactly the unbound case it exists to catch (mirrors createPresentation and
+      // verifyPresentation, which both hard-fail here).
+      if (!signerDid) {
+        return {
+          error: 'holder binding requires a signing key with a resolvable DID (controller/id).',
+        };
+      }
+      if (holder && holder !== signerDid) {
         return {
           error: `the signing key "${signerDid}" does not match the presentation holder "${holder}".`,
         };
@@ -620,7 +640,12 @@ export const signPresentation = async (
       const credentials = getCredentials(presentation);
       for (let i = 0; i < credentials.length; i++) {
         const subjectId = readId(getFirstSubject(credentials[i]));
-        if (subjectId && owner && subjectId !== owner) {
+        if (!subjectId) {
+          return {
+            error: `credential at index ${i} has no "credentialSubject.id", so it cannot be bound to the holder.`,
+          };
+        }
+        if (subjectId !== owner) {
           return {
             error:
               `credential at index ${i} is about "${subjectId}", which does not match the ` +
@@ -667,6 +692,191 @@ export const signPresentation = async (
     }
     return { error: err.message };
   }
+};
+
+type HolderProofResult = PresentationVerificationResult['presentationResult'];
+
+/**
+ * Stage 0 — temporal validity of the presentation envelope itself: reject an expired
+ * or not-yet-valid VP, and (when `maxLifetimeSeconds` is set) one whose own lifetime
+ * exceeds the cap so a far-future `validUntil` can't defeat the expiry.
+ * @returns {string | undefined} An error message, or undefined when temporally valid.
+ */
+const checkVpTemporalValidity = (
+  presentation: VerifiablePresentation,
+  vpNow: Date,
+  maxLifetimeSeconds?: number,
+): string | undefined => {
+  const { from, until } = getValidityBounds(presentation);
+  if (until && vpNow > new Date(until)) {
+    return `presentation has expired (validUntil ${until}).`;
+  }
+  if (from && vpNow < new Date(from)) {
+    return `presentation is not yet valid (validFrom ${from}).`;
+  }
+  if (maxLifetimeSeconds != null && from && until) {
+    const lifetimeSeconds = (new Date(until).getTime() - new Date(from).getTime()) / 1000;
+    if (lifetimeSeconds > maxLifetimeSeconds) {
+      return (
+        `presentation lifetime (${lifetimeSeconds}s) exceeds the maximum allowed ` +
+        `(${maxLifetimeSeconds}s).`
+      );
+    }
+  }
+  return undefined;
+};
+
+/**
+ * Stage 1 — verify each embedded credential independently (any suite / version).
+ * Expiry and revocation are enforced here too (verifyCredential only checks the
+ * signature) so a VP is rejected for an expired or revoked embedded credential —
+ * consistent with createPresentation's strict creation.
+ */
+const verifyEmbeddedCredentials = async (
+  credentials: SignedVerifiableCredential[],
+  vpNow: Date,
+  documentLoader: DocumentLoader,
+): Promise<CredentialVerificationResult[]> => {
+  const credentialResults: CredentialVerificationResult[] = [];
+  for (let i = 0; i < credentials.length; i++) {
+    let result = await verifyCredential(credentials[i], { documentLoader });
+    if (result.verified) {
+      try {
+        assertCredentialTemporallyValid(credentials[i], i, vpNow);
+        await assertCredentialNotRevoked(credentials[i], i, documentLoader);
+      } catch (err) {
+        result = {
+          verified: false,
+          error: err instanceof Error ? err.message : 'credential is no longer valid',
+        };
+      }
+    }
+    credentialResults.push({ ...result, credentialIndex: i });
+  }
+  return credentialResults;
+};
+
+/**
+ * Stage 2 — verify the holder-binding proof, if present. Only `ecdsa-rdfc-2019`
+ * DataIntegrityProofs are supported. An `authentication` proof requires a
+ * caller-supplied challenge (the proof's own challenge is never trusted); an
+ * `assertionMethod` proof takes no challenge/domain.
+ * @returns {HolderProofResult} The proof result, or undefined when the VP is unsigned.
+ */
+const verifyHolderProof = async (
+  presentation: VerifiablePresentation,
+  options: { challenge?: string; domain?: string } | undefined,
+  documentLoader: DocumentLoader,
+): Promise<HolderProofResult> => {
+  if (!presentation.proof) {
+    return undefined;
+  }
+  const proof = jsonld.getValues(presentation, 'proof')[0];
+  const proofType = proof.type as ProofType;
+  const proofCryptosuite = proof.cryptosuite as string | undefined;
+  if (proofType !== 'DataIntegrityProof' || proofCryptosuite !== PRESENTATION_PROOF_CRYPTOSUITE) {
+    return {
+      verified: false,
+      error:
+        `Presentation proof type "${proofType}"` +
+        (proofCryptosuite ? ` (cryptosuite "${proofCryptosuite}")` : '') +
+        ` is not supported. Only "${PRESENTATION_PROOF_CRYPTOSUITE}" holder proofs are supported.`,
+    };
+  }
+
+  const runVerify = async (purpose: unknown) =>
+    jsonldSignatures.verify(presentation, {
+      suite: new DataIntegrityProof({ cryptosuite: ecdsaRdfc2019Cryptosuite.cryptosuite }),
+      purpose,
+      documentLoader,
+    });
+  const toResult = (result: { verified: boolean; error?: { errors?: { message?: string }[] } }) =>
+    result.verified
+      ? { verified: true }
+      : {
+          verified: false,
+          error: result.error?.errors?.[0]?.message ?? 'Presentation proof verification error.',
+        };
+
+  const proofPurpose = proof.proofPurpose as string | undefined;
+  if (proofPurpose === 'authentication') {
+    // The challenge MUST be supplied by the caller (the verifier), not read from the
+    // proof — trusting the proof's own challenge would defeat replay protection.
+    const challenge = options?.challenge;
+    if (!challenge) {
+      return {
+        verified: false,
+        error:
+          'A caller-supplied "challenge" is required to verify an authentication ' +
+          'presentation proof. Pass the challenge the verifier issued; the value embedded ' +
+          'in the proof is not trusted.',
+      };
+    }
+    return toResult(
+      await runVerify(new AuthenticationProofPurpose({ challenge, domain: options?.domain })),
+    );
+  }
+  if (proofPurpose === 'assertionMethod') {
+    // Assertion proof: no challenge/domain. Proves the holder's key signed the VP
+    // (integrity + control at signing time) but is NOT anti-replay.
+    return toResult(await runVerify(new AssertionProofPurpose()));
+  }
+  return {
+    verified: false,
+    error: `Presentation proof purpose "${proofPurpose}" is not supported.`,
+  };
+};
+
+/**
+ * Stage 3 — optional holder binding: cryptographically prove the presenter owns the
+ * credentials. Requires a VALID holder proof AND signerDid === holder === every
+ * credentialSubject.id. Without a proof, ownership cannot be established.
+ * @returns {string | undefined} An error message, or undefined when binding holds.
+ */
+const checkHolderBindingAtVerify = (
+  presentation: VerifiablePresentation,
+  credentials: SignedVerifiableCredential[],
+  presentationResult: HolderProofResult,
+): string | undefined => {
+  if (!presentation.proof) {
+    return (
+      'holder binding requires a signed presentation (no "proof" is present, so ownership ' +
+      'cannot be proven).'
+    );
+  }
+  if (presentationResult?.verified !== true) {
+    return 'holder binding requires a valid presentation proof, but the proof did not verify.';
+  }
+  // The DID that signed the presentation (verificationMethod without its fragment).
+  const signerDid = getDidFromId(presentation.proof.verificationMethod as string | undefined);
+  const holder = readId(presentation.holder);
+  if (!signerDid) {
+    return 'the presentation proof has no "verificationMethod" to bind to.';
+  }
+  if (holder && holder !== signerDid) {
+    return (
+      `the presentation was signed by "${signerDid}", which does not match the ` +
+      `declared holder "${holder}".`
+    );
+  }
+  // Every credential must be about the presenter (the signer / holder).
+  const owner = holder ?? signerDid;
+  for (let i = 0; i < credentials.length; i++) {
+    const subjectId = readId(getFirstSubject(credentials[i]));
+    if (!subjectId) {
+      return (
+        `credential at index ${i} has no "credentialSubject.id", so it cannot be bound ` +
+        `to the holder.`
+      );
+    }
+    if (subjectId !== owner) {
+      return (
+        `credentialSubject.id ("${subjectId}") of credential at index ${i} does not ` +
+        `match the presentation holder/signer ("${owner}").`
+      );
+    }
+  }
+  return undefined;
 };
 
 /**
@@ -717,158 +927,18 @@ export const verifyPresentation = async (
     const documentLoader = options?.documentLoader ?? (await getDocumentLoader());
 
     const vpNow = options?.now ?? new Date();
-
-    // 0. Temporal validity of the presentation itself (expiry + optional max lifetime).
-    let expiryError: string | undefined;
-    {
-      const { from, until } = getValidityBounds(presentation);
-      if (until && vpNow > new Date(until)) {
-        expiryError = `presentation has expired (validUntil ${until}).`;
-      } else if (from && vpNow < new Date(from)) {
-        expiryError = `presentation is not yet valid (validFrom ${from}).`;
-      } else if (options?.maxLifetimeSeconds != null && from && until) {
-        const lifetimeSeconds = (new Date(until).getTime() - new Date(from).getTime()) / 1000;
-        if (lifetimeSeconds > options.maxLifetimeSeconds) {
-          expiryError =
-            `presentation lifetime (${lifetimeSeconds}s) exceeds the maximum allowed ` +
-            `(${options.maxLifetimeSeconds}s).`;
-        }
-      }
-    }
-
-    // 1. Verify each embedded credential independently (any suite / version). Expiry is
-    //    enforced here too (verifyCredential only warns) so that a VP is rejected for an
-    //    expired embedded credential — consistent with createPresentation's strict creation.
     const credentials = getCredentials(presentation);
-    const credentialResults: CredentialVerificationResult[] = [];
-    for (let i = 0; i < credentials.length; i++) {
-      let result = await verifyCredential(credentials[i], { documentLoader });
-      if (result.verified) {
-        try {
-          assertCredentialTemporallyValid(credentials[i], i, vpNow);
-        } catch (err) {
-          result = { verified: false, error: err instanceof Error ? err.message : 'expired' };
-        }
-      }
-      credentialResults.push({ ...result, credentialIndex: i });
-    }
+
+    // The four verification stages (each extracted into a focused helper).
+    const expiryError = checkVpTemporalValidity(presentation, vpNow, options?.maxLifetimeSeconds);
+    const credentialResults = await verifyEmbeddedCredentials(credentials, vpNow, documentLoader);
+    const presentationResult = await verifyHolderProof(presentation, options, documentLoader);
+    const holderBindingError = options?.checkHolderBinding
+      ? checkHolderBindingAtVerify(presentation, credentials, presentationResult)
+      : undefined;
+
     const allCredentialsVerified =
       credentials.length > 0 && credentialResults.every((r) => r.verified);
-
-    // 2. Verify the holder-binding proof, if present.
-    let presentationResult: PresentationVerificationResult['presentationResult'];
-    if (presentation.proof) {
-      const proof = jsonld.getValues(presentation, 'proof')[0];
-      const proofType = proof.type as ProofType;
-      const proofCryptosuite = proof.cryptosuite as string | undefined;
-      if (
-        proofType !== 'DataIntegrityProof' ||
-        proofCryptosuite !== PRESENTATION_PROOF_CRYPTOSUITE
-      ) {
-        presentationResult = {
-          verified: false,
-          error:
-            `Presentation proof type "${proofType}"` +
-            (proofCryptosuite ? ` (cryptosuite "${proofCryptosuite}")` : '') +
-            ` is not supported. Only "${PRESENTATION_PROOF_CRYPTOSUITE}" holder proofs are supported.`,
-        };
-      } else {
-        const proofPurpose = proof.proofPurpose as string | undefined;
-        const runVerify = async (purpose: unknown) =>
-          jsonldSignatures.verify(presentation, {
-            suite: new DataIntegrityProof({ cryptosuite: ecdsaRdfc2019Cryptosuite.cryptosuite }),
-            purpose,
-            documentLoader,
-          });
-        const toResult = (result: {
-          verified: boolean;
-          error?: { errors?: { message?: string }[] };
-        }) =>
-          result.verified
-            ? { verified: true }
-            : {
-                verified: false,
-                error:
-                  result.error?.errors?.[0]?.message ?? 'Presentation proof verification error.',
-              };
-
-        if (proofPurpose === 'authentication') {
-          // The challenge MUST be supplied by the caller (the verifier), not read from
-          // the proof — trusting the proof's own challenge would defeat replay protection.
-          const challenge = options?.challenge;
-          const domain = options?.domain;
-          if (!challenge) {
-            presentationResult = {
-              verified: false,
-              error:
-                'A caller-supplied "challenge" is required to verify an authentication ' +
-                'presentation proof. Pass the challenge the verifier issued; the value embedded ' +
-                'in the proof is not trusted.',
-            };
-          } else {
-            presentationResult = toResult(
-              await runVerify(new AuthenticationProofPurpose({ challenge, domain })),
-            );
-          }
-        } else if (proofPurpose === 'assertionMethod') {
-          // Assertion proof: no challenge/domain. Proves the holder's key signed the VP
-          // (integrity + control at signing time) but is NOT anti-replay.
-          presentationResult = toResult(await runVerify(new AssertionProofPurpose()));
-        } else {
-          presentationResult = {
-            verified: false,
-            error: `Presentation proof purpose "${proofPurpose}" is not supported.`,
-          };
-        }
-      }
-    }
-
-    // 3. Optional holder binding: cryptographically prove the presenter owns the
-    //    credentials. This requires that the VP is signed AND that the signing key's
-    //    DID equals the holder equals every credentialSubject.id. Without a proof,
-    //    ownership cannot be established, so the check fails.
-    let holderBindingError: string | undefined;
-    if (options?.checkHolderBinding) {
-      if (!presentation.proof) {
-        holderBindingError =
-          'holder binding requires a signed presentation (no "proof" is present, so ownership ' +
-          'cannot be proven).';
-      } else if (presentationResult?.verified !== true) {
-        holderBindingError =
-          'holder binding requires a valid presentation proof, but the proof did not verify.';
-      } else {
-        // The DID that signed the presentation (verificationMethod without its fragment).
-        const signerDid = getDidFromId(presentation.proof.verificationMethod as string | undefined);
-        const holder = readId(presentation.holder);
-
-        if (!signerDid) {
-          holderBindingError = 'the presentation proof has no "verificationMethod" to bind to.';
-        } else if (holder && holder !== signerDid) {
-          // The presenter's signing key must belong to the declared holder.
-          holderBindingError =
-            `the presentation was signed by "${signerDid}", which does not match the ` +
-            `declared holder "${holder}".`;
-        } else {
-          // Every credential must be about the presenter (the signer / holder).
-          const owner = holder ?? signerDid;
-          for (let i = 0; i < credentials.length; i++) {
-            const subjectId = readId(getFirstSubject(credentials[i]));
-            if (!subjectId) {
-              holderBindingError =
-                `credential at index ${i} has no "credentialSubject.id", so it cannot be bound ` +
-                `to the holder.`;
-              break;
-            }
-            if (subjectId !== owner) {
-              holderBindingError =
-                `credentialSubject.id ("${subjectId}") of credential at index ${i} does not ` +
-                `match the presentation holder/signer ("${owner}").`;
-              break;
-            }
-          }
-        }
-      }
-    }
 
     // A verifier that needs holder binding can require a proof to be present.
     const missingRequiredProof = options?.requireProof && !presentation.proof;
@@ -889,16 +959,21 @@ export const verifyPresentation = async (
       aggregate.presentationResult = presentationResult;
     }
     if (!verified) {
+      // First applicable message wins, in priority order (avoids nested ternaries).
+      const requiredProofError = missingRequiredProof
+        ? 'a holder proof is required ("requireProof"), but the presentation is not signed.'
+        : undefined;
+      const noCredentialsError =
+        credentials.length === 0 ? 'presentation contains no verifiable credentials.' : undefined;
       aggregate.error =
-        expiryError ??
-        (missingRequiredProof
-          ? 'a holder proof is required ("requireProof"), but the presentation is not signed.'
-          : (holderBindingError ??
-            presentationResult?.error ??
-            credentialResults.find((r) => !r.verified)?.error ??
-            (credentials.length === 0
-              ? 'presentation contains no verifiable credentials.'
-              : 'presentation verification failed.')));
+        [
+          expiryError,
+          requiredProofError,
+          holderBindingError,
+          presentationResult?.error,
+          credentialResults.find((r) => !r.verified)?.error,
+          noCredentialsError,
+        ].find((message) => message !== undefined) ?? 'presentation verification failed.';
     }
     return aggregate;
   } catch (err: unknown) {
