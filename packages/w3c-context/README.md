@@ -82,6 +82,10 @@ The package includes the following pre-cached contexts:
 - `https://trustvc.io/context/promissory-note.json` - Promissory Note
 - `https://trustvc.io/context/warehouse-receipt.json` - Warehouse Receipt
 
+### Samples
+
+- `samples/obligation-credential-subject.sample.json` - Example Obligation / BoE credential subject payload
+
 ### Context Constants
 
 You can import URL constants for type safety:
