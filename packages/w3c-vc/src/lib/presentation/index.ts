@@ -253,20 +253,8 @@ const assertCredentialNotRevoked = async (
   }
 };
 
-/**
- * Validates the basic structure of a Verifiable Presentation.
- * @param {VerifiablePresentation} presentation - The presentation to validate.
- * @param {'sign' | 'verify'} mode - Whether the presentation is being signed or verified.
- * @throws {Error} If the presentation is structurally invalid.
- */
-const _checkPresentation = (
-  presentation: VerifiablePresentation,
-  mode: 'sign' | 'verify' = 'verify',
-): void => {
-  if (!presentation || typeof presentation !== 'object') {
-    throw new Error('"presentation" must be an object.');
-  }
-
+/** Validates the presentation `@context` (present, and a supported VC data-model URL first). */
+const checkVpContext = (presentation: VerifiablePresentation): void => {
   const contexts = jsonld.getValues(presentation, '@context');
   if (contexts.length < 1) {
     throw new Error('"@context" property is required.');
@@ -277,30 +265,42 @@ const _checkPresentation = (
       `The first element of '@context' must be either '${VC_V1_URL}' (v1.1) or '${VC_V2_URL}' (v2.0).`,
     );
   }
+};
 
+/** Validates the presentation `type` (present and includes `VerifiablePresentation`). */
+const checkVpType = (presentation: VerifiablePresentation): void => {
   if (!presentation.type) {
     throw new Error('"type" property is required.');
   }
   if (!jsonld.getValues(presentation, 'type').includes('VerifiablePresentation')) {
     throw new Error('"type" must include `VerifiablePresentation`.');
   }
+};
 
-  // `verifiableCredential`, when present, must be a credential object or an array of them.
-  if ('verifiableCredential' in presentation) {
-    const credentials = getCredentials(presentation);
-    if (credentials.length === 0) {
-      throw new Error('"verifiableCredential" must contain at least one credential.');
+/** Validates the embedded `verifiableCredential` entries (objects; signed when verifying). */
+const checkVpCredentials = (
+  presentation: VerifiablePresentation,
+  mode: 'sign' | 'verify',
+): void => {
+  if (!('verifiableCredential' in presentation)) {
+    return;
+  }
+  const credentials = getCredentials(presentation);
+  if (credentials.length === 0) {
+    throw new Error('"verifiableCredential" must contain at least one credential.');
+  }
+  for (const credential of credentials) {
+    if (!credential || typeof credential !== 'object') {
+      throw new Error('each "verifiableCredential" entry must be a credential object.');
     }
-    for (const credential of credentials) {
-      if (!credential || typeof credential !== 'object') {
-        throw new Error('each "verifiableCredential" entry must be a credential object.');
-      }
-      if (mode === 'verify' && !credential.proof) {
-        throw new Error('each "verifiableCredential" entry must be signed (missing "proof").');
-      }
+    if (mode === 'verify' && !credential.proof) {
+      throw new Error('each "verifiableCredential" entry must be signed (missing "proof").');
     }
   }
+};
 
+/** Validates the presentation `proof` (absent when signing; at most one when verifying). */
+const checkVpProof = (presentation: VerifiablePresentation, mode: 'sign' | 'verify'): void => {
   if (mode === 'sign' && presentation.proof) {
     throw new Error('"proof" property is already there.');
   }
@@ -314,11 +314,30 @@ const _checkPresentation = (
 };
 
 /**
+ * Validates the basic structure of a Verifiable Presentation.
+ * @param {VerifiablePresentation} presentation - The presentation to validate.
+ * @param {'sign' | 'verify'} mode - Whether the presentation is being signed or verified.
+ * @throws {Error} If the presentation is structurally invalid.
+ */
+const _checkPresentation = (
+  presentation: VerifiablePresentation,
+  mode: 'sign' | 'verify' = 'verify',
+): void => {
+  if (!presentation || typeof presentation !== 'object') {
+    throw new Error('"presentation" must be an object.');
+  }
+  checkVpContext(presentation);
+  checkVpType(presentation);
+  checkVpCredentials(presentation, mode);
+  checkVpProof(presentation, mode);
+};
+
+/**
  * Checks if the input document is a raw (unsigned) Verifiable Presentation.
- * @param {RawVerifiablePresentation | unknown} presentation - The presentation to check.
+ * @param {unknown} presentation - The presentation to check.
  * @returns {boolean} True if it is a structurally valid unsigned presentation.
  */
-export const isRawPresentation = (presentation: RawVerifiablePresentation | unknown): boolean => {
+export const isRawPresentation = (presentation: unknown): boolean => {
   try {
     _checkPresentation(presentation as VerifiablePresentation, 'sign');
   } catch {
@@ -329,11 +348,11 @@ export const isRawPresentation = (presentation: RawVerifiablePresentation | unkn
 
 /**
  * Checks if the input document is a signed Verifiable Presentation.
- * @param {SignedVerifiablePresentation | unknown} presentation - The presentation to check.
+ * @param {unknown} presentation - The presentation to check.
  * @returns {boolean} True if it is a structurally valid presentation carrying a proof.
  */
 export const isSignedPresentation = (
-  presentation: SignedVerifiablePresentation | unknown,
+  presentation: unknown,
 ): presentation is SignedVerifiablePresentation => {
   try {
     _checkPresentation(presentation as VerifiablePresentation, 'verify');
@@ -341,6 +360,105 @@ export const isSignedPresentation = (
     return false;
   }
   return typeof presentation === 'object' && 'proof' in (presentation as object);
+};
+
+/** Every input must be a signed credential object (carrying a "proof"). */
+const assertSignedCredentialObjects = (credentials: SignedVerifiableCredential[]): void => {
+  if (credentials.length === 0) {
+    throw new Error('"verifiableCredential" must contain at least one credential.');
+  }
+  for (const credential of credentials) {
+    if (!credential || typeof credential !== 'object' || !credential.proof) {
+      throw new Error('each credential must be a signed credential object (with a "proof").');
+    }
+  }
+};
+
+/** Strict per-credential validation: genuine signature, temporally valid, and unrevoked. */
+const assertCredentialsValidForPresentation = async (
+  credentials: SignedVerifiableCredential[],
+  now: Date,
+  documentLoader: DocumentLoader,
+): Promise<void> => {
+  for (let i = 0; i < credentials.length; i++) {
+    const verification = await verifyCredential(credentials[i], { documentLoader });
+    if (!verification.verified) {
+      throw new Error(`credential at index ${i} is not valid: ${verification.error}`);
+    }
+    assertCredentialTemporallyValid(credentials[i], i, now);
+    await assertCredentialNotRevoked(credentials[i], i, documentLoader);
+  }
+};
+
+/**
+ * Data-level holder-binding consistency: a holder must exist and every credential
+ * must be about that holder (checks credentialSubject.id, not cryptographic proof).
+ */
+const assertHolderConsistency = (
+  credentials: SignedVerifiableCredential[],
+  holder: string | undefined,
+): void => {
+  if (!holder) {
+    throw new Error(
+      'holder binding requested but no "holder" is set and no credentialSubject.id to derive it from.',
+    );
+  }
+  for (let i = 0; i < credentials.length; i++) {
+    const subjectId = readId(getFirstSubject(credentials[i]));
+    if (!subjectId) {
+      throw new Error(
+        `credential at index ${i} has no "credentialSubject.id", so it cannot be bound to the holder.`,
+      );
+    }
+    if (subjectId !== holder) {
+      throw new Error(
+        `credential at index ${i} is about "${subjectId}", which does not match the holder "${holder}".`,
+      );
+    }
+  }
+};
+
+/**
+ * Resolves and validates the mandatory VP expiry bounds. Rejects a malformed ISO
+ * `validFrom` and a `validUntil` that is not strictly after `validFrom`.
+ */
+const resolveVpValidity = (
+  options: { validFrom?: string; validUntil?: string; expiresInSeconds?: number } | undefined,
+  now: Date,
+): { validFrom: string; validUntil: string } => {
+  const validFrom = options?.validFrom ?? now.toISOString();
+  if (Number.isNaN(new Date(validFrom).getTime())) {
+    throw new TypeError(`"validFrom" is not a valid ISO date-time: "${validFrom}".`);
+  }
+  const validUntil =
+    options?.validUntil ??
+    new Date(
+      new Date(validFrom).getTime() +
+        (options?.expiresInSeconds ?? DEFAULT_VP_LIFETIME_SECONDS) * 1000,
+    ).toISOString();
+  if (
+    Number.isNaN(new Date(validUntil).getTime()) ||
+    new Date(validUntil).getTime() <= new Date(validFrom).getTime()
+  ) {
+    throw new Error(
+      `"validUntil" (${validUntil}) must be a valid time after "validFrom" (${validFrom}).`,
+    );
+  }
+  return { validFrom, validUntil };
+};
+
+/** Coerces an optional string-or-array option into an array (empty when absent). */
+const toArray = (value: string | string[] | undefined): string[] => {
+  if (value === undefined) {
+    return [];
+  }
+  return Array.isArray(value) ? value : [value];
+};
+
+/** Builds the presentation `type` array (always leads with `VerifiablePresentation`). */
+const buildEnvelopeType = (optionType: string | string[] | undefined): string[] => {
+  const extra = toArray(optionType).filter((t) => t !== 'VerifiablePresentation');
+  return ['VerifiablePresentation', ...extra];
 };
 
 /**
@@ -401,15 +519,7 @@ export const createPresentation = async (
   let credentials = Array.isArray(verifiableCredential)
     ? verifiableCredential
     : [verifiableCredential];
-
-  if (credentials.length === 0) {
-    throw new Error('"verifiableCredential" must contain at least one credential.');
-  }
-  for (const credential of credentials) {
-    if (!credential || typeof credential !== 'object' || !credential.proof) {
-      throw new Error('each credential must be a signed credential object (with a "proof").');
-    }
-  }
+  assertSignedCredentialObjects(credentials);
 
   const now = options?.now ?? new Date();
   const documentLoader = options?.documentLoader ?? (await getDocumentLoader());
@@ -429,16 +539,8 @@ export const createPresentation = async (
 
   // Transferable records are controlled on-chain and must not be presented via a VP.
   assertNoTransferableRecords(credentials);
-
   // Strict validation: every credential must be genuine, temporally valid, and unrevoked.
-  for (let i = 0; i < credentials.length; i++) {
-    const verification = await verifyCredential(credentials[i], { documentLoader });
-    if (!verification.verified) {
-      throw new Error(`credential at index ${i} is not valid: ${verification.error}`);
-    }
-    assertCredentialTemporallyValid(credentials[i], i, now);
-    await assertCredentialNotRevoked(credentials[i], i, documentLoader);
-  }
+  await assertCredentialsValidForPresentation(credentials, now, documentLoader);
 
   // The presentation ENVELOPE defaults to VC Data Model v2.0, independent of the embedded
   // credentials' versions (each credential keeps its own @context). Override with `version`.
@@ -452,16 +554,7 @@ export const createPresentation = async (
     ...(Array.isArray(baseContext) ? baseContext : [baseContext]),
     VP_EXPIRY_CONTEXT,
   ];
-
-  const extraTypes = options?.type
-    ? Array.isArray(options.type)
-      ? options.type
-      : [options.type]
-    : [];
-  const type = [
-    'VerifiablePresentation',
-    ...extraTypes.filter((t) => t !== 'VerifiablePresentation'),
-  ];
+  const type = buildEnvelopeType(options?.type);
 
   // Default the holder to the subject of the first credential, when present.
   const holder = options?.holder ?? readId(getFirstSubject(credentials[0]));
@@ -471,47 +564,11 @@ export const createPresentation = async (
   // holder's, or mixing credentials from different subjects. The cryptographic proof
   // (signer DID == holder == subject) is enforced later by verifyPresentation.
   if (options?.checkHolderBinding) {
-    if (!holder) {
-      throw new Error(
-        'holder binding requested but no "holder" is set and no credentialSubject.id to derive it from.',
-      );
-    }
-    for (let i = 0; i < credentials.length; i++) {
-      const subjectId = readId(getFirstSubject(credentials[i]));
-      if (!subjectId) {
-        throw new Error(
-          `credential at index ${i} has no "credentialSubject.id", so it cannot be bound to the holder.`,
-        );
-      }
-      if (subjectId !== holder) {
-        throw new Error(
-          `credential at index ${i} is about "${subjectId}", which does not match the holder ` +
-            `"${holder}".`,
-        );
-      }
-    }
+    assertHolderConsistency(credentials, holder);
   }
 
-  // Mandatory expiry stamp. Validate any caller-supplied bounds so a malformed date
-  // cannot throw a raw RangeError and a born-expired VP is rejected up front.
-  const validFrom = options?.validFrom ?? now.toISOString();
-  if (Number.isNaN(new Date(validFrom).getTime())) {
-    throw new Error(`"validFrom" is not a valid ISO date-time: "${validFrom}".`);
-  }
-  const validUntil =
-    options?.validUntil ??
-    new Date(
-      new Date(validFrom).getTime() +
-        (options?.expiresInSeconds ?? DEFAULT_VP_LIFETIME_SECONDS) * 1000,
-    ).toISOString();
-  if (
-    Number.isNaN(new Date(validUntil).getTime()) ||
-    new Date(validUntil).getTime() <= new Date(validFrom).getTime()
-  ) {
-    throw new Error(
-      `"validUntil" (${validUntil}) must be a valid time after "validFrom" (${validFrom}).`,
-    );
-  }
+  // Mandatory expiry stamp (validated: malformed / born-expired bounds are rejected).
+  const { validFrom, validUntil } = resolveVpValidity(options, now);
 
   const presentation: RawVerifiablePresentation = {
     '@context': context,
@@ -533,6 +590,56 @@ export const createPresentation = async (
     presentation.expirationDate = validUntil;
   }
   return presentation;
+};
+
+/** Returns an error message if the chosen presentation proof suite is not supported. */
+const checkPresentationSuiteError = (cryptoSuite: string): string | undefined => {
+  if (UNSUPPORTED_PROOF_SUITES.has(cryptoSuite)) {
+    return (
+      `"${cryptoSuite}" cannot sign a Verifiable Presentation. Selective-disclosure ` +
+      `suites cannot cover the "verifiableCredential" @graph, and BbsBlsSignature2020 is ` +
+      `deprecated. Use "${PRESENTATION_PROOF_CRYPTOSUITE}"; embedded credentials may still ` +
+      `use any suite.`
+    );
+  }
+  if (cryptoSuite !== PRESENTATION_PROOF_CRYPTOSUITE) {
+    return `"${cryptoSuite}" is not supported for signing a presentation.`;
+  }
+  return undefined;
+};
+
+/**
+ * Sign-time holder binding: the signing key's DID must equal the holder and every
+ * credentialSubject.id. A missing DID or subject id FAILS (never silently passes).
+ * @returns {string | undefined} An error message, or undefined when binding holds.
+ */
+const checkSignerHolderBinding = (
+  presentation: RawVerifiablePresentation,
+  keyPair: PrivateKeyPair,
+): string | undefined => {
+  const signerDid = keyPair.controller ?? getDidFromId(keyPair.id);
+  const holder = readId(presentation.holder);
+  if (!signerDid) {
+    return 'holder binding requires a signing key with a resolvable DID (controller/id).';
+  }
+  if (holder && holder !== signerDid) {
+    return `the signing key "${signerDid}" does not match the presentation holder "${holder}".`;
+  }
+  const owner = holder ?? signerDid;
+  const credentials = getCredentials(presentation);
+  for (let i = 0; i < credentials.length; i++) {
+    const subjectId = readId(getFirstSubject(credentials[i]));
+    if (!subjectId) {
+      return `credential at index ${i} has no "credentialSubject.id", so it cannot be bound to the holder.`;
+    }
+    if (subjectId !== owner) {
+      return (
+        `credential at index ${i} is about "${subjectId}", which does not match the ` +
+        `signing key / holder "${owner}".`
+      );
+    }
+  }
+  return undefined;
 };
 
 /**
@@ -583,18 +690,9 @@ export const signPresentation = async (
 ): Promise<PresentationSigningResult> => {
   try {
     const cryptoSuite = options?.cryptoSuite ?? PRESENTATION_PROOF_CRYPTOSUITE;
-
-    if (UNSUPPORTED_PROOF_SUITES.has(cryptoSuite)) {
-      return {
-        error:
-          `"${cryptoSuite}" cannot sign a Verifiable Presentation. Selective-disclosure ` +
-          `suites cannot cover the "verifiableCredential" @graph, and BbsBlsSignature2020 is ` +
-          `deprecated. Use "${PRESENTATION_PROOF_CRYPTOSUITE}"; embedded credentials may still ` +
-          `use any suite.`,
-      };
-    }
-    if (cryptoSuite !== PRESENTATION_PROOF_CRYPTOSUITE) {
-      return { error: `"${cryptoSuite}" is not supported for signing a presentation.` };
+    const suiteError = checkPresentationSuiteError(cryptoSuite);
+    if (suiteError) {
+      return { error: suiteError };
     }
 
     // A `challenge` yields an authentication proof; omitting it yields an assertion
@@ -620,38 +718,12 @@ export const signPresentation = async (
     // Optionally refuse to sign with the wrong key: the signing key's DID must match the
     // holder and every credentialSubject.id. Caught here at sign time (a verifier with
     // checkHolderBinding would otherwise catch it later).
+    // A missing DID or subject id FAILS (never silently passes) — mirrors
+    // createPresentation and verifyPresentation, which both hard-fail here.
     if (options?.checkHolderBinding) {
-      const signerDid = keyPair.controller ?? getDidFromId(keyPair.id);
-      const holder = readId(presentation.holder);
-      // A missing DID must FAIL, not silently pass — otherwise the opt-in check no-ops
-      // in exactly the unbound case it exists to catch (mirrors createPresentation and
-      // verifyPresentation, which both hard-fail here).
-      if (!signerDid) {
-        return {
-          error: 'holder binding requires a signing key with a resolvable DID (controller/id).',
-        };
-      }
-      if (holder && holder !== signerDid) {
-        return {
-          error: `the signing key "${signerDid}" does not match the presentation holder "${holder}".`,
-        };
-      }
-      const owner = holder ?? signerDid;
-      const credentials = getCredentials(presentation);
-      for (let i = 0; i < credentials.length; i++) {
-        const subjectId = readId(getFirstSubject(credentials[i]));
-        if (!subjectId) {
-          return {
-            error: `credential at index ${i} has no "credentialSubject.id", so it cannot be bound to the holder.`,
-          };
-        }
-        if (subjectId !== owner) {
-          return {
-            error:
-              `credential at index ${i} is about "${subjectId}", which does not match the ` +
-              `signing key / holder "${owner}".`,
-          };
-        }
+      const bindingError = checkSignerHolderBinding(presentation, keyPair);
+      if (bindingError) {
+        return { error: bindingError };
       }
     }
 
