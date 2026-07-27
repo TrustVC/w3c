@@ -91,6 +91,53 @@ export type SignedVerifiableCredential = {
 
 export type RawVerifiableCredential = Omit<SignedVerifiableCredential, 'proof'>;
 
+// A Verifiable Presentation is an envelope that wraps one or more Verifiable
+// Credentials. The embedded credentials each keep their own proof (and may use
+// different cryptosuites / VC data-model versions); the presentation may
+// additionally carry a single holder-binding proof over the whole envelope.
+export type RawVerifiablePresentation = {
+  '@context': string | (string | Record<string, any>)[];
+  type: string | string[];
+  id?: string;
+  holder?: string | Record<string, any>;
+  verifiableCredential?: SignedVerifiableCredential | SignedVerifiableCredential[];
+} & Record<string, any>;
+
+export type SignedVerifiablePresentation = RawVerifiablePresentation & {
+  proof: Proof;
+};
+
+// Cryptosuite used for a presentation's holder-binding proof. Selective-disclosure
+// suites cannot cover the `verifiableCredential` @graph, so only the plain
+// `ecdsa-rdfc-2019` suite is supported (reusing the ECDSA Multikey used for
+// `ecdsa-sd-2023` credentials).
+export type PresentationProofSuite = 'ecdsa-rdfc-2019';
+
+export type VerifiablePresentation = SignedVerifiablePresentation | RawVerifiablePresentation;
+
+// Result of signing a presentation
+export interface PresentationSigningResult {
+  signed?: SignedVerifiablePresentation; // The signed presentation, if successful
+  error?: string; // The error message, if an error occurred
+}
+
+// Per-credential verification outcome within a presentation
+export interface CredentialVerificationResult extends VerificationResult {
+  credentialIndex: number; // Index of the credential within verifiableCredential
+}
+
+// Result of verifying a presentation. `verified` is true only when the holder
+// proof (if any) AND every embedded credential verify successfully.
+export interface PresentationVerificationResult {
+  verified: boolean;
+  error?: string;
+  // Verification outcome of the presentation's own holder-binding proof.
+  // Undefined when the presentation carries no proof (unsigned envelope).
+  presentationResult?: VerificationResult;
+  // Verification outcome of each embedded verifiable credential.
+  credentialResults?: CredentialVerificationResult[];
+}
+
 export type CryptoSuiteName = 'BbsBlsSignature2020' | 'bbs-2023' | 'ecdsa-sd-2023';
 
 export type ProofType = 'BbsBlsSignature2020' | 'BbsBlsSignatureProof2020' | 'DataIntegrityProof';
