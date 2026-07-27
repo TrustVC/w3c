@@ -128,7 +128,7 @@ const assertNoTransferableRecords = (credentials: SignedVerifiableCredential[]):
 
 // Selective-disclosure cryptosuites whose base credentials must be derived
 // before they can be verified / presented.
-const SD_CREDENTIAL_CRYPTOSUITES = ['ecdsa-sd-2023', 'bbs-2023'];
+const SD_CREDENTIAL_CRYPTOSUITES = new Set(['ecdsa-sd-2023', 'bbs-2023']);
 
 /**
  * Determines whether a credential is a base (non-derived) selective-disclosure
@@ -139,7 +139,7 @@ const SD_CREDENTIAL_CRYPTOSUITES = ['ecdsa-sd-2023', 'bbs-2023'];
  */
 const isBaseSdCredential = async (credential: SignedVerifiableCredential): Promise<boolean> => {
   const cryptosuite = credential?.proof?.cryptosuite as string | undefined;
-  if (!cryptosuite || !SD_CREDENTIAL_CRYPTOSUITES.includes(cryptosuite)) {
+  if (!cryptosuite || !SD_CREDENTIAL_CRYPTOSUITES.has(cryptosuite)) {
     return false;
   }
   return !(await isDerived(credential));
