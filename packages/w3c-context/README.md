@@ -69,10 +69,12 @@ The package includes the following pre-cached contexts:
 
 #### TrustVC Business Contexts
 - `https://trustvc.io/context/transferable-records-context.json` - Transferable Records
+- `https://trustvc.io/context/obligation-records-context.json` - Obligation Records (BoE)
 - `https://trustvc.io/context/render-method-context.json` - Render Methods
 - `https://trustvc.io/context/attachments-context.json` - Attachments
 - `https://trustvc.io/context/qrcode-context.json` - QR Code
 - `https://trustvc.io/context/opencerts-context.json` - OpenCerts Certificate
+- `https://trustvc.io/context/bill-of-exchange.json` - Bill of Exchange (KTDDE glossary fields)
 - `https://trustvc.io/context/bill-of-lading.json` - Bill of Lading
 - `https://trustvc.io/context/bill-of-lading-carrier.json` - Bill of Lading Carrier
 - `https://trustvc.io/context/coo.json` - Certificate of Origin

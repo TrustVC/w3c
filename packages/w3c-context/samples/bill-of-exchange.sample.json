@@ -1,0 +1,120 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/security/data-integrity/v2",
+    "https://trustvc.io/context/render-method-context-v2.json",
+    "https://trustvc.io/context/bill-of-exchange.json",
+    "https://trustvc.io/context/obligation-records-context.json",
+    "https://trustvc.io/context/qrcode-context.json"
+  ],
+  "renderMethod": [
+    {
+      "type": "EMBEDDED_RENDERER",
+      "templateName": "BILL_OF_EXCHANGE",
+      "id": "https://generic-templates.tradetrust.io"
+    }
+  ],
+  "credentialSubject": {
+    "documentIdentifier": "BOE-2026-00147",
+    "bookingReferenceNumber": "BK-SIN-77821",
+    "purchaseOrderNumber": "PO-FV-2026-0912",
+    "houseWaybillDocumentIdentifier": "HWB-ASIA-44102",
+    "documentaryCreditIdentifier": "LC-DBS-2026-88341",
+    "transportContractDocumentNumber": "BL-SIN-2026-0781",
+    "uniqueConsignmentReference": "UCR-SG-2026-004812",
+    "contractNumber": "CTR-MER-FV-2026-017",
+    "invoiceNumber": "INV-2026-0456",
+    "freightForwarderReferenceNumber": "FF-REF-99021",
+
+    "issueDate": "2026-07-01",
+    "documentaryCreditIssueDate": "2026-06-15",
+    "documentaryCreditEffectiveEndDate": "2026-10-15",
+    "paymentDueDate": "2026-09-29",
+
+    "buyer": {
+      "name": "Fairview Industries Inc.",
+      "address": "1201 Market Street, Suite 900, Wilmington, DE 19801, USA"
+    },
+    "invoicee": {
+      "name": "Fairview Industries Inc.",
+      "address": "1201 Market Street, Suite 900, Wilmington, DE 19801, USA"
+    },
+    "sellersBank": {
+      "name": "DBS Bank Ltd",
+      "address": "12 Marina Boulevard, Marina Bay Financial Centre Tower 3, Singapore 018982"
+    },
+    "importer": {
+      "name": "Fairview Industries Inc.",
+      "address": "1201 Market Street, Suite 900, Wilmington, DE 19801, USA"
+    },
+    "exporter": {
+      "name": "Meridian Commodities Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981"
+    },
+    "documentaryCreditApplicantAgentBank": {
+      "name": "JPMorgan Chase Bank, N.A.",
+      "address": "383 Madison Avenue, New York, NY 10179, USA"
+    },
+    "documentaryCreditAvailableBank": {
+      "name": "DBS Bank Ltd",
+      "address": "12 Marina Boulevard, Marina Bay Financial Centre Tower 3, Singapore 018982"
+    },
+    "documentaryCreditBeneficiary": {
+      "name": "Meridian Commodities Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981"
+    },
+    "documentaryCreditDrawee": {
+      "name": "Fairview Industries Inc.",
+      "address": "1201 Market Street, Suite 900, Wilmington, DE 19801, USA"
+    },
+    "seller": {
+      "name": "Meridian Commodities Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981"
+    },
+    "documentaryCreditReimbursingBank": {
+      "name": "Citibank N.A.",
+      "address": "388 Greenwich Street, New York, NY 10013, USA"
+    },
+    "payee": {
+      "name": "Meridian Commodities Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981"
+    },
+    "buyersBank": {
+      "name": "Bank of America, N.A.",
+      "address": "100 North Tryon Street, Charlotte, NC 28255, USA"
+    },
+    "drawer": {
+      "name": "Meridian Commodities Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981"
+    },
+    "drawee": {
+      "name": "Fairview Industries Inc.",
+      "address": "1201 Market Street, Suite 900, Wilmington, DE 19801, USA"
+    },
+    "guarantor": {
+      "name": "Trade Guarantee Insurance Co.",
+      "address": "1 Raffles Place, #40-00, Singapore 048616"
+    },
+
+    "paymentLocation": "Singapore",
+    "placeOfIssue": "Singapore",
+    "authentication": "Authenticated by Wei Ling Tan, Director of Trade Finance, Meridian Commodities Pte Ltd",
+    "paymentTerm": "90 days after sight",
+    "documentEndorsement": "Endorsed to the order of Meridian Commodities Pte Ltd",
+    "paymentMethod": "TT",
+    "monetaryAmount": "128500.00",
+    "currencyQualifier": "invoice currency",
+    "currencyCode": "USD"
+  },
+  "type": ["VerifiableCredential"],
+  "credentialStatus": {
+    "type": "TransferableRecords",
+    "tokenNetwork": {
+      "chain": "Sepolia",
+      "chainId": 11155111
+    },
+    "obligationRegistry": "0x3d98717d536Eb8A6062A50241447f6343e9336A5"
+  },
+  "issuer": "did:web:trustvc.github.io:did:1",
+  "validFrom": "2026-07-01T09:00:00Z"
+}

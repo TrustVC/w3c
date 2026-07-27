@@ -2,86 +2,206 @@
   "@context": {
     "@version": 1.1,
     "@protected": true,
-    "boeNumber": {
-      "@id": "https://trustvc.io/context/terms#boeNumber"
+
+    "documentIdentifier": {
+      "@id": "https://trustvc.io/context/terms#documentIdentifier"
+    },
+    "bookingReferenceNumber": {
+      "@id": "https://trustvc.io/context/terms#bookingReferenceNumber"
+    },
+    "purchaseOrderNumber": {
+      "@id": "https://trustvc.io/context/terms#purchaseOrderNumber"
+    },
+    "houseWaybillDocumentIdentifier": {
+      "@id": "https://trustvc.io/context/terms#houseWaybillDocumentIdentifier"
+    },
+    "documentaryCreditIdentifier": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditIdentifier"
+    },
+    "transportContractDocumentNumber": {
+      "@id": "https://trustvc.io/context/terms#transportContractDocumentNumber"
+    },
+    "uniqueConsignmentReference": {
+      "@id": "https://trustvc.io/context/terms#uniqueConsignmentReference"
+    },
+    "contractNumber": {
+      "@id": "https://trustvc.io/context/terms#contractNumber"
+    },
+    "invoiceNumber": {
+      "@id": "https://trustvc.io/context/terms#invoiceNumber"
+    },
+    "freightForwarderReferenceNumber": {
+      "@id": "https://trustvc.io/context/terms#freightForwarderReferenceNumber"
+    },
+
+    "issueDate": {
+      "@id": "https://trustvc.io/context/terms#issueDate"
+    },
+    "documentaryCreditEffectiveEndDate": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditEffectiveEndDate"
+    },
+    "documentaryCreditIssueDate": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditIssueDate"
+    },
+    "paymentDueDate": {
+      "@id": "https://trustvc.io/context/terms#paymentDueDate"
+    },
+
+    "buyer": {
+      "@id": "https://trustvc.io/context/terms#buyer",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "invoicee": {
+      "@id": "https://trustvc.io/context/terms#invoicee",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "sellersBank": {
+      "@id": "https://trustvc.io/context/terms#sellersBank",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "importer": {
+      "@id": "https://trustvc.io/context/terms#importer",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "exporter": {
+      "@id": "https://trustvc.io/context/terms#exporter",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "documentaryCreditApplicantAgentBank": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditApplicantAgentBank",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "documentaryCreditAvailableBank": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditAvailableBank",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "documentaryCreditBeneficiary": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditBeneficiary",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "documentaryCreditDrawee": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditDrawee",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "seller": {
+      "@id": "https://trustvc.io/context/terms#seller",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "documentaryCreditReimbursingBank": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditReimbursingBank",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "payee": {
+      "@id": "https://trustvc.io/context/terms#payee",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "buyersBank": {
+      "@id": "https://trustvc.io/context/terms#buyersBank",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "drawer": {
+      "@id": "https://trustvc.io/context/terms#drawer",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "drawee": {
+      "@id": "https://trustvc.io/context/terms#drawee",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+    "guarantor": {
+      "@id": "https://trustvc.io/context/terms#guarantor",
+      "@context": {
+        "@protected": true,
+        "name": { "@id": "https://trustvc.io/context/terms#partyName" },
+        "address": { "@id": "https://trustvc.io/context/terms#partyAddress" }
+      }
+    },
+
+    "paymentLocation": {
+      "@id": "https://trustvc.io/context/terms#paymentLocation"
     },
     "placeOfIssue": {
       "@id": "https://trustvc.io/context/terms#placeOfIssue"
     },
-    "dateOfIssue": {
-      "@id": "https://trustvc.io/context/terms#dateOfIssue"
+    "authentication": {
+      "@id": "https://trustvc.io/context/terms#authentication"
     },
-    "tenor": {
-      "@id": "https://trustvc.io/context/terms#tenor"
+    "paymentTerm": {
+      "@id": "https://trustvc.io/context/terms#paymentTerm"
     },
-    "drawerCompanyName": {
-      "@id": "https://trustvc.io/context/terms#drawerCompanyName"
+    "documentEndorsement": {
+      "@id": "https://trustvc.io/context/terms#documentEndorsement"
     },
-    "drawerCompanyNo": {
-      "@id": "https://trustvc.io/context/terms#drawerCompanyNo"
+    "paymentMethod": {
+      "@id": "https://trustvc.io/context/terms#paymentMethod"
     },
-    "drawerJurisdiction": {
-      "@id": "https://trustvc.io/context/terms#drawerJurisdiction"
+    "monetaryAmount": {
+      "@id": "https://trustvc.io/context/terms#monetaryAmount"
     },
-    "drawerAddress": {
-      "@id": "https://trustvc.io/context/terms#drawerAddress"
+    "currencyQualifier": {
+      "@id": "https://trustvc.io/context/terms#currencyQualifier"
     },
-    "drawerEmail": {
-      "@id": "https://trustvc.io/context/terms#drawerEmail"
-    },
-    "drawerWalletAddress": {
-      "@id": "https://trustvc.io/context/terms#drawerWalletAddress"
-    },
-    "draweeCompanyName": {
-      "@id": "https://trustvc.io/context/terms#draweeCompanyName"
-    },
-    "draweeCompanyNo": {
-      "@id": "https://trustvc.io/context/terms#draweeCompanyNo"
-    },
-    "draweeJurisdiction": {
-      "@id": "https://trustvc.io/context/terms#draweeJurisdiction"
-    },
-    "draweeAddress": {
-      "@id": "https://trustvc.io/context/terms#draweeAddress"
-    },
-    "draweeEmail": {
-      "@id": "https://trustvc.io/context/terms#draweeEmail"
-    },
-    "draweeWalletAddress": {
-      "@id": "https://trustvc.io/context/terms#draweeWalletAddress"
-    },
-    "payeeCompanyName": {
-      "@id": "https://trustvc.io/context/terms#payeeCompanyName"
-    },
-    "payeeWalletAddress": {
-      "@id": "https://trustvc.io/context/terms#payeeWalletAddress"
-    },
-    "dueDate": {
-      "@id": "https://trustvc.io/context/terms#dueDate"
-    },
-    "currency": {
-      "@id": "https://trustvc.io/context/terms#currency"
-    },
-    "amount": {
-      "@id": "https://trustvc.io/context/terms#amount"
-    },
-    "amountInWords": {
-      "@id": "https://trustvc.io/context/terms#amountInWords"
-    },
-    "clause": {
-      "@id": "https://trustvc.io/context/terms#clause"
-    },
-    "signerName": {
-      "@id": "https://trustvc.io/context/terms#signerName"
-    },
-    "signerPosition": {
-      "@id": "https://trustvc.io/context/terms#signerPosition"
-    },
-    "signerEmail": {
-      "@id": "https://trustvc.io/context/terms#signerEmail"
-    },
-    "signerTimeStamp": {
-      "@id": "https://trustvc.io/context/terms#signerTimeStamp"
+    "currencyCode": {
+      "@id": "https://trustvc.io/context/terms#currencyCode"
     }
   }
 }
