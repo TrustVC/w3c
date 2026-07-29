@@ -82,11 +82,11 @@ describe('utils.ts', () => {
       [NaN, 'NaN'],
       [Infinity, 'Infinity'],
       [1.5, 'fractional number'],
-    ])('rejects invalid chainId (%s / %s)', (chainId) => {
+    ])('rejects invalid chainId (%s / %s)', (chainId: string | number, _label: string) => {
       expect(() =>
         assertTransferableRecords({
           ...base,
-          tokenNetwork: { chain: 'sepolia', chainId: chainId as string | number },
+          tokenNetwork: { chain: 'sepolia', chainId },
         }),
       ).toThrow(/credentialStatus\.tokenNetwork\.chainId" must be an integer/);
     });
