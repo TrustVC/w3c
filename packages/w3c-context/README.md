@@ -69,16 +69,25 @@ The package includes the following pre-cached contexts:
 
 #### TrustVC Business Contexts
 - `https://trustvc.io/context/transferable-records-context.json` - Transferable Records
+- `https://trustvc.io/context/obligation-records-context.json` - Obligation Records (BoE)
 - `https://trustvc.io/context/render-method-context.json` - Render Methods
+- `https://trustvc.io/context/render-method-context-v2.json` - Render Methods v2
 - `https://trustvc.io/context/attachments-context.json` - Attachments
 - `https://trustvc.io/context/qrcode-context.json` - QR Code
 - `https://trustvc.io/context/opencerts-context.json` - OpenCerts Certificate
+- `https://trustvc.io/context/bill-of-exchange.json` - Bill of Exchange
+
 - `https://trustvc.io/context/bill-of-lading.json` - Bill of Lading
 - `https://trustvc.io/context/bill-of-lading-carrier.json` - Bill of Lading Carrier
 - `https://trustvc.io/context/coo.json` - Certificate of Origin
 - `https://trustvc.io/context/invoice.json` - Invoice
 - `https://trustvc.io/context/promissory-note.json` - Promissory Note
 - `https://trustvc.io/context/warehouse-receipt.json` - Warehouse Receipt
+
+### Samples
+
+- `samples/obligation-credential-subject.sample.json` - Example Obligation / BoE credential subject payload
+- `samples/bill-of-exchange.md` - Form label → property map for finalized BoE fields
 
 ### Context Constants
 
