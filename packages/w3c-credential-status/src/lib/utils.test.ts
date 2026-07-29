@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { CredentialStatusPurpose, VCBitstringCredentialSubject } from './types';
 import {
   assertCredentialStatusType,
+  assertObligationRecords,
   assertStatusListIndex,
   assertStatusPurposeMatches,
+  assertTransferableRecords,
   fetchCredentialStatusVC,
 } from './utils';
 
@@ -52,6 +54,60 @@ describe('utils.ts', () => {
       };
       const statusPurpose: CredentialStatusPurpose = 'revocation';
       expect(() => assertStatusPurposeMatches(statusList, statusPurpose)).not.toThrowError();
+    });
+  });
+
+  describe('assertTransferableRecords chainId', () => {
+    const base = {
+      type: 'TransferableRecords' as const,
+      tokenId: 'abc',
+      tokenRegistry: '0x123',
+      tokenNetwork: { chain: 'sepolia', chainId: 11155111 as string | number },
+    };
+
+    it('accepts integer number and numeric string chainId', () => {
+      expect(() => assertTransferableRecords(base)).not.toThrow();
+      expect(() =>
+        assertTransferableRecords({
+          ...base,
+          tokenNetwork: { chain: 'sepolia', chainId: '11155111' },
+        }),
+      ).not.toThrow();
+    });
+
+    it.each([
+      ['', 'empty string'],
+      ['abc', 'non-numeric'],
+      ['1.5', 'fractional'],
+      [NaN, 'NaN'],
+      [Infinity, 'Infinity'],
+      [1.5, 'fractional number'],
+    ])('rejects invalid chainId (%s / %s)', (chainId) => {
+      expect(() =>
+        assertTransferableRecords({
+          ...base,
+          tokenNetwork: { chain: 'sepolia', chainId: chainId as string | number },
+        }),
+      ).toThrow(/credentialStatus\.tokenNetwork\.chainId" must be an integer/);
+    });
+  });
+
+  describe('assertObligationRecords chainId', () => {
+    const base = {
+      type: 'TransferableRecords' as const,
+      tokenId: 'abc',
+      obligationRegistry: '0x456',
+      tokenNetwork: { chain: 'sepolia', chainId: 11155111 as string | number },
+    };
+
+    it('accepts integer chainId and rejects invalid values', () => {
+      expect(() => assertObligationRecords(base)).not.toThrow();
+      expect(() =>
+        assertObligationRecords({
+          ...base,
+          tokenNetwork: { chain: 'sepolia', chainId: '' },
+        }),
+      ).toThrow(/credentialStatus\.tokenNetwork\.chainId" must be an integer/);
     });
   });
 

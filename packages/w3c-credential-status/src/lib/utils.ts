@@ -127,6 +127,23 @@ const _assertStatusListCredentialStatus = (
 export const assertStatusList2021Entry = _assertStatusListCredentialStatus;
 export const assertBitstringStatusListEntry = _assertStatusListCredentialStatus;
 
+/**
+ * Asserts that `chainId` is an integer (number or whole numeric string).
+ * Rejects empty, non-numeric, non-finite, and fractional values.
+ * @param {string | number} chainId - Chain id from credentialStatus.tokenNetwork.
+ * @param {string} name - Property name used in the error message.
+ */
+export const assertIntegerChainId = (chainId: string | number, name: string): void => {
+  const valid =
+    typeof chainId === 'number'
+      ? Number.isSafeInteger(chainId)
+      : typeof chainId === 'string' && chainId.trim() !== '' && /^[+-]?\d+$/.test(chainId.trim());
+
+  if (!valid) {
+    throw new TypeError(`"${name}" must be an integer.`);
+  }
+};
+
 export const assertTransferableRecords = (
   credentialStatus: TransferableRecordsCredentialStatus,
   mode: 'sign' | 'verify' = 'verify',
@@ -149,7 +166,7 @@ export const assertTransferableRecords = (
 
   isString(tokenRegistry, 'credentialStatus.tokenRegistry');
   isString(chain, 'credentialStatus.tokenNetwork.chain');
-  isNumber(Number(chainId), 'credentialStatus.tokenNetwork.chainId');
+  assertIntegerChainId(chainId, 'credentialStatus.tokenNetwork.chainId');
 };
 
 /**
@@ -179,7 +196,7 @@ export const assertObligationRecords = (
 
   isString(obligationRegistry, 'credentialStatus.obligationRegistry');
   isString(chain, 'credentialStatus.tokenNetwork.chain');
-  isNumber(Number(chainId), 'credentialStatus.tokenNetwork.chainId');
+  assertIntegerChainId(chainId, 'credentialStatus.tokenNetwork.chainId');
 };
 
 /**

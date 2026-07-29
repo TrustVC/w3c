@@ -15,14 +15,17 @@ mkdir -p "$DEST_DIR"
 # List of files to copy
 FILES=(
   "attachments-context.json"
+  "bill-of-exchange.json"
   "bill-of-lading.json"
   "bill-of-lading-carrier.json"
   "coo.json"
   "invoice.json"
+  "obligation-records-context.json"
   "opencerts-demo-context.json"
   "promissory-note.json"
   "qrcode-context.json"
   "render-method-context.json"
+  "render-method-context-v2.json"
   "transferable-records-context.json"
   "warehouse-receipt.json"
 )
