@@ -321,8 +321,15 @@ export function _checkCredential<T extends VerifiableCredential>(
     }
   }
 
-  // Validate credentialStatus field if present
-  assertCredentialStatuses(credential, mode);
+  // Validate the credentialStatus field FORMAT only when signing. At verify time the
+  // credential status is the concern of the dedicated status verifier (verifyCredentialStatus):
+  // a malformed status field (e.g. a non-integer tokenNetwork.chainId) must surface there as a
+  // status problem, NOT make the credential look unsigned or fail signature integrity. Note
+  // that _checkCredential(mode: 'verify') is reached by isSignedDocument() and the
+  // DataIntegrity verifiers, so throwing here would mis-attribute a status error to those.
+  if (mode === 'sign') {
+    assertCredentialStatuses(credential, mode);
+  }
 
   // Validate that certain fields, if present, are objects with a type property
   for (const prop of mustHaveType) {
