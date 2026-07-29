@@ -528,7 +528,7 @@ export const _checkCredentialStatus = (
     assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
   } else if (type === 'TransferableRecords') {
     if (
-      typeof (credentialStatus as { obligationRegistry?: string }).obligationRegistry === 'string'
+      Object.prototype.hasOwnProperty.call(credentialStatus, 'obligationRegistry')
     ) {
       assertObligationRecords(credentialStatus as ObligationRecordsCredentialStatus, mode);
     } else {
