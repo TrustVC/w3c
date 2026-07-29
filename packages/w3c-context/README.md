@@ -71,6 +71,7 @@ The package includes the following pre-cached contexts:
 - `https://trustvc.io/context/transferable-records-context.json` - Transferable Records
 - `https://trustvc.io/context/obligation-records-context.json` - Obligation Records (BoE)
 - `https://trustvc.io/context/render-method-context.json` - Render Methods
+- `https://trustvc.io/context/render-method-context-v2.json` - Render Methods v2
 - `https://trustvc.io/context/attachments-context.json` - Attachments
 - `https://trustvc.io/context/qrcode-context.json` - QR Code
 - `https://trustvc.io/context/opencerts-context.json` - OpenCerts Certificate
