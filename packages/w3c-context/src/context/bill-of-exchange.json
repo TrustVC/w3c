@@ -2,97 +2,79 @@
   "@context": {
     "@version": 1.1,
     "@protected": true,
-    "BillOfExchange": {
-      "@id": "https://example.com/terms#BillOfExchange",
-      "@type": "@id",
+
+    "electronicDocumentIdentifier": {
+      "@id": "https://trustvc.io/context/terms#electronicDocumentIdentifier"
+    },
+    "referenceNumber": {
+      "@id": "https://trustvc.io/context/terms#referenceNumber"
+    },
+    "amountInFigures": {
+      "@id": "https://trustvc.io/context/terms#amountInFigures"
+    },
+    "amountInWords": {
+      "@id": "https://trustvc.io/context/terms#amountInWords"
+    },
+    "currencyCode": {
+      "@id": "https://trustvc.io/context/terms#currencyCode"
+    },
+    "blDate": {
+      "@id": "https://trustvc.io/context/terms#blDate"
+    },
+    "placeOfIssue": {
+      "@id": "https://trustvc.io/context/terms#placeOfIssue"
+    },
+    "dateOfIssue": {
+      "@id": "https://trustvc.io/context/terms#dateOfIssue"
+    },
+    "tenor": {
+      "@id": "https://trustvc.io/context/terms#tenor"
+    },
+    "payee": {
+      "@id": "https://trustvc.io/context/terms#payee"
+    },
+    "drawnUnder": {
+      "@id": "https://trustvc.io/context/terms#drawnUnder"
+    },
+    "drawnUnderDate": {
+      "@id": "https://trustvc.io/context/terms#drawnUnderDate"
+    },
+    "issuedBy": {
+      "@id": "https://trustvc.io/context/terms#issuedBy"
+    },
+    "drawee": {
+      "@id": "https://trustvc.io/context/terms#drawee",
       "@context": {
         "@protected": true,
-        "logo": {
-          "@id": "https://example.com/terms#logo"
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
         },
-        "backgroundImage": {
-          "@id": "https://example.com/terms#backgroundImage"
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
         },
-        "boeNumber": {
-          "@id": "https://example.com/terms#boeNumber"
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
         },
-        "placeOfIssue": {
-          "@id": "https://example.com/terms#placeOfIssue"
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
+        }
+      }
+    },
+    "drawer": {
+      "@id": "https://trustvc.io/context/terms#drawer",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
         },
-        "dateOfIssue": {
-          "@id": "https://example.com/terms#dateOfIssue"
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
         },
-        "tenor": {
-          "@id": "https://example.com/terms#tenor"
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
         },
-        "drawerCompanyName": {
-          "@id": "https://example.com/terms#drawerCompanyName"
-        },
-        "drawerCompanyNo": {
-          "@id": "https://example.com/terms#drawerCompanyNo"
-        },
-        "drawerJurisdiction": {
-          "@id": "https://example.com/terms#drawerJurisdiction"
-        },
-        "drawerAddress": {
-          "@id": "https://example.com/terms#drawerAddress"
-        },
-        "drawerEmail": {
-          "@id": "https://example.com/terms#drawerEmail"
-        },
-        "drawerWalletAddress": {
-          "@id": "https://example.com/terms#drawerWalletAddress"
-        },
-        "draweeCompanyName": {
-          "@id": "https://example.com/terms#draweeCompanyName"
-        },
-        "draweeCompanyNo": {
-          "@id": "https://example.com/terms#draweeCompanyNo"
-        },
-        "draweeJurisdiction": {
-          "@id": "https://example.com/terms#draweeJurisdiction"
-        },
-        "draweeAddress": {
-          "@id": "https://example.com/terms#draweeAddress"
-        },
-        "draweeEmail": {
-          "@id": "https://example.com/terms#draweeEmail"
-        },
-        "draweeWalletAddress": {
-          "@id": "https://example.com/terms#draweeWalletAddress"
-        },
-        "payeeCompanyName": {
-          "@id": "https://example.com/terms#payeeCompanyName"
-        },
-        "payeeWalletAddress": {
-          "@id": "https://example.com/terms#payeeWalletAddress"
-        },
-        "dueDate": {
-          "@id": "https://example.com/terms#dueDate"
-        },
-        "currency": {
-          "@id": "https://example.com/terms#currency"
-        },
-        "amount": {
-          "@id": "https://example.com/terms#amount"
-        },
-        "amountInWords": {
-          "@id": "https://example.com/terms#amountInWords"
-        },
-        "clause": {
-          "@id": "https://example.com/terms#clause"
-        },
-        "signerName": {
-          "@id": "https://example.com/terms#signerName"
-        },
-        "signerPosition": {
-          "@id": "https://example.com/terms#signerPosition"
-        },
-        "signerEmail": {
-          "@id": "https://example.com/terms#signerEmail"
-        },
-        "signerTimeStamp": {
-          "@id": "https://example.com/terms#signerTimeStamp"
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
         }
       }
     }
