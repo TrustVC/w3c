@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@2.4.1...@trustvc/w3c-vc@2.4.2) (2026-08-06)
+
+
+### Bug Fixes
+
+* make credentialStatus and expiry non-strippable at issuance ([#108](https://github.com/TrustVC/w3c/issues/108)) ([63fc8b5](https://github.com/TrustVC/w3c/commit/63fc8b548b8e8fa3c7ed020e712c67c93362a88d))
+
 ## [2.4.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@2.4.0...@trustvc/w3c-vc@2.4.1) (2026-07-29)
 
 
