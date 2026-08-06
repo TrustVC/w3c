@@ -261,6 +261,85 @@ describe('W3C Verifiable Credentials', () => {
           expect(verificationResult.error).toBeUndefined();
         });
 
+        describe('fields a holder must not be able to withhold', () => {
+          // Selective disclosure lets the holder drop any non-mandatory statement while the
+          // credential still verifies, so anything that limits whether a credential may
+          // still be used has to be mandatory at issuance. These derivations deliberately
+          // ask for none of those fields; they must come back anyway.
+          const expiryField = dateField === 'validFrom' ? 'validUntil' : 'expirationDate';
+          const revealOnlyOneSubjectField = ['/credentialSubject/billOfLadingName'];
+
+          it(`keeps ${dateField === 'validFrom' ? 'validUntil' : 'expirationDate'} through an unrelated derivation`, async () => {
+            const testCredential = {
+              ...credential,
+              [dateField]: dateValue,
+              [expiryField]: '2029-12-03T12:19:52Z',
+            };
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            // Without this, an expired credential could be presented with no expiry at all.
+            expect(derivedCredential.derived?.[expiryField]).toBe('2029-12-03T12:19:52Z');
+
+            const verificationResult = await verifyCredential(derivedCredential.derived);
+            expect(verificationResult.verified).toBe(true);
+          });
+
+          it('keeps credentialStatus through an unrelated derivation', async () => {
+            const testCredential = {
+              ...credential,
+              '@context': [...credential['@context'], 'https://w3id.org/vc/status-list/2021/v1'],
+              [dateField]: dateValue,
+              credentialStatus: {
+                id: 'https://trustvc.github.io/did/credentials/statuslist/1#10',
+                type: 'StatusList2021Entry',
+                statusPurpose: 'revocation',
+                statusListIndex: '10',
+                statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
+              },
+            };
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            // Without this, a revoked credential could be presented with the entry removed.
+            expect(derivedCredential.derived?.credentialStatus).toBeDefined();
+
+            const verificationResult = await verifyCredential(derivedCredential.derived);
+            expect(verificationResult.verified).toBe(true);
+          });
+
+          it('leaves a credential carrying neither field unaffected', async () => {
+            // The shared fixture already has an expiry, so strip both fields to test the
+            // case where there is nothing extra to force.
+            const testCredential = { ...credential, [dateField]: dateValue };
+            delete (testCredential as Record<string, unknown>)[expiryField];
+            delete (testCredential as Record<string, unknown>).credentialStatus;
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            expect(derivedCredential.derived?.[expiryField]).toBeUndefined();
+            expect(derivedCredential.derived?.credentialStatus).toBeUndefined();
+          });
+        });
+
         it('should automatically include entire credentialSubject when no properties selected', async () => {
           const testCredential = { ...credential, [dateField]: dateValue };
 

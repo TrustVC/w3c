@@ -28,14 +28,38 @@ const assertDefined = <T>(value: T | undefined, message: string): T => {
 };
 
 /**
+ * The modern fixtures carry a TransferableRecords credentialStatus, which cannot be
+ * presented. `credentialStatus` is a mandatory pointer so it survives derivation — tests
+ * about anything other than transferable records need it gone before signing.
+ */
+const presentableV2 = () => {
+  const { credentialStatus: _transferableRecord, ...rest } = modernCredentialV2_0 as Record<
+    string,
+    unknown
+  >;
+  return rest;
+};
+
+/**
  * Signs a credential and derives it (selective disclosure) so it is a
  * verifiable, holder-presentable credential.
+ *
+ * The shared modern fixtures carry a TransferableRecords credentialStatus, which is NOT
+ * presentable — ownership of a transferable record lives on-chain. It is dropped before
+ * signing rather than relied on being derived away: `credentialStatus` is a mandatory
+ * pointer, so it survives derivation and the presentation would be rejected. The dedicated
+ * `rejects TransferableRecords credentials` block below keeps it, via makeSignedCredential.
  */
 const makeDerivedCredential = async (
   credential: object,
   keyPair: object,
   cryptosuite: 'ecdsa-sd-2023' | 'bbs-2023',
 ): Promise<SignedVerifiableCredential> => {
+  const { credentialStatus: _transferableRecord, ...presentable } = credential as Record<
+    string,
+    unknown
+  >;
+  credential = presentable;
   const signed = await signCredential(credential as never, keyPair as never, cryptosuite);
   if (signed.error) throw new Error(`sign failed: ${signed.error}`);
   const derived = await deriveCredential(
@@ -416,7 +440,8 @@ describe('Verifiable Presentation', () => {
 
     beforeAll(async () => {
       // The modern credential fixtures carry a TransferableRecords credentialStatus;
-      // a base (non-derived) signature retains it.
+      // a base (non-derived) signature retains it. This block NEEDS it, so it uses the
+      // fixture as-is rather than presentableV2().
       transferableRecordVc = await makeSignedCredential(
         {
           ...modernCredentialV2_0,
@@ -556,7 +581,7 @@ describe('Verifiable Presentation', () => {
       // modernCredentialV2_0 has validUntil 2029; reveal it, then treat "now" as 2030.
       const signed = await signCredential(
         {
-          ...modernCredentialV2_0,
+          ...presentableV2(),
           issuer: ECDSA_DID_KEY_ISSUER,
           validFrom: '2024-04-01T12:19:52Z',
         },
@@ -582,7 +607,7 @@ describe('Verifiable Presentation', () => {
       // Build a VP whose embedded credential expires in 2021, created in 2020 (so creation passes).
       const signed = await signCredential(
         {
-          ...modernCredentialV2_0,
+          ...presentableV2(),
           issuer: ECDSA_DID_KEY_ISSUER,
           validFrom: '2020-01-01T00:00:00Z',
           validUntil: '2021-01-01T00:00:00Z',
