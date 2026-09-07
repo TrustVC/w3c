@@ -46,6 +46,7 @@ export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-c
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 export const OPENCERTS_CONTEXT_URL = 'https://trustvc.io/context/opencerts-context.json';
 
+/** @deprecated Superseded by BOE_DC_CONTEXT_URL. Kept resolvable for already-issued documents — do not remove. */
 export const BOE_CONTEXT_URL = 'https://trustvc.io/context/bill-of-exchange.json';
 export const BOE_DC_CONTEXT_URL =
   'https://trustvc.io/context/bill-of-exchange-documentary-credit.json';
