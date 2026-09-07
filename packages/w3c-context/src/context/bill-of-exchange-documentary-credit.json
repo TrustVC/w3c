@@ -6,6 +6,9 @@
     "electronicDocumentIdentifier": {
       "@id": "https://trustvc.io/context/terms#electronicDocumentIdentifier"
     },
+    "bankLogo": {
+      "@id": "https://trustvc.io/context/terms#bankLogo"
+    },
     "referenceNumber": {
       "@id": "https://trustvc.io/context/terms#referenceNumber"
     },
