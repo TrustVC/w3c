@@ -1,3 +1,17 @@
+# [2.4.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.3.0...@trustvc/w3c-credential-status@2.4.0) (2026-07-29)
+
+
+### Features
+
+* add obligation records context and related types ([#104](https://github.com/TrustVC/w3c/issues/104)) ([8f3e73a](https://github.com/TrustVC/w3c/commit/8f3e73a3cc243c9377c380b248d18c6be39bfb8d))
+
+# [2.3.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.2.0...@trustvc/w3c-credential-status@2.3.0) (2026-07-27)
+
+
+### Features
+
+* add Verifiable Presentation create/sign/verify ([#105](https://github.com/TrustVC/w3c/issues/105)) ([c78c76c](https://github.com/TrustVC/w3c/commit/c78c76c26d61686d35383a0aca71b30325fd33fd))
+
 # [2.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.1.0...@trustvc/w3c-credential-status@2.2.0) (2026-06-02)
 
 

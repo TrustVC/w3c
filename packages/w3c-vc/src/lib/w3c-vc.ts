@@ -281,19 +281,52 @@ export const signCredential = async (
       const firstContext = credential['@context'][0];
       const isV2 = firstContext === CredentialContextVersion.v2;
 
-      // Core mandatory pointers for fields required for credential validity
+      // Core mandatory pointers for fields required for credential validity.
+      //
+      // These are forced rather than left to the caller because selective disclosure lets
+      // the HOLDER omit any statement the issuer did not mark mandatory, and the credential
+      // still verifies. Anything constraining whether a credential may still be used has to
+      // be here or a holder can derive it away: a revoked credential presented with no
+      // `credentialStatus`, or an expired one with no expiry, verifies clean. The removal is
+      // undetectable — the derived proof records nothing about what was withheld, and
+      // dropping the then-unused `@context` entry leaves the canonical RDF, and so the
+      // signature, intact. Verification cannot catch it; issuance is the only defence.
       const coreMandatoryPointers = ['/issuer'];
 
-      // Add date field pointer based on credential version
+      // Add date field pointers based on credential version. Both ends of the validity
+      // window belong here — forcing only the start would leave the expiry strippable.
       if (isV2) {
         // For v2.0, validFrom is optional but if present should be mandatory for consistency
         if (credential.validFrom) {
           coreMandatoryPointers.push('/validFrom');
         }
+        if (credential.validUntil) {
+          coreMandatoryPointers.push('/validUntil');
+        }
       } else {
         // For v1.1, issuanceDate is required
         coreMandatoryPointers.push('/issuanceDate');
+        if (credential.expirationDate) {
+          coreMandatoryPointers.push('/expirationDate');
+        }
       }
+
+      // A revocation entry a holder can withhold is not a revocation entry.
+      if (credential.credentialStatus) {
+        coreMandatoryPointers.push('/credentialStatus');
+      }
+
+      // BEFORE ENFORCING A NEW FIELD DURING VERIFICATION, ADD IT HERE FIRST.
+      //
+      // `credentialSchema` and `termsOfUse` are deliberately absent: nothing reads them
+      // today, so forcing them would only widen what a derivation discloses. But the moment
+      // a verifier starts acting on one, a holder can delete it and the check is silently
+      // skipped rather than failed — and that cannot be fixed retroactively, because
+      // mandatory pointers are fixed at issuance. Credentials signed before the pointer is
+      // added stay strippable forever and have to be reissued.
+      //
+      // `evidence`, `renderMethod` and `qrCode` are informational or display-only, and
+      // withholding them is a legitimate holder choice; they should stay optional.
 
       // Combine core mandatory pointers with user-provided ones, ensuring core fields are always included
       const userMandatoryPointers = options?.mandatoryPointers || [];
