@@ -186,11 +186,13 @@ export const assertObligationRecords = (
   } = credentialStatus;
   assertCredentialStatusType(type);
 
-  if (tokenId && mode === 'sign') {
-    throw new Error(
-      `"tokenId" is a generated field and should not be included in the credential status.`,
-    );
-  } else if (mode === 'verify') {
+  if (mode === 'sign') {
+    if (Object.hasOwn(credentialStatus, 'tokenId')) {
+      throw new Error(
+        `"tokenId" is a generated field and should not be included in the credential status.`,
+      );
+    }
+  } else {
     isString(tokenId, 'credentialStatus.tokenId');
   }
 

@@ -42,10 +42,10 @@ import { getDocumentLoader } from '@trustvc/w3c-context';
 // Add custom contexts
 const additionalContexts = {
   'https://example.com/my-context': {
-    "@context": {
-      "MyProperty": "https://example.com/vocab#MyProperty"
-    }
-  }
+    '@context': {
+      MyProperty: 'https://example.com/vocab#MyProperty',
+    },
+  },
 };
 
 const documentLoader = await getDocumentLoader(additionalContexts);
@@ -56,6 +56,7 @@ const documentLoader = await getDocumentLoader(additionalContexts);
 The package includes the following pre-cached contexts:
 
 #### Core W3C Contexts
+
 - `https://w3id.org/security/data-integrity/v2` - Data Integrity v2
 - `https://www.w3.org/ns/did/v1` - DID Core v1
 - `https://www.w3.org/2018/credentials/v1` - Verifiable Credentials v1
@@ -63,11 +64,13 @@ The package includes the following pre-cached contexts:
 - `https://w3id.org/vc/status-list/2021/v1` - Status List 2021 v1
 
 #### Cryptographic Suite Contexts
+
 - `https://w3id.org/security/bbs/v1` - BBS+ v1
 - `https://w3id.org/security/suites/bls12381-2020/v1` - BLS12-381 2020
 - `https://w3id.org/security/suites/jws-2020/v1` - JWS 2020
 
 #### TrustVC Business Contexts
+
 - `https://trustvc.io/context/transferable-records-context.json` - Transferable Records
 - `https://trustvc.io/context/obligation-records-context.json` - Obligation Records (BoE)
 - `https://trustvc.io/context/render-method-context.json` - Render Methods
@@ -94,11 +97,7 @@ The package includes the following pre-cached contexts:
 You can import URL constants for type safety:
 
 ```typescript
-import { 
-  DATA_INTEGRITY_V2_URL,
-  MULTIKEY_V1_URL,
-  VC_V1_URL
-} from '@trustvc/w3c-context';
+import { DATA_INTEGRITY_V2_URL, MULTIKEY_V1_URL, VC_V1_URL } from '@trustvc/w3c-context';
 
 console.log(DATA_INTEGRITY_V2_URL); // https://w3id.org/security/data-integrity/v2
 console.log(MULTIKEY_V1_URL); // https://w3id.org/security/multikey/v1
@@ -113,19 +112,19 @@ import { DATA_INTEGRITY_V2_URL, VC_V1_URL } from '@trustvc/w3c-context';
 
 // Create a credential with BBS-2023 or ECDSA-SD-2023
 const credential = {
-  "@context": [
+  '@context': [
     VC_V1_URL,
-    DATA_INTEGRITY_V2_URL  // Supports BBS-2023, ECDSA-SD-2023
+    DATA_INTEGRITY_V2_URL, // Supports BBS-2023, ECDSA-SD-2023
   ],
-  "type": ["VerifiableCredential"],
-  "credentialSubject": {
+  type: ['VerifiableCredential'],
+  credentialSubject: {
     // ... credential data
   },
-  "proof": {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "bbs-2023", // or "ecdsa-sd-2023"
+  proof: {
+    type: 'DataIntegrityProof',
+    cryptosuite: 'bbs-2023', // or "ecdsa-sd-2023"
     // ... proof data
-  }
+  },
 };
 ```
 
@@ -150,6 +149,7 @@ const verificationMethod = await documentLoader('did:web:example.com#key-1');
 Creates a document loader function that resolves JSON-LD contexts.
 
 **Parameters:**
+
 - `additionalContexts` (optional): Record<string, Document> - Additional contexts to include
 
 **Returns:** Promise<DocumentLoader> - A document loader function

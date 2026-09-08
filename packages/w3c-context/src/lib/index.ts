@@ -94,7 +94,7 @@ export const qrCodeContexts: { [key: string]: Document } = {
 };
 
 export const templateContexts: { [key: string]: Document } = {
-  [BOE_CONTEXT_URL]: boeContext,
+  [BOE_CONTEXT_URL]: boeContext, // NOSONAR - deprecated URL kept resolvable for already-issued documents; do not remove.
   [BOE_DC_CONTEXT_URL]: boeDcContext,
   [BOL_CONTEXT_URL]: bolContext,
   [BOLC_CONTEXT_URL]: bolcContext,

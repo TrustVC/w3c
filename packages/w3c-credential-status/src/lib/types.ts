@@ -43,10 +43,11 @@ export type TransferableRecordsCredentialStatus = Omit<GeneralCredentialStatus, 
 /**
  * Obligation Records (BoE) credential status. Same TransferableRecords type string,
  * but keyed by obligationRegistry instead of tokenRegistry.
+ * `tokenId` is generated at issuance and must be omitted when signing.
  */
 export type ObligationRecordsCredentialStatus = Omit<GeneralCredentialStatus, 'type'> & {
   type: 'TransferableRecords';
-  tokenId: string;
+  tokenId?: string;
   tokenNetwork: {
     chain: string;
     chainId: string | number;
