@@ -7,6 +7,7 @@ import {
   assertTransferableRecords,
   BitstringStatusListCredentialStatus,
   ObligationRecordsCredentialStatus,
+  ObligationRecordsSigningCredentialStatus,
   TransferableRecordsCredentialStatus,
 } from '@trustvc/w3c-credential-status';
 import {
@@ -535,7 +536,14 @@ export const _checkCredentialStatus = (
     assertBitstringStatusListEntry(credentialStatus as BitstringStatusListCredentialStatus);
   } else if (type === 'TransferableRecords') {
     if (Object.hasOwn(credentialStatus, 'obligationRegistry')) {
-      assertObligationRecords(credentialStatus as ObligationRecordsCredentialStatus, mode);
+      if (mode === 'sign') {
+        assertObligationRecords(
+          credentialStatus as ObligationRecordsSigningCredentialStatus,
+          'sign',
+        );
+      } else {
+        assertObligationRecords(credentialStatus as ObligationRecordsCredentialStatus, 'verify');
+      }
     } else {
       assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);
     }

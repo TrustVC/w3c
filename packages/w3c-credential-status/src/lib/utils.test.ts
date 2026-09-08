@@ -123,13 +123,13 @@ describe('utils.ts', () => {
     });
 
     it('rejects an empty string tokenId', () => {
-      expect(() => assertObligationRecords({ ...base, tokenId: '' }, 'sign')).toThrow(
+      expect(() => assertObligationRecords({ ...base, tokenId: '' } as never, 'sign')).toThrow(
         '"tokenId" is a generated field and should not be included in the credential status.',
       );
     });
 
     it('rejects a populated tokenId', () => {
-      expect(() => assertObligationRecords({ ...base, tokenId: 'abc' }, 'sign')).toThrow(
+      expect(() => assertObligationRecords({ ...base, tokenId: 'abc' } as never, 'sign')).toThrow(
         '"tokenId" is a generated field and should not be included in the credential status.',
       );
     });
