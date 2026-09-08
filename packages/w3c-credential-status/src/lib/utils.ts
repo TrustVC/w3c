@@ -10,6 +10,7 @@ import {
   BitstringStatusListCredentialStatus,
   GeneralCredentialStatus,
   ObligationRecordsCredentialStatus,
+  ObligationRecordsSigningCredentialStatus,
   SignedCredentialStatusVC,
   TransferableRecordsCredentialStatus,
   VCBitstringCredentialSubject,
@@ -171,13 +172,20 @@ export const assertTransferableRecords = (
 
 /**
  * Asserts an Obligation Records (BoE) credential status.
- * @param {ObligationRecordsCredentialStatus} credentialStatus - Obligation credential status.
- * @param {'sign' | 'verify'} mode - Validation mode.
+ * Verify (default) requires `tokenId`; sign requires it to be omitted.
  */
-export const assertObligationRecords = (
+export function assertObligationRecords(
+  credentialStatus: ObligationRecordsSigningCredentialStatus,
+  mode: 'sign',
+): void;
+export function assertObligationRecords(
   credentialStatus: ObligationRecordsCredentialStatus,
+  mode?: 'verify',
+): void;
+export function assertObligationRecords(
+  credentialStatus: ObligationRecordsSigningCredentialStatus & { tokenId?: string },
   mode: 'sign' | 'verify' = 'verify',
-): void => {
+): void {
   const {
     type,
     tokenId,
@@ -186,18 +194,20 @@ export const assertObligationRecords = (
   } = credentialStatus;
   assertCredentialStatusType(type);
 
-  if (tokenId && mode === 'sign') {
-    throw new Error(
-      `"tokenId" is a generated field and should not be included in the credential status.`,
-    );
-  } else if (mode === 'verify') {
+  if (mode === 'sign') {
+    if (Object.hasOwn(credentialStatus, 'tokenId')) {
+      throw new Error(
+        `"tokenId" is a generated field and should not be included in the credential status.`,
+      );
+    }
+  } else {
     isString(tokenId, 'credentialStatus.tokenId');
   }
 
   isString(obligationRegistry, 'credentialStatus.obligationRegistry');
   isString(chain, 'credentialStatus.tokenNetwork.chain');
   assertIntegerChainId(chainId, 'credentialStatus.tokenNetwork.chainId');
-};
+}
 
 /**
  * Fetches the verifiable credential of the credential status.

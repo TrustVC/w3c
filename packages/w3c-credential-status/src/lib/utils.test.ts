@@ -111,6 +111,30 @@ describe('utils.ts', () => {
     });
   });
 
+  describe('assertObligationRecords tokenId in sign mode', () => {
+    const base = {
+      type: 'TransferableRecords' as const,
+      obligationRegistry: '0x456',
+      tokenNetwork: { chain: 'sepolia', chainId: 11155111 as string | number },
+    };
+
+    it('accepts an omitted tokenId', () => {
+      expect(() => assertObligationRecords(base, 'sign')).not.toThrow();
+    });
+
+    it('rejects an empty string tokenId', () => {
+      expect(() => assertObligationRecords({ ...base, tokenId: '' } as never, 'sign')).toThrow(
+        '"tokenId" is a generated field and should not be included in the credential status.',
+      );
+    });
+
+    it('rejects a populated tokenId', () => {
+      expect(() => assertObligationRecords({ ...base, tokenId: 'abc' } as never, 'sign')).toThrow(
+        '"tokenId" is a generated field and should not be included in the credential status.',
+      );
+    });
+  });
+
   describe('fetchCredentialStatusVC', () => {
     it('should fetch a credential status VC successfully', async () => {
       const vc = await fetchCredentialStatusVC(
