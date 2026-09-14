@@ -4,7 +4,6 @@ import { DocumentLoader, DocumentLoaderObject } from './types';
 import jsonldSignatures from 'jsonld-signatures';
 import attachmentsContext from '../context/attachments-context.json';
 import bbsV1 from '../context/bbs-v1.json';
-import boeContext from '../context/bill-of-exchange.json';
 import boeDcContext from '../context/bill-of-exchange-documentary-credit.json';
 import bolContext from '../context/bill-of-lading.json';
 import bolcContext from '../context/bill-of-lading-carrier.json';
@@ -46,8 +45,6 @@ export const ATTACHMENTS_CONTEXT_URL = 'https://trustvc.io/context/attachments-c
 export const QRCODE_CONTEXT_URL = 'https://trustvc.io/context/qrcode-context.json';
 export const OPENCERTS_CONTEXT_URL = 'https://trustvc.io/context/opencerts-context.json';
 
-/** @deprecated Superseded by BOE_DC_CONTEXT_URL. Kept resolvable for already-issued documents — do not remove. */
-export const BOE_CONTEXT_URL = 'https://trustvc.io/context/bill-of-exchange.json';
 export const BOE_DC_CONTEXT_URL =
   'https://trustvc.io/context/bill-of-exchange-documentary-credit.json';
 export const BOL_CONTEXT_URL = 'https://trustvc.io/context/bill-of-lading.json';
@@ -94,7 +91,6 @@ export const qrCodeContexts: { [key: string]: Document } = {
 };
 
 export const templateContexts: { [key: string]: Document } = {
-  [BOE_CONTEXT_URL]: boeContext, // NOSONAR - deprecated URL kept resolvable for already-issued documents; do not remove.
   [BOE_DC_CONTEXT_URL]: boeDcContext,
   [BOL_CONTEXT_URL]: bolContext,
   [BOLC_CONTEXT_URL]: bolcContext,
