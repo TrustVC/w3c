@@ -542,7 +542,10 @@ export const _checkCredentialStatus = (
           'sign',
         );
       } else {
-        assertObligationRecords(credentialStatus as ObligationRecordsCredentialStatus, 'verify');
+        assertObligationRecords(
+          credentialStatus as unknown as ObligationRecordsCredentialStatus,
+          'verify',
+        );
       }
     } else {
       assertTransferableRecords(credentialStatus as TransferableRecordsCredentialStatus, mode);

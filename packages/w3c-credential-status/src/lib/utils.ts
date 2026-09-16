@@ -183,7 +183,9 @@ export function assertObligationRecords(
   mode?: 'verify',
 ): void;
 export function assertObligationRecords(
-  credentialStatus: ObligationRecordsSigningCredentialStatus & { tokenId?: string },
+  credentialStatus: Omit<ObligationRecordsSigningCredentialStatus, 'tokenId'> & {
+    tokenId?: string;
+  },
   mode: 'sign' | 'verify' = 'verify',
 ): void {
   const {

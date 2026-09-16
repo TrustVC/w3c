@@ -52,12 +52,16 @@ export type ObligationRecordsSigningCredentialStatus = Omit<GeneralCredentialSta
     chainId: string | number;
   };
   obligationRegistry: string;
+  tokenId?: never;
 };
 
 /**
  * Issued / verified Obligation Records status — `tokenId` is required.
  */
-export type ObligationRecordsCredentialStatus = ObligationRecordsSigningCredentialStatus & {
+export type ObligationRecordsCredentialStatus = Omit<
+  ObligationRecordsSigningCredentialStatus,
+  'tokenId'
+> & {
   tokenId: string;
 };
 
