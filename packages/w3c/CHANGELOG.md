@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@2.4.2...@trustvc/w3c@2.5.0) (2026-09-17)
+
+
+### Features
+
+* add bill of exchange documentary credit context ([#109](https://github.com/TrustVC/w3c/issues/109)) ([8b110da](https://github.com/TrustVC/w3c/commit/8b110daf8b90c5558fec715753e8a9c8e3b70432))
+
 ## [2.4.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c@2.4.1...@trustvc/w3c@2.4.2) (2026-08-06)
 
 
