@@ -122,6 +122,12 @@ describe('utils.ts', () => {
       expect(() => assertObligationRecords(base, 'sign')).not.toThrow();
     });
 
+    it('accepts an explicitly present tokenId: undefined', () => {
+      expect(() =>
+        assertObligationRecords({ ...base, tokenId: undefined } as never, 'sign'),
+      ).not.toThrow();
+    });
+
     it('rejects an empty string tokenId', () => {
       expect(() => assertObligationRecords({ ...base, tokenId: '' } as never, 'sign')).toThrow(
         '"tokenId" is a generated field and should not be included in the credential status.',

@@ -197,7 +197,9 @@ export function assertObligationRecords(
   assertCredentialStatusType(type);
 
   if (mode === 'sign') {
-    if (Object.hasOwn(credentialStatus, 'tokenId')) {
+    // An explicitly present `tokenId: undefined` type-checks against `tokenId?: never`
+    // (no exactOptionalPropertyTypes here), so treat it the same as an omitted key.
+    if (tokenId !== undefined) {
       throw new Error(
         `"tokenId" is a generated field and should not be included in the credential status.`,
       );
