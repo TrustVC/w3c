@@ -1,0 +1,91 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+
+    "electronicDocumentIdentifier": {
+      "@id": "https://trustvc.io/context/terms#electronicDocumentIdentifier"
+    },
+    "bankLogo": {
+      "@id": "https://trustvc.io/context/terms#bankLogo"
+    },
+    "referenceNumber": {
+      "@id": "https://trustvc.io/context/terms#referenceNumber"
+    },
+    "amountInFigures": {
+      "@id": "https://trustvc.io/context/terms#amountInFigures"
+    },
+    "amountInWords": {
+      "@id": "https://trustvc.io/context/terms#amountInWords"
+    },
+    "currencyCode": {
+      "@id": "https://trustvc.io/context/terms#currencyCode"
+    },
+    "placeOfIssue": {
+      "@id": "https://trustvc.io/context/terms#placeOfIssue"
+    },
+    "dateOfIssue": {
+      "@id": "https://trustvc.io/context/terms#dateOfIssue"
+    },
+    "maturityDate": {
+      "@id": "https://trustvc.io/context/terms#maturityDate"
+    },
+    "payee": {
+      "@id": "https://trustvc.io/context/terms#payee"
+    },
+    "drawnUnder": {
+      "@id": "https://trustvc.io/context/terms#drawnUnder"
+    },
+    "documentaryCreditNumber": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditNumber"
+    },
+    "documentaryCreditDate": {
+      "@id": "https://trustvc.io/context/terms#documentaryCreditDate"
+    },
+    "indorsement": {
+      "@id": "https://trustvc.io/context/terms#indorsement",
+      "@context": {
+        "@protected": true,
+        "payee": {
+          "@id": "https://trustvc.io/context/terms#indorsementPayee"
+        }
+      }
+    },
+    "drawee": {
+      "@id": "https://trustvc.io/context/terms#drawee",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
+        },
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
+        },
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
+        },
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
+        }
+      }
+    },
+    "drawer": {
+      "@id": "https://trustvc.io/context/terms#drawer",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
+        },
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
+        },
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
+        },
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
+        }
+      }
+    }
+  }
+}

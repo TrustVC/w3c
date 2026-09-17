@@ -16,6 +16,7 @@ mkdir -p "$DEST_DIR"
 FILES=(
   "attachments-context.json"
   "bill-of-exchange.json"
+  "bill-of-exchange-documentary-credit.json"
   "bill-of-lading.json"
   "bill-of-lading-carrier.json"
   "coo.json"

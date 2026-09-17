@@ -1,168 +1,144 @@
 # [2.4.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.3.0...@trustvc/w3c-credential-status@2.4.0) (2026-07-29)
 
-
 ### Features
 
-* add obligation records context and related types ([#104](https://github.com/TrustVC/w3c/issues/104)) ([8f3e73a](https://github.com/TrustVC/w3c/commit/8f3e73a3cc243c9377c380b248d18c6be39bfb8d))
+- add obligation records context and related types ([#104](https://github.com/TrustVC/w3c/issues/104)) ([8f3e73a](https://github.com/TrustVC/w3c/commit/8f3e73a3cc243c9377c380b248d18c6be39bfb8d))
 
 # [2.3.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.2.0...@trustvc/w3c-credential-status@2.3.0) (2026-07-27)
 
-
 ### Features
 
-* add Verifiable Presentation create/sign/verify ([#105](https://github.com/TrustVC/w3c/issues/105)) ([c78c76c](https://github.com/TrustVC/w3c/commit/c78c76c26d61686d35383a0aca71b30325fd33fd))
+- add Verifiable Presentation create/sign/verify ([#105](https://github.com/TrustVC/w3c/issues/105)) ([c78c76c](https://github.com/TrustVC/w3c/commit/c78c76c26d61686d35383a0aca71b30325fd33fd))
 
 # [2.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.1.0...@trustvc/w3c-credential-status@2.2.0) (2026-06-02)
 
-
 ### Features
 
-* add did:key support ([#103](https://github.com/TrustVC/w3c/issues/103)) ([67dbb86](https://github.com/TrustVC/w3c/commit/67dbb867d23384d31bd6b14f379d9ae34fb3850a))
+- add did:key support ([#103](https://github.com/TrustVC/w3c/issues/103)) ([67dbb86](https://github.com/TrustVC/w3c/commit/67dbb867d23384d31bd6b14f379d9ae34fb3850a))
 
 # [2.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.0.2...@trustvc/w3c-credential-status@2.1.0) (2026-04-27)
 
-
 ### Features
 
-* w3c vc context for opencert certificate ([#101](https://github.com/TrustVC/w3c/issues/101)) ([0e45032](https://github.com/TrustVC/w3c/commit/0e450327713c2d5538895aee29baa2808ecd72f1))
+- w3c vc context for opencert certificate ([#101](https://github.com/TrustVC/w3c/issues/101)) ([0e45032](https://github.com/TrustVC/w3c/commit/0e450327713c2d5538895aee29baa2808ecd72f1))
 
 ## [2.0.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.0.1...@trustvc/w3c-credential-status@2.0.2) (2025-12-30)
 
-
 ### Bug Fixes
 
-* enhance DID key handling and generation ([#99](https://github.com/TrustVC/w3c/issues/99)) ([7092c00](https://github.com/TrustVC/w3c/commit/7092c009f12d2f841691b844fb37daa6e09ccb13))
+- enhance DID key handling and generation ([#99](https://github.com/TrustVC/w3c/issues/99)) ([7092c00](https://github.com/TrustVC/w3c/commit/7092c009f12d2f841691b844fb37daa6e09ccb13))
 
 ## [2.0.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@2.0.0...@trustvc/w3c-credential-status@2.0.1) (2025-12-26)
 
-
 ### Bug Fixes
 
-* remove w3c cli tool mention ([#98](https://github.com/TrustVC/w3c/issues/98)) ([66072ee](https://github.com/TrustVC/w3c/commit/66072ee9b2a4add632892e8c85bc34ba0d355655))
+- remove w3c cli tool mention ([#98](https://github.com/TrustVC/w3c/issues/98)) ([66072ee](https://github.com/TrustVC/w3c/commit/66072ee9b2a4add632892e8c85bc34ba0d355655))
 
 # [2.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.13...@trustvc/w3c-credential-status@2.0.0) (2025-11-11)
 
-
 ### Features
 
-* w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes ([#96](https://github.com/TrustVC/w3c/issues/96)) ([d075c4c](https://github.com/TrustVC/w3c/commit/d075c4c49b58a3f231f48985c2523fdcf8d3a6cc))
-
+- w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes ([#96](https://github.com/TrustVC/w3c/issues/96)) ([d075c4c](https://github.com/TrustVC/w3c/commit/d075c4c49b58a3f231f48985c2523fdcf8d3a6cc))
 
 ### BREAKING CHANGES
 
-* w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes
+- w3c vc data model 2.0 support with modern cryptosuites, bitstringstatuslist, and fixes
 
 ## [1.2.13](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.12...@trustvc/w3c-credential-status@1.2.13) (2025-06-13)
 
-
 ### Bug Fixes
 
-* expired and redacted doc checks ([#64](https://github.com/TrustVC/w3c/issues/64)) ([4d0a65a](https://github.com/TrustVC/w3c/commit/4d0a65ad467e07bc0f837368f6ff93f84abfb0a8))
+- expired and redacted doc checks ([#64](https://github.com/TrustVC/w3c/issues/64)) ([4d0a65a](https://github.com/TrustVC/w3c/commit/4d0a65ad467e07bc0f837368f6ff93f84abfb0a8))
 
 ## [1.2.12](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.11...@trustvc/w3c-credential-status@1.2.12) (2025-05-30)
 
-
 ### Bug Fixes
 
-* type errors ([#62](https://github.com/TrustVC/w3c/issues/62)) ([e4cf81f](https://github.com/TrustVC/w3c/commit/e4cf81f4cab187be464f92503bf0f0c39aef61d7))
+- type errors ([#62](https://github.com/TrustVC/w3c/issues/62)) ([e4cf81f](https://github.com/TrustVC/w3c/commit/e4cf81f4cab187be464f92503bf0f0c39aef61d7))
 
 ## [1.2.11](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.10...@trustvc/w3c-credential-status@1.2.11) (2025-05-21)
 
-
 ### Bug Fixes
 
-* coo context ([#59](https://github.com/TrustVC/w3c/issues/59)) ([b802c6f](https://github.com/TrustVC/w3c/commit/b802c6f8605387024d5a50d81e4edfa3da709ba7))
+- coo context ([#59](https://github.com/TrustVC/w3c/issues/59)) ([b802c6f](https://github.com/TrustVC/w3c/commit/b802c6f8605387024d5a50d81e4edfa3da709ba7))
 
 ## [1.2.10](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.9...@trustvc/w3c-credential-status@1.2.10) (2025-05-20)
 
-
 ### Bug Fixes
 
-* add template context ([#58](https://github.com/TrustVC/w3c/issues/58)) ([8a467b7](https://github.com/TrustVC/w3c/commit/8a467b738bebe935f00af525684e84bfd01fe6e9))
+- add template context ([#58](https://github.com/TrustVC/w3c/issues/58)) ([8a467b7](https://github.com/TrustVC/w3c/commit/8a467b738bebe935f00af525684e84bfd01fe6e9))
 
 ## [1.2.9](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.8...@trustvc/w3c-credential-status@1.2.9) (2025-05-16)
 
-
 ### Bug Fixes
 
-* cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
+- cli error messages ([#54](https://github.com/TrustVC/w3c/issues/54)) ([3825ce9](https://github.com/TrustVC/w3c/commit/3825ce9598479f52a75b2a8dbd38efc97730950a))
 
 ## [1.2.8](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.7...@trustvc/w3c-credential-status@1.2.8) (2025-05-14)
 
-
 ### Bug Fixes
 
-* add qrcode context ([#55](https://github.com/TrustVC/w3c/issues/55)) ([19cd0df](https://github.com/TrustVC/w3c/commit/19cd0dfd20e848f744e1a5d6255557bde101d998))
+- add qrcode context ([#55](https://github.com/TrustVC/w3c/issues/55)) ([19cd0df](https://github.com/TrustVC/w3c/commit/19cd0dfd20e848f744e1a5d6255557bde101d998))
 
 ## [1.2.7](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.6...@trustvc/w3c-credential-status@1.2.7) (2025-04-24)
 
-
 ### Bug Fixes
 
-* update promissory note context ([#53](https://github.com/TrustVC/w3c/issues/53)) ([e032f45](https://github.com/TrustVC/w3c/commit/e032f4582da0983d2ca5648d7c55fac6bc97c1f6))
+- update promissory note context ([#53](https://github.com/TrustVC/w3c/issues/53)) ([e032f45](https://github.com/TrustVC/w3c/commit/e032f4582da0983d2ca5648d7c55fac6bc97c1f6))
 
 ## [1.2.6](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.5...@trustvc/w3c-credential-status@1.2.6) (2025-04-23)
 
-
 ### Bug Fixes
 
-* add promissory note context for w3c ([#52](https://github.com/TrustVC/w3c/issues/52)) ([54b866a](https://github.com/TrustVC/w3c/commit/54b866a66ff1db2466628fb32a1bb4820d71b7d1))
+- add promissory note context for w3c ([#52](https://github.com/TrustVC/w3c/issues/52)) ([54b866a](https://github.com/TrustVC/w3c/commit/54b866a66ff1db2466628fb32a1bb4820d71b7d1))
 
 ## [1.2.5](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.4...@trustvc/w3c-credential-status@1.2.5) (2025-04-22)
 
-
 ### Bug Fixes
 
-* clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
+- clean up resolver ([#51](https://github.com/TrustVC/w3c/issues/51)) ([936b5ec](https://github.com/TrustVC/w3c/commit/936b5ec23a372ae441bde9cd99701cbdd2408465))
 
 ## [1.2.4](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.3...@trustvc/w3c-credential-status@1.2.4) (2025-04-10)
 
-
 ### Bug Fixes
 
-* add bls to context cache ([#50](https://github.com/TrustVC/w3c/issues/50)) ([a1988b0](https://github.com/TrustVC/w3c/commit/a1988b0ef2d82c95c3e285c93eedd61b050e4fd9))
+- add bls to context cache ([#50](https://github.com/TrustVC/w3c/issues/50)) ([a1988b0](https://github.com/TrustVC/w3c/commit/a1988b0ef2d82c95c3e285c93eedd61b050e4fd9))
 
 ## [1.2.3](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.2...@trustvc/w3c-credential-status@1.2.3) (2025-04-09)
 
-
 ### Bug Fixes
 
-* update fetchCredentialStatusVC to use documentLoader and add cache for jws 2020 v1 ([#49](https://github.com/TrustVC/w3c/issues/49)) ([2c50901](https://github.com/TrustVC/w3c/commit/2c50901035aac696f75ef386bd8beca367f02db7))
+- update fetchCredentialStatusVC to use documentLoader and add cache for jws 2020 v1 ([#49](https://github.com/TrustVC/w3c/issues/49)) ([2c50901](https://github.com/TrustVC/w3c/commit/2c50901035aac696f75ef386bd8beca367f02db7))
 
 ## [1.2.2](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.1...@trustvc/w3c-credential-status@1.2.2) (2025-04-07)
 
-
 ### Bug Fixes
 
-* add context cache for bbs v1 and export document loader ([#43](https://github.com/TrustVC/w3c/issues/43)) ([65d28ba](https://github.com/TrustVC/w3c/commit/65d28bab684344fe325a1c636fb99c77242d3e72))
+- add context cache for bbs v1 and export document loader ([#43](https://github.com/TrustVC/w3c/issues/43)) ([65d28ba](https://github.com/TrustVC/w3c/commit/65d28bab684344fe325a1c636fb99c77242d3e72))
 
 ## [1.2.1](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.2.0...@trustvc/w3c-credential-status@1.2.1) (2024-12-17)
 
-
 ### Bug Fixes
 
-* types ([#40](https://github.com/TrustVC/w3c/issues/40)) ([aaf4d40](https://github.com/TrustVC/w3c/commit/aaf4d40a7d2551f96adf7cb7e0b68bfeba12c795))
+- types ([#40](https://github.com/TrustVC/w3c/issues/40)) ([aaf4d40](https://github.com/TrustVC/w3c/commit/aaf4d40a7d2551f96adf7cb7e0b68bfeba12c795))
 
 # [1.2.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.1.0...@trustvc/w3c-credential-status@1.2.0) (2024-12-13)
 
-
 ### Features
 
-* add transferable records ([#37](https://github.com/TrustVC/w3c/issues/37)) ([1ec9ec6](https://github.com/TrustVC/w3c/commit/1ec9ec634c9a4824a895ab03233904411a19883c))
+- add transferable records ([#37](https://github.com/TrustVC/w3c/issues/37)) ([1ec9ec6](https://github.com/TrustVC/w3c/commit/1ec9ec634c9a4824a895ab03233904411a19883c))
 
 # [1.1.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@1.0.0...@trustvc/w3c-credential-status@1.1.0) (2024-12-12)
 
-
 ### Features
 
-* update contexts ([#36](https://github.com/TrustVC/w3c/issues/36)) ([f55f223](https://github.com/TrustVC/w3c/commit/f55f22329caa8e4b61b5fb642defdc5523edce6a))
+- update contexts ([#36](https://github.com/TrustVC/w3c/issues/36)) ([f55f223](https://github.com/TrustVC/w3c/commit/f55f22329caa8e4b61b5fb642defdc5523edce6a))
 
 # [1.0.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-credential-status@0.0.0...@trustvc/w3c-credential-status@1.0.0) (2024-11-26)
 
-
 ### Features
 
-* v1 release [BREAKING CHANGE] ([#33](https://github.com/TrustVC/w3c/issues/33)) ([a2bfb4d](https://github.com/TrustVC/w3c/commit/a2bfb4d8c2ae2582c1ed8a992ea262b0a2fd1353))
+- v1 release [BREAKING CHANGE] ([#33](https://github.com/TrustVC/w3c/issues/33)) ([a2bfb4d](https://github.com/TrustVC/w3c/commit/a2bfb4d8c2ae2582c1ed8a992ea262b0a2fd1353))
 
 # 0.0.0 (2024-10-07)
 
