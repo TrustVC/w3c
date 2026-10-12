@@ -73,6 +73,17 @@ as `VP_EXPIRY_CONTEXT` — an inline `@context` mapping those terms to canonical
 absolute IRI under jsonld's safe mode. When in doubt, test in a repo that resolves
 jsonld 9 (see below) — not just here.
 
+The same split hides undefined terms: an undefined property is **silently dropped** from
+the canonical form under jsonld 6 (so it's outside the proof and can be tampered with) but
+throws under jsonld 9. `INLINE_HTML_TEMPLATE` / `template` hit this until they were added to
+`render-method-context-v2.json`. That was an in-place edit of a published context: verifiers
+bundling an older v2 copy (older SDK versions) won't know these terms, so credentials using
+them only verify with an SDK/hosted context that has the update. Adding terms is safe for
+existing credentials (they don't use them); **never change or remove an existing term** in a
+published context. `template` is a plain string term because it only ever holds the gzipped
+base64url string; an uncompressed `{html, css}` object there fails safe mode (by design). If a
+term ever needs to hold arbitrary JSON, it needs `"@type": "@json"`, or object values are dropped.
+
 ## Verifiable Presentations (`src/lib/presentation`)
 
 VP support was designed around a few hard rules. Preserve them:
