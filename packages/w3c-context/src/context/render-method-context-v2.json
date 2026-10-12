@@ -8,6 +8,12 @@
       "@context": {
         "templateName": "https://example.org/terms#templateName"
       }
+    },
+    "INLINE_HTML_TEMPLATE": {
+      "@id": "https://example.org/terms#InlineHtmlTemplate",
+      "@context": {
+        "template": "https://example.org/terms#template"
+      }
     }
   }
 }

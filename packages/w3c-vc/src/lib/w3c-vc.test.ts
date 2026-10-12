@@ -464,4 +464,61 @@ describe('W3C Verifiable Credentials', () => {
       },
     );
   });
+
+  // INLINE_HTML_TEMPLATE carries the renderer's HTML/CSS inside the credential, gzipped into a single
+  // base64url string. render-method-context-v2 defines `template` as a plain string term; without
+  // it JSON-LD silently drops the value during canonicalization, so the template would sit
+  // outside the proof and could be swapped freely.
+  describe('INLINE_HTML_TEMPLATE renderMethod (render-method-context-v2)', () => {
+    const template = 'H4sIAAAAAAAAA6tWKkktLlGyUlAqzUvOz00tKk5VqAUAuDHZ_RkAAAA';
+
+    it.each([CryptoSuite.EcdsaSd2023, CryptoSuite.Bbs2023])(
+      '%s: signs a compressed template and detects tampering with it',
+      async (cryptosuite) => {
+        const { did, didKeyPairs } = await generateDidKeyPair(cryptosuite);
+        const credential = {
+          ...modernCredentialV2_0,
+          issuer: did,
+          validFrom: '2024-04-01T12:19:52Z',
+          renderMethod: [
+            {
+              id: 'https://localhost:3000/renderer',
+              type: 'EMBEDDED_RENDERER',
+              templateName: 'BILL_OF_LADING',
+            },
+            { type: 'INLINE_HTML_TEMPLATE', template },
+          ],
+        };
+
+        // /renderMethod is mandatory so a derived credential can't withhold the template.
+        const signed = await signCredential(
+          credential,
+          didKeyPairs,
+          cryptosuite as CryptoSuiteName,
+          {
+            mandatoryPointers: ['/renderMethod'],
+          },
+        );
+        expect(signed.error).toBeUndefined();
+
+        const derived = await deriveCredential(signed.signed, ['/credentialSubject/blNumber']);
+        expect(derived.error).toBeUndefined();
+        expect(derived.derived?.renderMethod).toEqual(credential.renderMethod);
+
+        const verification = await verifyCredential(derived.derived);
+        expect(verification.error).toBeUndefined();
+        expect(verification.verified).toBe(true);
+
+        const tampered = {
+          ...derived.derived,
+          renderMethod: [
+            credential.renderMethod[0],
+            { type: 'INLINE_HTML_TEMPLATE', template: `${template}x` },
+          ],
+        };
+        const tamperedResult = await verifyCredential(tampered as never);
+        expect(tamperedResult.verified).toBe(false);
+      },
+    );
+  });
 });
