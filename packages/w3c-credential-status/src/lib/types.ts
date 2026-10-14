@@ -40,6 +40,31 @@ export type TransferableRecordsCredentialStatus = Omit<GeneralCredentialStatus, 
   tokenRegistry: string;
 };
 
+/**
+ * Pre-issuance Obligation Records (BoE) credential status for signing.
+ * Same TransferableRecords type string, keyed by obligationRegistry.
+ * `tokenId` is not part of this type — it is generated at issuance and must be omitted.
+ */
+export type ObligationRecordsSigningCredentialStatus = Omit<GeneralCredentialStatus, 'type'> & {
+  type: 'TransferableRecords';
+  tokenNetwork: {
+    chain: string;
+    chainId: string | number;
+  };
+  obligationRegistry: string;
+  tokenId?: never;
+};
+
+/**
+ * Issued / verified Obligation Records status — `tokenId` is required.
+ */
+export type ObligationRecordsCredentialStatus = Omit<
+  ObligationRecordsSigningCredentialStatus,
+  'tokenId'
+> & {
+  tokenId: string;
+};
+
 export type RawCredentialStatusVC = {
   '@context': string | string[];
   type: string[];

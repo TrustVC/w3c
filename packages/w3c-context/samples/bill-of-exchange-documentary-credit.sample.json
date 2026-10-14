@@ -1,0 +1,62 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/security/data-integrity/v2",
+    "https://trustvc.io/context/render-method-context-v2.json",
+    "https://trustvc.io/context/bill-of-exchange-documentary-credit.json",
+    "https://trustvc.io/context/obligation-records-context.json",
+    "https://trustvc.io/context/qrcode-context.json"
+  ],
+  "renderMethod": [
+    {
+      "type": "EMBEDDED_RENDERER",
+      "templateName": "BILL_OF_EXCHANGE_DOCUMENTARY_CREDIT",
+      "id": "https://generic-templates.tradetrust.io"
+    }
+  ],
+  "credentialSubject": {
+    "electronicDocumentIdentifier": "urn:uuid:9c2e5a41-3b7d-4c1a-9f6e-2d8b1a4c7e93",
+    "bankLogo": "",
+    "referenceNumber": "BOE-DC-2026-001",
+    "amountInFigures": "100000.00",
+    "amountInWords": "United States Dollars One Hundred Thousand Only",
+    "currencyCode": "USD",
+    "placeOfIssue": "Singapore",
+    "dateOfIssue": "2026-09-04",
+    "maturityDate": "2026-11-04",
+    "payee": "DBS Bank Ltd",
+    "drawnUnder": "Bank of Asia Ltd., Hong Kong",
+    "documentaryCreditNumber": "LC2026/001234",
+    "documentaryCreditDate": "2026-08-15",
+    "indorsement": {
+      "payee": "DBS Bank Ltd"
+    },
+    "drawee": {
+      "name": "Bank of Asia Ltd.",
+      "address": "123 Finance Street, Central, Hong Kong",
+      "authorisedSignatoryName": "James R. Carter",
+      "signature": ""
+    },
+    "drawer": {
+      "name": "ABC Singapore Pte Ltd",
+      "address": "8 Marina Boulevard, #24-01, Singapore 018981",
+      "authorisedSignatoryName": "Wei Ling Tan",
+      "signature": ""
+    }
+  },
+  "type": ["VerifiableCredential"],
+  "qrCode": {
+    "type": "TrustVCQRCode",
+    "uri": "https://ref.tradetrust.io"
+  },
+  "credentialStatus": {
+    "type": "TransferableRecords",
+    "tokenNetwork": {
+      "chain": "Sepolia",
+      "chainId": 11155111
+    },
+    "obligationRegistry": "0xE8c7516BD4FC64DF039BAA586035dfaA57520BE4"
+  },
+  "issuer": "did:web:didhost.vercel.app",
+  "validFrom": "2026-09-04T09:00:00Z"
+}

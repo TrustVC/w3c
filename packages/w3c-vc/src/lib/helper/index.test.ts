@@ -19,6 +19,27 @@ describe('helper', () => {
       expect(() => _checkCredentialStatus({} as any)).toThrowError('Invalid type');
     });
 
+    it('routes to Obligation Records when obligationRegistry is present even if not a string', () => {
+      const assertObligation = vi
+        .spyOn(w3c_credential_status, 'assertObligationRecords')
+        .mockImplementation(() => {
+          throw new TypeError('"credentialStatus.obligationRegistry" must be a string.');
+        });
+      const assertTransferable = vi.spyOn(w3c_credential_status, 'assertTransferableRecords');
+
+      expect(() =>
+        _checkCredentialStatus({
+          type: 'TransferableRecords',
+          obligationRegistry: 123,
+          tokenRegistry: '0xabc',
+          tokenNetwork: { chain: 'sepolia', chainId: 11155111 },
+        } as any),
+      ).toThrow(/obligationRegistry" must be a string/);
+
+      expect(assertObligation).toHaveBeenCalled();
+      expect(assertTransferable).not.toHaveBeenCalled();
+    });
+
     describe('_checkCredentialStatus', () => {
       it('should return true if the credential status is valid', () => {
         vi.spyOn(w3c_credential_status, 'assertStatusList2021Entry').mockResolvedValue();

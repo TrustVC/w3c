@@ -261,6 +261,85 @@ describe('W3C Verifiable Credentials', () => {
           expect(verificationResult.error).toBeUndefined();
         });
 
+        describe('fields a holder must not be able to withhold', () => {
+          // Selective disclosure lets the holder drop any non-mandatory statement while the
+          // credential still verifies, so anything that limits whether a credential may
+          // still be used has to be mandatory at issuance. These derivations deliberately
+          // ask for none of those fields; they must come back anyway.
+          const expiryField = dateField === 'validFrom' ? 'validUntil' : 'expirationDate';
+          const revealOnlyOneSubjectField = ['/credentialSubject/billOfLadingName'];
+
+          it(`keeps ${dateField === 'validFrom' ? 'validUntil' : 'expirationDate'} through an unrelated derivation`, async () => {
+            const testCredential = {
+              ...credential,
+              [dateField]: dateValue,
+              [expiryField]: '2029-12-03T12:19:52Z',
+            };
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            // Without this, an expired credential could be presented with no expiry at all.
+            expect(derivedCredential.derived?.[expiryField]).toBe('2029-12-03T12:19:52Z');
+
+            const verificationResult = await verifyCredential(derivedCredential.derived);
+            expect(verificationResult.verified).toBe(true);
+          });
+
+          it('keeps credentialStatus through an unrelated derivation', async () => {
+            const testCredential = {
+              ...credential,
+              '@context': [...credential['@context'], 'https://w3id.org/vc/status-list/2021/v1'],
+              [dateField]: dateValue,
+              credentialStatus: {
+                id: 'https://trustvc.github.io/did/credentials/statuslist/1#10',
+                type: 'StatusList2021Entry',
+                statusPurpose: 'revocation',
+                statusListIndex: '10',
+                statusListCredential: 'https://trustvc.github.io/did/credentials/statuslist/1',
+              },
+            };
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            // Without this, a revoked credential could be presented with the entry removed.
+            expect(derivedCredential.derived?.credentialStatus).toBeDefined();
+
+            const verificationResult = await verifyCredential(derivedCredential.derived);
+            expect(verificationResult.verified).toBe(true);
+          });
+
+          it('leaves a credential carrying neither field unaffected', async () => {
+            // The shared fixture already has an expiry, so strip both fields to test the
+            // case where there is nothing extra to force.
+            const testCredential = { ...credential, [dateField]: dateValue };
+            delete (testCredential as Record<string, unknown>)[expiryField];
+            delete (testCredential as Record<string, unknown>).credentialStatus;
+
+            const signedCredential = await signCredential(testCredential, keyPair, cryptosuite);
+            expect(signedCredential.error).toBeUndefined();
+
+            const derivedCredential = await deriveCredential(
+              signedCredential.signed,
+              revealOnlyOneSubjectField,
+            );
+            expect(derivedCredential.error).toBeUndefined();
+            expect(derivedCredential.derived?.[expiryField]).toBeUndefined();
+            expect(derivedCredential.derived?.credentialStatus).toBeUndefined();
+          });
+        });
+
         it('should automatically include entire credentialSubject when no properties selected', async () => {
           const testCredential = { ...credential, [dateField]: dateValue };
 
@@ -382,6 +461,63 @@ describe('W3C Verifiable Credentials', () => {
           expect(signedCredential.signed).toBeUndefined();
           expect(signedCredential.error).toBe('"unsupported-suite" is not supported.');
         });
+      },
+    );
+  });
+
+  // INLINE_HTML_TEMPLATE carries the renderer's HTML/CSS inside the credential, gzipped into a single
+  // base64url string. render-method-context-v2 defines `template` as a plain string term; without
+  // it JSON-LD silently drops the value during canonicalization, so the template would sit
+  // outside the proof and could be swapped freely.
+  describe('INLINE_HTML_TEMPLATE renderMethod (render-method-context-v2)', () => {
+    const template = 'H4sIAAAAAAAAA6tWKkktLlGyUlAqzUvOz00tKk5VqAUAuDHZ_RkAAAA';
+
+    it.each([CryptoSuite.EcdsaSd2023, CryptoSuite.Bbs2023])(
+      '%s: signs a compressed template and detects tampering with it',
+      async (cryptosuite) => {
+        const { did, didKeyPairs } = await generateDidKeyPair(cryptosuite);
+        const credential = {
+          ...modernCredentialV2_0,
+          issuer: did,
+          validFrom: '2024-04-01T12:19:52Z',
+          renderMethod: [
+            {
+              id: 'https://localhost:3000/renderer',
+              type: 'EMBEDDED_RENDERER',
+              templateName: 'BILL_OF_LADING',
+            },
+            { type: 'INLINE_HTML_TEMPLATE', template },
+          ],
+        };
+
+        // /renderMethod is mandatory so a derived credential can't withhold the template.
+        const signed = await signCredential(
+          credential,
+          didKeyPairs,
+          cryptosuite as CryptoSuiteName,
+          {
+            mandatoryPointers: ['/renderMethod'],
+          },
+        );
+        expect(signed.error).toBeUndefined();
+
+        const derived = await deriveCredential(signed.signed, ['/credentialSubject/blNumber']);
+        expect(derived.error).toBeUndefined();
+        expect(derived.derived?.renderMethod).toEqual(credential.renderMethod);
+
+        const verification = await verifyCredential(derived.derived);
+        expect(verification.error).toBeUndefined();
+        expect(verification.verified).toBe(true);
+
+        const tampered = {
+          ...derived.derived,
+          renderMethod: [
+            credential.renderMethod[0],
+            { type: 'INLINE_HTML_TEMPLATE', template: `${template}x` },
+          ],
+        };
+        const tamperedResult = await verifyCredential(tampered as never);
+        expect(tamperedResult.verified).toBe(false);
       },
     );
   });

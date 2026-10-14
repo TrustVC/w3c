@@ -12,6 +12,7 @@ This repository provides utilities for signing, verifying, and deriving Verifiab
   - [2. Verifying a Credential](#2-verifying-a-credential)
   - [3. Deriving a Credential (Selective Disclosure)](#3-deriving-a-credential-selective-disclosure)
   - [4. Schema Validation](#4-schema-validation)
+  - [5. Verifiable Presentations](#5-verifiable-presentations)
 - [Migration from Legacy BbsBlsSignature2020](#migration-from-legacy-bbsblssignature2020)
 - [Best Practices](#best-practices)
 - [License](#license)
@@ -28,6 +29,7 @@ npm install @trustvc/w3c-vc
 - **W3C Compliance**: Support for both W3C VC Data Model v1.1 and v2.0
 - **DID Method Agnostic**: Sign and verify with `did:web` issuers (hosted DID document) or `did:key` issuers (self-certifying, no hosting). See [`@trustvc/w3c-issuer`](../w3c-issuer/README.md) for issuance.
 - **Selective Disclosure**: Derive credentials with selective field revelation
+- **Verifiable Presentations**: Create (with strict input validation + mandatory expiry), sign (optional holder binding via `ecdsa-rdfc-2019`, with or without `challenge`/`domain`, `did:key` or `did:web` holder) and verify presentations that may wrap credentials of mixed cryptosuites and versions
 - **Legacy Support**: Deprecated BbsBlsSignature2020 signature support (verification only)
 - **Schema Validation**: Checks if payload matches W3C VC schema
 - **Version Detection**: Helper functions to detect credential versions
@@ -427,6 +429,147 @@ console.log('Is v2.0 raw document:', isRawDocumentV2_0(document)); // true
 // Check if credential is derived (selective disclosure)
 const signedDocument = { ...document, proof: { /* proof object */ } };
 console.log('Is derived credential:', await isDerived(signedDocument));
+```
+
+### 5. Verifiable Presentations
+
+A **Verifiable Presentation (VP)** is an envelope that a _holder_ wraps around one or
+more Verifiable Credentials to present them to a _verifier_. It has two independent
+layers:
+
+1. **The embedded credentials** (`verifiableCredential`) — each keeps its **own** proof.
+   A single VP may freely mix cryptosuites (`ecdsa-sd-2023`, `bbs-2023`,
+   `BbsBlsSignature2020`) **and** VC data-model versions (v1.1 / v2.0). Each is verified
+   independently.
+2. **An optional holder-binding proof** over the whole envelope, with a `challenge` (and
+   optional `domain`) supplied by the verifier to prevent replay. This proves the holder
+   controls the key and made _this_ presentation for _this_ verifier.
+
+#### Which cryptosuite signs the presentation?
+
+The holder proof must sign the **entire** envelope, so it uses a **plain
+(non-selective-disclosure)** suite: **`ecdsa-rdfc-2019`**. This reuses the **same ECDSA
+(P-256) Multikey** used for `ecdsa-sd-2023` credentials — the holder's signing key is
+independent of the suites used by the credentials inside. The holder DID may be a
+**`did:key`** (self-certifying, nothing to host) or a **`did:web`** — both resolve out of
+the box.
+
+> The selective-disclosure suites (`ecdsa-sd-2023`, `bbs-2023`) **cannot** sign a
+> presentation: `verifiableCredential` is a JSON-LD `@graph` container that JSON-pointer
+> selective disclosure cannot cover, so the proof would not bind the credentials being
+> presented. The deprecated `BbsBlsSignature2020` is likewise not used. `signPresentation`
+> returns a descriptive error if you request any of them. This only affects the _outer_
+> proof — the **credentials inside** the VP may still use any suite.
+>
+> A BBS-only holder (no ECDSA key) cannot produce a modern holder proof (there is no
+> non-deprecated plain BBS suite) — either generate an ECDSA key or present an **unsigned**
+> VP (see below).
+
+| Layer | Cryptosuite |
+|-------|-------------|
+| VP holder proof (outer) | `ecdsa-rdfc-2019` (ECDSA P-256 Multikey, `did:key` or `did:web`) |
+| Embedded credentials | any (`ecdsa-sd-2023`, `bbs-2023`, `BbsBlsSignature2020`), any version |
+
+#### Transferable records cannot be presented via a VP
+
+Credentials with a **`TransferableRecords`** `credentialStatus` are controlled **on-chain**
+via their token registry — possession is proven by **token ownership**, not by a
+presentation. `createPresentation` (and `signPresentation`) therefore **throw / error** if
+any embedded credential carries a `TransferableRecords` status. Present those through their
+token ownership instead.
+
+#### Strict validation at creation + mandatory expiry
+
+`createPresentation` is **async** and validates **every** input credential before producing
+a VP. If any credential is not signed, **expired**, future-dated, **revoked**, or a
+**transferable record**, it **throws with a clear reason (and index)** and **no VP is
+produced**. The VP is also stamped with a **mandatory, configurable expiry**
+(`validFrom = now`, `validUntil = now + lifetime`; default 5 minutes).
+
+The presentation **envelope** defaults to **VC Data Model v2.0** regardless of the embedded
+credentials' versions (each credential keeps its own `@context`); pass `version: 'v1'` only
+if a verifier specifically requires a v1.1 presentation.
+
+```ts
+const presentation = await createPresentation(signedCredentials, {
+  holder: 'did:web:holder.example',
+  expiresInSeconds: 300,        // VP lifetime (default 300s); or pass an explicit validUntil
+  // version: 'v2',             // envelope version (default 'v2'); wraps v1.1 or v2.0 credentials
+  // fullDisclosure: true,      // auto-derive any base SD credential (reveals ALL fields)
+});
+// throws e.g. "credential at index 0 is not valid: Invalid signature."
+//            "credential at index 1 has expired (2024-01-01T…)."
+//            "credential at index 0 has been revoked (credentialStatus)."
+```
+
+#### Three signing routes
+
+| Route | Call | Proof | Notes |
+|-------|------|-------|-------|
+| **1. Unsigned** | `createPresentation(...)` → `verifyPresentation(vp)` | none | verifies credential authenticity only |
+| **2. Signed, no challenge** | `signPresentation(vp, key)` | `assertionMethod` | proves holder signed it; **not** anti-replay |
+| **3. Signed, with challenge** | `signPresentation(vp, key, { challenge, domain })` | `authentication` | challenge/domain enforced on verify (anti-replay) |
+
+```ts
+import { createPresentation, signPresentation, verifyPresentation } from '@trustvc/w3c-vc';
+
+// `signedCredentials` are already signed (and, for SD suites, derived) — mixed suites/versions ok.
+const vp = await createPresentation(signedCredentials, { holder: 'did:web:holder.example' });
+
+// Route 3 — signed with a verifier-issued challenge (strongest; needs a server to issue/track it)
+const challenge = 'a-random-verifier-supplied-nonce';
+const { signed, error } = await signPresentation(vp, holderEcdsaKey, {
+  challenge,
+  domain: 'verifier.example.com', // optional audience binding
+});
+if (error) throw new Error(error);
+
+const result = await verifyPresentation(signed, {
+  challenge,                      // REQUIRED for an authentication proof; never read from the proof
+  domain: 'verifier.example.com',
+  requireProof: true,             // reject an unsigned VP
+  checkHolderBinding: true,       // signer DID == holder == every credentialSubject.id
+  maxLifetimeSeconds: 300,        // reject a VP whose lifetime exceeds this (defeats a huge validUntil)
+});
+
+console.log(result.verified);          // true only if the holder proof + all credentials verify + not expired
+console.log(result.presentationResult); // outcome of the holder proof (undefined if unsigned)
+console.log(result.credentialResults);  // per-credential outcomes (with credentialIndex)
+```
+
+> **`challenge`/`domain` are optional (per the W3C Data Integrity spec).** Provide a
+> `challenge` (Route 3) for **single-use** anti-replay — this needs a **server** to issue a
+> fresh nonce and track/consume it. Omit it (Route 2) for a signed-but-replayable proof.
+> `verifyPresentation` requires you to pass the `challenge` **it** issued — the value in the
+> proof is never trusted (that would allow replay).
+>
+> **Stateless alternative for frontends.** If you have no backend to track challenges, rely
+> on the **VP expiry** instead: a short-lived signed VP + `maxLifetimeSeconds` on verify
+> gives time-boxed replay mitigation with no server state.
+
+#### Unsigned presentations
+
+If you only need to bundle credentials (no cryptographic holder binding), omit the
+signing step. `verifyPresentation` still verifies every embedded credential (and the VP expiry):
+
+```ts
+const presentation = await createPresentation(signedCredentials);
+const result = await verifyPresentation(presentation);
+// result.verified reflects whether all embedded credentials verify and the VP is not expired;
+// result.presentationResult is undefined (no holder proof present).
+```
+
+> **Note:** an unsigned VP does not prove who is presenting it — anyone holding a copy of
+> the credentials could send it. Sign it (Route 2/3) when you need to prove the holder
+> controls the subject's key.
+
+#### Presentation helper functions
+
+```ts
+import { isRawPresentation, isSignedPresentation } from '@trustvc/w3c-vc';
+
+isRawPresentation(presentation); // true for a structurally valid unsigned VP
+isSignedPresentation(signed); // true for a structurally valid VP carrying a proof
 ```
 
 ## Migration from Legacy BbsBlsSignature2020

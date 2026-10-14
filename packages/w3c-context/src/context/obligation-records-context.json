@@ -1,0 +1,32 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "TransferableRecords": {
+      "@id": "https://example.com/terms#TransferableRecords",
+      "@type": "@id",
+      "@context": {
+        "@protected": true,
+        "tokenId": {
+          "@id": "https://example.com/terms#tokenId"
+        },
+        "tokenNetwork": {
+          "@id": "https://example.com/terms#tokenNetwork",
+          "@context": {
+            "@protected": true,
+            "chain": {
+              "@id": "https://example.com/terms#chain"
+            },
+            "chainId": {
+              "@id": "https://example.com/terms#chainId",
+              "@type": "http://www.w3.org/2001/XMLSchema#integer"
+            }
+          }
+        },
+        "obligationRegistry": {
+          "@id": "https://trustvc.io/context/terms#obligationRegistry"
+        }
+      }
+    }
+  }
+}

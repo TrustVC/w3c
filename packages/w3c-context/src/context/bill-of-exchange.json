@@ -1,0 +1,82 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+
+    "electronicDocumentIdentifier": {
+      "@id": "https://trustvc.io/context/terms#electronicDocumentIdentifier"
+    },
+    "referenceNumber": {
+      "@id": "https://trustvc.io/context/terms#referenceNumber"
+    },
+    "amountInFigures": {
+      "@id": "https://trustvc.io/context/terms#amountInFigures"
+    },
+    "amountInWords": {
+      "@id": "https://trustvc.io/context/terms#amountInWords"
+    },
+    "currencyCode": {
+      "@id": "https://trustvc.io/context/terms#currencyCode"
+    },
+    "blDate": {
+      "@id": "https://trustvc.io/context/terms#blDate"
+    },
+    "placeOfIssue": {
+      "@id": "https://trustvc.io/context/terms#placeOfIssue"
+    },
+    "dateOfIssue": {
+      "@id": "https://trustvc.io/context/terms#dateOfIssue"
+    },
+    "tenor": {
+      "@id": "https://trustvc.io/context/terms#tenor"
+    },
+    "payee": {
+      "@id": "https://trustvc.io/context/terms#payee"
+    },
+    "drawnUnder": {
+      "@id": "https://trustvc.io/context/terms#drawnUnder"
+    },
+    "drawnUnderDate": {
+      "@id": "https://trustvc.io/context/terms#drawnUnderDate"
+    },
+    "issuedBy": {
+      "@id": "https://trustvc.io/context/terms#issuedBy"
+    },
+    "drawee": {
+      "@id": "https://trustvc.io/context/terms#drawee",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
+        },
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
+        },
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
+        },
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
+        }
+      }
+    },
+    "drawer": {
+      "@id": "https://trustvc.io/context/terms#drawer",
+      "@context": {
+        "@protected": true,
+        "name": {
+          "@id": "https://trustvc.io/context/terms#partyName"
+        },
+        "address": {
+          "@id": "https://trustvc.io/context/terms#partyAddress"
+        },
+        "authorisedSignatoryName": {
+          "@id": "https://trustvc.io/context/terms#authorisedSignatoryName"
+        },
+        "signature": {
+          "@id": "https://trustvc.io/context/terms#signature"
+        }
+      }
+    }
+  }
+}

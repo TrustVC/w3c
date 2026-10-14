@@ -13,6 +13,14 @@ import {
 } from './lib/w3c-vc';
 import { getDocumentLoader } from '@trustvc/w3c-context';
 
+export {
+  createPresentation,
+  signPresentation,
+  verifyPresentation,
+  isRawPresentation,
+  isSignedPresentation,
+} from './lib/presentation';
+
 export * from './lib/types';
 export type * from './lib/types';
 export type {
