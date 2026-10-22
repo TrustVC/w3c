@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@2.5.0...@trustvc/w3c-vc@2.6.0) (2026-10-22)
+
+
+### Features
+
+* **w3c-context:** add INLINE_HTML_TEMPLATE render method to render-method-context-v2 ([#112](https://github.com/TrustVC/w3c/issues/112)) ([9375e71](https://github.com/TrustVC/w3c/commit/9375e71cde43b642418438648d2273a4ad9e303a))
+
 # [2.5.0](https://github.com/TrustVC/w3c/compare/@trustvc/w3c-vc@2.4.2...@trustvc/w3c-vc@2.5.0) (2026-09-17)
 
 
